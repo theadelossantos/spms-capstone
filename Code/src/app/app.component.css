@@ -1,0 +1,41 @@
+*{
+    font-family: 'Montserrat', sans-serif;
+}
+a{
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 24px; /* 171.429% */
+    letter-spacing: 0.2px;
+    color: #000;
+}
+.nav-text{
+    margin-left: 20px;
+}
+.navbar-nav-custom{
+    margin-left: 20px;
+}
+
+.navbar-brand{
+    margin-left: 20px;
+}
+.btn-custom{
+    border-radius: 5px;
+    background: var(--danger-color, #A70000);
+    border: none;
+    color: white;
+    padding: 10px 25px;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 22px; 
+    margin-right: 40px;
+
+}
+
+.btn-custom i{
+    margin-left: 5px;
+    font-weight: 800;
+}
+
