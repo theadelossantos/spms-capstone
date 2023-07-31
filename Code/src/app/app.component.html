@@ -1,26 +1,41 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="#">
-        <img src="assets/images/logo.png" alt="" width="30" height="30">
-      </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse nav-text justify-content-between align-items-center" id="navbarNav">
-        <ul class="navbar-nav navbar-nav-custom">
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">Home</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">About Us</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Contact Us</a>
-          </li>
-        </ul>
-        <button type="button" class="btn-custom">Login <i class="bi bi-arrow-right icon-custom"></i></button>
-
-      </div>
+<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">
+      <img src="assets/images/logo.png" alt="" width="30" height="30">
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse nav-text justify-content-between align-items-center" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="#home">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#about">About Us</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Contact Us</a>
+        </li>
+      </ul>
+      <button type="button" class="btn btn-custom">Login <i class="bi bi-arrow-right icon-custom"></i></button>
     </div>
-  </nav>
-  <app-home></app-home>
+  </div>
+</nav>
+<div id = "home" class="home-banner-container">
+  <div class="home-bannerImage-container">
+    <div class="banner-overlay"></div>
+    <img src="../../assets/images/background.jpg" alt=""/>
+  </div>
+  <div class="home-text-section container">
+    <h1 class="primary-heading">
+      THE LIPA GRACE ACADEMY
+    </h1>
+    <p class="primary-text">
+    “Meaningful Education Fortified With Christian Values”
+    </p>
+  </div>
+</div>
+<div id = "about" class="home-banner-container">
+  
+</div>
