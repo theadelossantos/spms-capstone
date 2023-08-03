@@ -98,4 +98,90 @@ a{
     font-style: italic;
     font-weight: 700;
   }
+
+  .about-section {
+    padding: 80px 0;
+    position: relative; 
+  }
   
+  .blob-bg {
+    width: 300px;
+    height: 300px;
+    position: absolute;
+    top: 0; 
+    left: -50px; 
+    z-index: 1;
+  }
+  
+  .person-image {
+    width: 500px;
+    height: auto;
+    margin-top: 100px; 
+    z-index: 1;
+    margin-left: -100px;
+}
+  
+  .about-text {
+    font-size: 54px;
+    font-weight: bold;
+    color: #fff;
+    z-index: 3;
+    margin-left: -40px;
+
+  }
+  .about-line {
+    width:50%;
+    height: 7px;
+    background-color: white;
+    margin-top: 5px;
+    margin-left: -40px;
+    z-index: 2;
+  }
+
+  .about-vision{
+    width:35%;
+    height: 3px;
+    background-color: #A70000;
+    margin-top: 5px;
+    z-index: 2;
+    margin-bottom: 10px;
+  }
+
+  .card-title{
+    font-weight: 700;
+    margin-top: 10px;
+  }
+  .mission-vision{
+    width: 260px;
+    height: 388px;
+    padding: 35px 20px;
+
+  }
+  
+  .biblical-philo{
+    width: 280px;
+    height: 388px;
+    padding: 35px 20px;
+  }
+  .card-text{
+    text-align: justify;
+
+  }
+@media (max-width: 767px) {
+  .person-image {
+    width: 100%; 
+    height: auto;
+    margin-top: 10px;
+  }
+
+  .blob-bg {
+    display: none;
+  }
+  .about-text{
+    text-align: center;
+    color: #000;
+  }
+  .mission-vision{
+    margin-left: 0;
+  }
+}
