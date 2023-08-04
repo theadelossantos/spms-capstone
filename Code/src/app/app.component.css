@@ -100,6 +100,13 @@ a{
   }
 
   .about-section {
+    padding: 20px 0;
+    position: relative; 
+    height: auto;
+    margin-bottom: 10px;
+  }
+
+  .contact-section {
     padding: 80px 0;
     position: relative; 
     height: 850px;
@@ -115,12 +122,27 @@ a{
     z-index: 1;
   }
   
+  .blob-bg-contact {
+    width: 300px;
+    height: 300px;
+    position: relative;
+    top: 0; 
+    left: 300px; 
+    z-index: 1;
+  }
   .person-image {
     width: 500px;
     height: auto;
     margin-top: 100px; 
     z-index: 1;
     margin-left: -100px;
+}
+.person-image-contact {
+  width: 500px;
+  height: auto;
+  margin-top: -100px; 
+  z-index: 1;
+  margin-left: 400px;
 }
   
   .about-text {
@@ -131,12 +153,30 @@ a{
     margin-left: -40px;
 
   }
+  .about-contact {
+    font-size: 54px;
+    font-weight: bold;
+    color: #fff;
+    z-index: 3;
+    margin-left: 500px;
+    white-space: nowrap;
+  }
+
   .about-line {
     width:50%;
     height: 7px;
     background-color: white;
     margin-top: 5px;
     margin-left: -40px;
+    z-index: 2;
+  }
+
+  .contact-line {
+    width:50%;
+    height: 7px;
+    background-color: white;
+    margin-top: 5px;
+    margin-left: 550px;
     z-index: 2;
   }
 
@@ -155,7 +195,7 @@ a{
   }
   .mission-vision{
     width: 260px;
-    height: 388px;
+    height: auto;
     padding: 35px 20px;
 
   }
@@ -170,6 +210,7 @@ a{
     text-align: justify;
 
   }
+
 @media (max-width: 767px) {
   .person-image {
     width: 50%; 
@@ -177,22 +218,45 @@ a{
     margin-top: 10px;
   }
 
+  .person-image-contact {
+    width: 50%; 
+    height: auto;
+    margin-top: 0;
+  }
+
   .blob-bg {
     display: none;
   }
-  .about-text{
+
+  .blob-bg-contact{
+    display: none;
+  }
+  .about-text {
     text-align: center;
     color: #000;
-  }
-  .mission-vision{
     margin-left: 0;
-    width: auto;
-    height: auto;
   }
 
-  .biblical-philo{
+  .about-contact {
+    text-align: center;
+    color: #000;
     margin-left: 0;
-    width: auto;
+  }
+  .mission-vision {
+    width: 100%;
     height: auto;
+    margin-top: 10px;
+  }
+
+  .biblical-philo {
+    width: 100%;
+    height: auto;
+    margin-top: 10px;
+  }
+
+  .about-section{
+    display: block;
+    margin-left: 0;
+    width: 100%;
   }
 }
