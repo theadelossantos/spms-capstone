@@ -102,6 +102,8 @@ a{
   .about-section {
     padding: 80px 0;
     position: relative; 
+    height: 850px;
+    margin-bottom: 10px;
   }
   
   .blob-bg {
@@ -159,9 +161,10 @@ a{
   }
   
   .biblical-philo{
-    width: 280px;
+    width: 260px;
     height: 388px;
     padding: 35px 20px;
+    margin-top: 130px;
   }
   .card-text{
     text-align: justify;
@@ -169,7 +172,7 @@ a{
   }
 @media (max-width: 767px) {
   .person-image {
-    width: 100%; 
+    width: 50%; 
     height: auto;
     margin-top: 10px;
   }
@@ -183,5 +186,13 @@ a{
   }
   .mission-vision{
     margin-left: 0;
+    width: auto;
+    height: auto;
+  }
+
+  .biblical-philo{
+    margin-left: 0;
+    width: auto;
+    height: auto;
   }
 }
