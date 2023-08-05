@@ -306,12 +306,14 @@ textarea::placeholder,input::placeholder{
 
 iframe{
   margin-top: 20px;
+  margin-bottom: 30px;
 }
 
 .footer{
-  background: var(--light-text-color, #f1eded);
+  background: #F0F3F9;
   padding-top: 20px;
   padding-bottom: 20px;
+  font-size: 14px;
 }
 
 .footer-line{
@@ -325,6 +327,15 @@ iframe{
     color: #737373;
 }
 .footer-label{
-  font-size: 16px;
+  font-size: 12px;
   margin-top: 10px;
+}
+
+.footer-h6{
+  font-weight: 700;
+  color: #A70000;
+}
+
+.icon{
+  color: #A70000;
 }
