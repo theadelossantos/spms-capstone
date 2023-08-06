@@ -1,0 +1,82 @@
+.main-content{
+    padding: 60px;
+    position: relative; 
+    height: auto;
+    /* overflow: hidden; */
+}
+.blob-bg-contact {
+    width: 300px;
+    height: 300px;
+    position: relative;
+    top: 0; 
+    left: 120px; 
+    z-index: 1;
+}
+.person-image-contact {
+    width: 500px;
+    height: auto;
+    margin-top: -200px; 
+    z-index: 1;
+    margin-left: 250px;
+}
+.about-contact {
+    font-size: 54px;
+    font-weight: bold;
+    color: #fff;
+    z-index: 3;
+    margin-left: 300px;
+    white-space: nowrap;
+}
+.contact-line {
+    width:50%;
+    height: 7px;
+    background-color: white;
+    margin-top: 5px;
+    margin-left: 350px;
+    z-index: 2;
+}
+
+@media (max-width: 767px) {
+  
+    /* .person-image-contact {
+      width: 50%; 
+      height: auto;
+      margin-top: 0;
+    } */
+
+  
+    .blob-bg-contact{
+      display: none;
+    }
+
+  
+    .about-contact {
+      display:none;
+    }
+  
+    .person-image-contact {
+      display: none;
+    }
+  
+    .about-contact-small{
+      font-weight: 700;
+      text-align: center;
+    }
+  }
+  
+  @media (min-width: 768px) {
+    .about-contact-small {
+      display: none;
+    }
+  }
+  
+  .contact-h2{
+    font-weight: 700;
+    text-align: center;
+    font-size: 58px;
+  }
+  .contact-label{
+    font-size: 14px;
+    white-space: nowrap;
+  }
+  
