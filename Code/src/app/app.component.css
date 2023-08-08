@@ -339,3 +339,9 @@ iframe{
 .icon{
   color: #A70000;
 }
+
+.modal-header .close {
+  border: none;
+  background-color: white; 
+
+}
