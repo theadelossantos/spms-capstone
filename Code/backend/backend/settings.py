@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'accounts.apps.AccountsConfig',
+    'public.apps.PublicConfig',
     'rest_framework',
 ]
 
@@ -130,3 +132,4 @@ REST_FRAMEWORK = {
     ]
 }
 
+# LOGIN_REDIRECT_URL = '/'
