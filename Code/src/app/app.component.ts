@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { PublicService } from './services/public.service';
+import { FormControl, FormGroup } from '@angular/forms';
+import { AuthService } from './services/auth.service';
+import { first } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -9,7 +12,11 @@ import { PublicService } from './services/public.service';
 })
 export class AppComponent {
   msg:any;
-  constructor(private router: Router, private pService: PublicService){
+  myForm: FormGroup;
+
+  role: string;
+
+  constructor(private router: Router, private pService: PublicService, private authService: AuthService){
 
   }
   
@@ -19,6 +26,11 @@ export class AppComponent {
 
   ngOnInit(){
     this.showMessage();
+    this.myForm = new FormGroup({
+      email: new FormControl(''),
+      password: new FormControl(''),
+      role: new FormControl('')
+    });
   }
 
   showMessage(){
@@ -26,6 +38,18 @@ export class AppComponent {
       this.msg = data, 
       console.log(this.msg);
     });
+  }
+
+  get f(){
+    return this.myForm.controls;
+  }
+
+  onSubmit() {
+    this.authService.login(this.f['email'].value, this.f['password'].value, this.f['role'].value).pipe(first()).subscribe(
+      data => {
+        console.log(data);
+      }
+    );
   }
  
 
