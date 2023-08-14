@@ -143,4 +143,3 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:4200",
 ]
 
-AUTH_USER_MODEL = 'accounts.CustomUser'

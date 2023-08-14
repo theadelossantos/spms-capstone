@@ -5,11 +5,11 @@
 
     <div class="fmname">
         <div class="input-container">
-          <input class="round-input" type="text" name="fname" placeholder="First Name" formControlName="fname">
+          <input class="form-control" type="text" name="fname" placeholder="First Name" formControlName="fname">
           
         </div>
         <div class="input-container">
-          <input class="round-input" (input)="capitalizeFirstLetter($event, 'mname')" type="text" placeholder="Middle Name" name="mname" formControlName="mname">
+          <input class="form-control" (input)="capitalizeFirstLetter($event, 'mname')" type="text" placeholder="Middle Name" name="mname" formControlName="mname">
         </div>
     </div>
     <div class="errordiv">
@@ -21,7 +21,7 @@
     </div>
       
     <div class="lname">
-        <input class="round-input" (input)="capitalizeFirstLetter($event, 'lname')" type="text" name="lname" placeholder="Last Name" formControlName="lname">
+        <input class="form-control" (input)="capitalizeFirstLetter($event, 'lname')" type="text" name="lname" placeholder="Last Name" formControlName="lname">
         <ng-container *ngFor="let validation of validationMessages.lname">
             <div class="error_message" *ngIf="ValidationFormUser.get('lname')?.hasError(validation.type) && (ValidationFormUser.get('lname')?.dirty || ValidationFormUser.get('lname')?.touched)">
             {{validation.message}}
@@ -30,7 +30,7 @@
     </div>
       
     <div class="address">
-    <input class="round-input" (input)="capitalizeFirstLetter($event, 'address')" type="text" name="address" placeholder="Address" formControlName="address">
+    <input class="form-control" (input)="capitalizeFirstLetter($event, 'address')" type="text" name="address" placeholder="Address" formControlName="address">
     <ng-container *ngFor="let validation of validationMessages.address">
         <div class="error_message" *ngIf="ValidationFormUser.get('address')?.hasError(validation.type) && (ValidationFormUser.get('address')?.dirty || ValidationFormUser.get('address')?.touched)">
         {{validation.message}}
@@ -39,7 +39,7 @@
     </div>
 
     <div class="address">
-    <input class="round-input" type="tel" name="phone" placeholder="Phone Number" formControlName="phone" inputmode="numeric" (input)="restrictNonNumeric($event)">
+    <input class="form-control" type="tel" name="phone" placeholder="Phone Number" formControlName="phone" inputmode="numeric" (input)="restrictNonNumeric($event)">
     <ng-container *ngFor="let validation of validationMessages.phone">
         <div class="error_message" *ngIf="ValidationFormUser.get('phone')?.hasError(validation.type) && (ValidationFormUser.get('phone')?.dirty || ValidationFormUser.get('phone')?.touched)">
         {{validation.message}}
@@ -49,9 +49,9 @@
         </div> -->
     </ng-container>
     </div>
-    <div class="gend-bday">
+    <div class="fmname">
         <div class="input-container">
-          <select label-placement="floating" fill="outline" label="Gender" class="custom-select" name="gender" formControlName="gender">
+          <select label-placement="floating" fill="outline" label="Gender" class="form-control" name="gender" formControlName="gender">
             <option value="female">Female</option>
             <option value="male">Male</option>
           </select>
@@ -62,9 +62,11 @@
           </ng-container>
         </div>
         <div class="input-container">
-          <input id="open-modal" class="round-input-calendar" type="text" name="birthdate" formControlName="birthdate" readonly>
-            <!-- <ion-icon name="calendar" icon="calendar-outline" slot="start" ></ion-icon> -->
-            <label >{{ formattedString }}</label>
+          <div class="input-with-icon">
+            <input data-format="dd/MM/yyyy" class="form-control" type="text" name="birthdate" formControlName="birthdate" readonly>
+            <i class="bi bi-calendar custom-icon"></i>
+          </div>
+          <label >{{ formattedString }}</label>
 
           <!-- <ion-modal trigger="open-modal" mode="md">
             <ng-template>
@@ -83,16 +85,17 @@
           
         </div>
     </div>
+
     <div class="assigninfo">
         <label class="personalinfo">ADVISING SECTION</label>
       </div>
-      <div class="gr-sec">
+      <div class="fmname">
         <div class="input-container">
           
           <select label-placement="floating" 
             fill="outline" 
             label="Grade Level" 
-            class="custom-select" 
+            class="form-control" 
             name="gradelevel" 
             formControlName="gradelevel">
             <option *ngFor="let gradeLevel of gradeLevels" [value]="gradeLevel">{{ gradeLevel }}</option>
@@ -115,7 +118,7 @@
           <select label-placement="floating" 
             fill="outline" 
             label="Section" 
-            class="custom-select" 
+            class="form-control" 
             name="section" 
             formControlName="section">
             <option *ngFor="let section of sections" [value]="section">{{section}}</option>
@@ -139,7 +142,7 @@
         <label class="personalinfo">ASSIGNED SUBJECTS</label>
       </div>
       <div class="addsubjdiv">
-        <button class="addsubj">Add subject</button>
+        <button class="btn addsubj">Add subject</button>
       </div>
       <div formArrayName="assignments">
         <div *ngFor="let assignment of assignments.controls; let i = index" [formGroupName]="i">
@@ -176,7 +179,7 @@
       </div>
       
       <div class="email">
-        <input class="round-input" type="email" name="email" placeholder="Email" formControlName="email">
+        <input class="form-control" type="email" name="email" placeholder="Email" formControlName="email">
         <ng-container *ngFor="let validation of validationMessages.email">
           <div class="error_message" *ngIf="ValidationFormUser.get('email')?.hasError(validation.type) && (ValidationFormUser.get('email')?.dirty || ValidationFormUser.get('email')?.touched)">
             {{validation.message}}
@@ -187,7 +190,7 @@
         </div>
       </div>
       <div class="pw">
-        <input class="round-input" type="password" name="password" placeholder="Password" formControlName="password">
+        <input class="form-control" type="password" name="password" placeholder="Password" formControlName="password">
         <ng-container *ngFor="let validation of validationMessages.password">
           <div class="error_message" *ngIf="ValidationFormUser.get('password')?.hasError(validation.type) && (ValidationFormUser.get('password')?.dirty || ValidationFormUser.get('password')?.touched)">
             {{validation.message}}
@@ -196,6 +199,6 @@
       </div>
 
       <div class="addstuddiv">
-        <button class="addstudbutton" type="submit" [disabled]="!ValidationFormUser.valid">Add Teacher</button>
+        <button class="btn addstudbutton" type="submit" [disabled]="!ValidationFormUser.valid">Add Teacher</button>
       </div>
 </form>

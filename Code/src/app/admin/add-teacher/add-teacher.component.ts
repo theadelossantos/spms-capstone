@@ -63,6 +63,7 @@ export class AddTeacherComponent {
   
 
   constructor(private formbuilder:FormBuilder) {
+
     // this.setToday();
 
     this.ValidationFormUser = this.formbuilder.group({
@@ -126,6 +127,22 @@ export class AddTeacherComponent {
     this.phoneError = false;
   }
   
+  addSubject(){
+    const assignment = this.formbuilder.group({
+      gradelevel:['',Validators.required],
+      subjects: new FormControl([], Validators.required),
+    });
+    this.assignments.push(assignment);
+  }
+
+  removeAssignment(index: number){
+    this.assignments.removeAt(index);
+  }
+
+  ngOnInit(){
+    this.addSubject();
+
+  }
 
 }
 

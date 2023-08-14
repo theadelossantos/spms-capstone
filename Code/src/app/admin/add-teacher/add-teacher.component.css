@@ -2,25 +2,6 @@
     font-family: 'DM Sans', sans-serif;
   }
   
-  
-
-
-.round-input, .round-input-calendar
-select.custom-select, select.custom-select-section{
-  --border-radius: 8px;
-  --padding-start: 4vw;
-  --padding-end: 3vw;
-  --background: #f4f4f4;
-  --color: #333;
-  font-family: 'DM Sans', sans-serif;
-  padding-top: 2vh;
-  padding-bottom: 2vh;
-  width: 100%;
-}
-
-ion-input{
-  height: 62px;
-}
 
 
 .lname,
@@ -39,21 +20,6 @@ margin-bottom: 12px;
   margin-bottom: 15px;
 }
 
-.round-input input{
-  border: none;
-  border-bottom: none;
-  text-decoration: none;
-  outline: none;
-  font-family: 'DM Sans', sans-serif;
-}
-
-.round-input::placeholder{
-  font-family: 'DM Sans', sans-serif;
-  font-size: 11px;
-  font-weight: 800;
-  color: #999;
-}
-
 .fmname {
   display: flex;
   flex-direction: row;
@@ -63,7 +29,6 @@ margin-bottom: 12px;
 .errordiv{
   margin-bottom: 12px;
 }
-
 
 
 .gend-bday {
@@ -77,67 +42,6 @@ margin-bottom: 12px;
   margin-right: 10px;
 }
 
-ion-select.custom-select,
-ion-select.custom-select-section {
-  --background: #f4f4f4;
-  --placeholder-color: #1c2120;
-  --color: #333;
-  --padding-start: 16px;
-  --padding-end: 16px;
-  --border-radius: 8px;
-  --height: 40px;
-  --selected-text-color: #333;
-  --selected-text-font-weight: 500;
-  --selected-placeholder-color: #999;
-  --selected-background: #ffffff;
-  --icon-color: #999;
-  --icon-size: 20px;
-  --border-width: 1px;
-  --border-color: #e5e5e5;
-  --caret-color: #333;
-  --caret-size: 10px;
-  --caret-margin-end: 4px;
-  --transition-duration: 200ms;
-  --caret-size: 0;
-  width: 100%; /* Set the width to 100% */
-  max-width: 100%;
-}
-
-ion-select.custom-select-section {
-  width: 180px;
-}
-
-ion-select.custom-select::part(icon),
-ion-select.custom-select-section::part(icon) {
-  display: none;
-}
-
-ion-select.custom-select::part(text),
-ion-select.custom-select-section::part(text) {
-  height: 40px;
-  line-height: 40px;
-  font-family: 'DM Sans', sans-serif;
-}
-
-.custom-select::after,
-.custom-select-section::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  right: 12px;
-  transform: translateY(-50%);
-  width: 0;
-  height: 0;
-  border-left: 5px solid transparent;
-  border-right: 5px solid transparent;
-  border-top: 5px solid #1c2120;
-}
-
-.custom-select-section::after {
-  content: '';
-  position: absolute;
-  
-}
 
 .gr-sec {
   display: flex;
@@ -161,39 +65,18 @@ ion-select.custom-select-section::part(text) {
   margin-bottom: 15px;
 }
   
-.round-input-calendar {
-  --background: #f4f4f4;
-  padding-left: 30px;
-  --border-radius: 8px;
-  height: 62px;
-}
 
-
-.round-input-calendar ion-icon {
+/* .custom-icon {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
   left: 10px;
   z-index: 2;
   font-size: 16px;
-  --color:#999;
+  color:#999;
   
-}
+} */
 
-.round-input-calendar ion-label {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  left: 30px;
-  pointer-events: none;
-  z-index: 2;
-  color: light gray;
-  font-size: 16px;
-  margin-bottom: 8px;
-  display: block;
-  margin-left: 10px;
-  
-}
 
 .addstuddiv {
   display: flex; 
@@ -210,10 +93,10 @@ ion-select.custom-select-section::part(text) {
   gap: 10px;
   flex-shrink: 0;
   border-radius: 5px;
-  --background: #a70000;
+  background: #a70000;
   font-family: 'Poppins', sans-serif;
   font-weight: 600;
-
+  color: white;
 }
 
 .error_message{
@@ -233,6 +116,8 @@ ion-select.custom-select-section::part(text) {
   font-family: 'Poppins', sans-serif;
   font-weight: 600;
   margin-bottom: 10px;
+  background-color: #a70000;
+  color: white;
 }
 .addsubjicon{
   margin-right: 5px;
@@ -255,4 +140,30 @@ ion-select.custom-select-section::part(text) {
   font-family: 'Poppins', sans-serif;
   font-weight: 600;
   margin-bottom: 10px;
+}
+
+.input-with-icon {
+  position: relative;
+}
+
+.custom-icon {
+  position: absolute;
+  top: 50%;
+  right: 10px; /* Adjust as needed */
+  transform: translateY(-50%);
+  font-size: 16px;
+  color: #999;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.form-control {
+  padding-right: 30px; /* Ensure space for the icon */
+}
+
+/* Adjust the icon position for smaller screens */
+@media (max-width: 767px) {
+  .custom-icon {
+      right: 5px;
+  }
 }
