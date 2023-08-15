@@ -19,6 +19,8 @@ export class AddTeacherComponent {
   sections: string[] = [];
   sectionId: string = '';
   sectionIds: number[] = [];
+  selectedDate: Date = new Date();
+  showDatePicker: boolean = false;
 
   fname : string = "";
   mname : string = "";
@@ -143,6 +145,20 @@ export class AddTeacherComponent {
     this.addSubject();
 
   }
+
+  onDateChange(event: any): void {
+    const selectedDate: Date = event.target.valueAsDate; 
+    if (selectedDate){
+      this.selectedDate = selectedDate;
+      this.showDatePicker = false;
+    }
+  }
+
+  
+toggleDatePicker() {
+  this.showDatePicker = !this.showDatePicker;
+}
+  
 
 }
 

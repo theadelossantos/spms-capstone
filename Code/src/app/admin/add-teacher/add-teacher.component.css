@@ -140,6 +140,8 @@ margin-bottom: 12px;
   font-family: 'Poppins', sans-serif;
   font-weight: 600;
   margin-bottom: 10px;
+  background-color: #a70000;
+  color: white;
 }
 
 .input-with-icon {
