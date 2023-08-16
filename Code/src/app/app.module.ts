@@ -9,11 +9,13 @@ import { AddTeacherComponent } from './admin/add-teacher/add-teacher.component';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { AddStudentComponent } from './admin/add-student/add-student.component';
 @NgModule({
   declarations: [
     AppComponent,
     HomepageComponent,
     AddTeacherComponent,
+    AddStudentComponent,
   ],
   imports: [
     BrowserModule,

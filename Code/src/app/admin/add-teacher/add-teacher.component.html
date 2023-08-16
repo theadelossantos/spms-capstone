@@ -2,10 +2,9 @@
 
 <form [formGroup]="ValidationFormUser">
     <h3>PERSONAL INFORMATION</h3>
-
     <div class="fmname">
         <div class="input-container">
-          <input class="form-control" type="text" name="fname" placeholder="First Name" formControlName="fname">
+          <input class="form-control" (input)="capitalizeFirstLetter($event, 'fname')" type="text" name="fname" placeholder="First Name" formControlName="fname">
           
         </div>
         <div class="input-container">
@@ -71,121 +70,147 @@
 
     <div class="assigninfo">
         <label class="personalinfo">ADVISING SECTION</label>
-      </div>
-      <div class="fmname">
-        <div class="input-container">
-          
-          <select label-placement="floating" 
-            fill="outline" 
-            label="Grade Level" 
-            class="form-control" 
-            name="gradelevel" 
-            formControlName="gradelevel">
-            <option value="" disabled selected>Grade Level</option>
-            <option *ngFor="let gradeLevel of gradeLevels" [value]="gradeLevel">{{ gradeLevel }}</option>
-          </select>
-          <ng-container *ngFor="let validation of validationMessages.gradelevel">
-            <div
+    </div>
+    <div class="mb-2">
+      <select label-placement="floating" 
+          fill="outline" 
+          label="Department" 
+          class="form-control" 
+          name="department" 
+          formControlName="department">
+          <option value="" disabled selected>Department</option>
+          <!-- <option *ngFor="let gradeLevel of gradeLevels" [value]="gradeLevel">{{ gradeLevel }}</option> -->
+      </select>
+      <ng-container *ngFor="let validation of validationMessages.department">
+          <div
               class="error_message"
               *ngIf="
-                ValidationFormUser.get('gradelevel')?.hasError(validation.type) &&
-                (ValidationFormUser.get('gradelevel')?.dirty || ValidationFormUser.get('gradelevel')?.touched)
+              ValidationFormUser.get('department')?.hasError(validation.type) &&
+              (ValidationFormUser.get('department')?.dirty || ValidationFormUser.get('department')?.touched)
               "
-            >
+          >
               {{ validation.message }}
-            </div>
-          </ng-container>
-          
+          </div>
+      </ng-container>
+  </div>
+    <div class="fmname">
+      <div class="input-container">
+        
+        <select label-placement="floating" 
+          fill="outline" 
+          label="Grade Level" 
+          class="form-control" 
+          name="gradelevel" 
+          formControlName="gradelevel">
+          <option value="" disabled selected>Grade Level</option>
+          <option *ngFor="let gradeLevel of gradeLevels" [value]="gradeLevel">{{ gradeLevel }}</option>
+        </select>
+        <ng-container *ngFor="let validation of validationMessages.gradelevel">
+          <div
+            class="error_message"
+            *ngIf="
+              ValidationFormUser.get('gradelevel')?.hasError(validation.type) &&
+              (ValidationFormUser.get('gradelevel')?.dirty || ValidationFormUser.get('gradelevel')?.touched)
+            "
+          >
+            {{ validation.message }}
+          </div>
+        </ng-container>
+        
+      </div>
+      <div class="input-container-section">
+        
+        <select label-placement="floating" 
+          fill="outline" 
+          label="Section" 
+          class="form-control" 
+          name="section" 
+          formControlName="section">
+          <option value="" disabled selected>Section</option>
+          <option *ngFor="let section of sections" [value]="section">{{section}}</option>
+        </select>
+        <ng-container *ngFor="let validation of validationMessages.section">
+          <div
+            class="error_message"
+            *ngIf="
+              ValidationFormUser.get('section')?.hasError(validation.type) &&
+              (ValidationFormUser.get('section')?.dirty || ValidationFormUser.get('section')?.touched)
+            "
+          >
+            {{ validation.message }}
+          </div>
+        </ng-container>
+      </div>
+
+    </div>
+
+    <div class="assigninfo">
+      <label class="personalinfo">ASSIGNED SUBJECTS</label>
+    </div>
+    <div class="addsubjdiv">
+      <button class="btn addsubj" (click)="addSubject()"><i class="bi bi-plus-circle-fill"></i> Add subject</button>
+    </div>
+
+    <div formArrayName="assignments">
+      <div *ngFor="let assignment of assignments.controls; let i = index" [formGroupName]="i" class="fmname">
+        <div class="input-container mr-2">
+          <select label-placement="floating" fill="outline" label="Grade & Section" class="form-control" formControlName="gradelevel">
+            <option value="" disabled selected>Grade Levels</option>
+            <option *ngFor="let gradeLevelss of gradeLevelss" [value]="gradeLevelss">
+              {{ gradeLevelss }}
+            </option>
+          </select>
         </div>
         <div class="input-container-section">
-          
-          <select label-placement="floating" 
+          <select 
+            label-placement="floating" 
             fill="outline" 
-            label="Section" 
+            placeholder="Subjects" 
             class="form-control" 
-            name="section" 
-            formControlName="section">
-            <option value="" disabled selected>Section</option>
-            <option *ngFor="let section of sections" [value]="section">{{section}}</option>
+            formControlName="subjects">
+            <option value="" disabled selected>Subjects</option>
+            <option *ngFor="let subject of subjects" [value]="subject">
+              {{ subject }}
+            </option>
           </select>
-          <ng-container *ngFor="let validation of validationMessages.section">
-            <div
-              class="error_message"
-              *ngIf="
-                ValidationFormUser.get('section')?.hasError(validation.type) &&
-                (ValidationFormUser.get('section')?.dirty || ValidationFormUser.get('section')?.touched)
-              "
-            >
-              {{ validation.message }}
-            </div>
-          </ng-container>
         </div>
+        <button class="btn btn-danger custom-btn" (click)="removeAssignment(i)">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill" viewBox="0 0 16 16">
+            <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5Zm-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5ZM4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06Zm6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528ZM8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5Z"/>
+          </svg>
+        </button>
 
-      </div>
-
-      <div class="assigninfo">
-        <label class="personalinfo">ASSIGNED SUBJECTS</label>
-      </div>
-      <div class="addsubjdiv">
-        <button class="btn addsubj" (click)="addSubject()"><i class="bi bi-plus-circle-fill"></i> Add subject</button>
-      </div>
-      <div formArrayName="assignments">
-        <div *ngFor="let assignment of assignments.controls; let i = index" [formGroupName]="i">
-          <div class="input-container-section">
-            <select label-placement="floating" fill="outline" label="Grade & Section" class="form-control" formControlName="gradelevel">
-              <option value="" disabled selected>Grade Levels</option>
-              <option *ngFor="let gradeLevelss of gradeLevelss" [value]="gradeLevelss">
-                {{ gradeLevelss }}
-              </option>
-            </select>
-          </div>
-          <div class="input-container-section">
-            <select 
-              label-placement="floating" 
-              fill="outline" 
-              placeholder="Subjects" 
-              class="form-control" 
-              formControlName="subjects">
-              <option value="" disabled selected>Subjects</option>
-              <option *ngFor="let subject of subjects" [value]="subject">
-                {{ subject }}
-              </option>
-            </select>
-          </div>
-          <button class="btn remsubj" (click)="removeAssignment(i)">
-            <i class="bi bi-trash3-fill"></i>Remove</button>
-
-        </div>
-        
-
-      </div> 
-
-
-      <div class="accdeets">
-        <label>ACCOUNT DETAILS</label>
       </div>
       
-      <div class="email">
-        <input class="form-control" type="email" name="email" placeholder="Email" formControlName="email">
-        <ng-container *ngFor="let validation of validationMessages.email">
-          <div class="error_message" *ngIf="ValidationFormUser.get('email')?.hasError(validation.type) && (ValidationFormUser.get('email')?.dirty || ValidationFormUser.get('email')?.touched)">
-            {{validation.message}}
-          </div>
-        </ng-container>
-        <div class="error_message" *ngIf="emailExistsError">
-          Email already exists.
-        </div>
-      </div>
-      <div class="pw">
-        <input class="form-control" type="password" name="password" placeholder="Password" formControlName="password">
-        <ng-container *ngFor="let validation of validationMessages.password">
-          <div class="error_message" *ngIf="ValidationFormUser.get('password')?.hasError(validation.type) && (ValidationFormUser.get('password')?.dirty || ValidationFormUser.get('password')?.touched)">
-            {{validation.message}}
-          </div>
-        </ng-container>
-      </div>
 
-      <div class="addstuddiv">
-        <button class="btn addstudbutton" type="submit" [disabled]="!ValidationFormUser.valid">Add Teacher</button>
+    </div> 
+
+
+    <div class="accdeets">
+      <label>ACCOUNT DETAILS</label>
+    </div>
+      
+    <div class="email">
+      <input class="form-control" type="email" name="email" placeholder="Email" formControlName="email">
+      <ng-container *ngFor="let validation of validationMessages.email">
+        <div class="error_message" *ngIf="ValidationFormUser.get('email')?.hasError(validation.type) && (ValidationFormUser.get('email')?.dirty || ValidationFormUser.get('email')?.touched)">
+          {{validation.message}}
+        </div>
+      </ng-container>
+      <div class="error_message" *ngIf="emailExistsError">
+        Email already exists.
       </div>
+    </div>
+    <div class="pw">
+      <input class="form-control" type="password" name="password" placeholder="Password" formControlName="password">
+      <ng-container *ngFor="let validation of validationMessages.password">
+        <div class="error_message" *ngIf="ValidationFormUser.get('password')?.hasError(validation.type) && (ValidationFormUser.get('password')?.dirty || ValidationFormUser.get('password')?.touched)">
+          {{validation.message}}
+        </div>
+      </ng-container>
+    </div>
+
+    <div class="addstuddiv">
+      <button class="btn addstudbutton" type="submit" [disabled]="!ValidationFormUser.valid">Add Teacher</button>
+    </div>
 </form>

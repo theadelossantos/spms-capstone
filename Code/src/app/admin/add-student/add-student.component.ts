@@ -1,13 +1,12 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators, FormArray, Form} from '@angular/forms';
 
-
 @Component({
-  selector: 'app-add-teacher',
-  templateUrl: './add-teacher.component.html',
-  styleUrls: ['./add-teacher.component.css']
+  selector: 'app-add-student',
+  templateUrl: './add-student.component.html',
+  styleUrls: ['./add-student.component.css']
 })
-export class AddTeacherComponent {
+export class AddStudentComponent {
 
   ValidationFormUser: FormGroup;
   emailExistsError: boolean = false;
@@ -29,7 +28,7 @@ export class AddTeacherComponent {
   phone : string = "";
   gender : string = "";
   birthdate:string= "";
-  department: string ="";
+  department: string = "";
   gradelevel : string = "";
   gradelevel1 : string = "";
   section : string = "";
@@ -163,7 +162,5 @@ export class AddTeacherComponent {
 toggleDatePicker() {
   this.showDatePicker = !this.showDatePicker;
 }
-  
 
 }
-
