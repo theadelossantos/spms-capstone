@@ -151,7 +151,7 @@ margin-bottom: 12px;
 .custom-icon {
   position: absolute;
   top: 50%;
-  right: 10px; /* Adjust as needed */
+  right: 10px; 
   transform: translateY(-50%);
   font-size: 16px;
   color: #999;
@@ -159,11 +159,6 @@ margin-bottom: 12px;
   z-index: 2;
 }
 
-.form-control {
-  padding-right: 30px; /* Ensure space for the icon */
-}
-
-/* Adjust the icon position for smaller screens */
 @media (max-width: 767px) {
   .custom-icon {
       right: 5px;

@@ -6,7 +6,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HomepageComponent } from './admin/homepage/homepage.component';
 import { AddTeacherComponent } from './admin/add-teacher/add-teacher.component';
-import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     HttpClientModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
-    BsDatepickerModule.forRoot(),
+    MatDatepickerModule,
+    MatInputModule,
 
   ],
   providers: [],

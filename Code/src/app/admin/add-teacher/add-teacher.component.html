@@ -64,11 +64,7 @@
         </div>
         <div class="input-container">
           <div class="input-with-icon">
-            <input placeholder="Birthdate" class="form-control" type="text" name="birthdate" [value]="selectedDate | date:'dd/MM/yyyy'" readonly>
-            <i class="bi bi-calendar custom-icon" (click)="toggleDatePicker()"></i>
-          </div>
-          <div class="date-picker" *ngIf="showDatePicker">
-            <input type="date" (change)="onDateChange($event)" [value]="selectedDate | date:'yyyy-MM-dd'" />
+            <input placeholder="Birthdate" class="form-control" type="date" name="birthdate">
           </div>
         </div>
     </div>
