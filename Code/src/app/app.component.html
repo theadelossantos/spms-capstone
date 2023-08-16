@@ -35,7 +35,7 @@
         </button>
       </div>
       <div class="modal-body">
-        <form [formGroup] = "myForm" (ngSubmit)="onSubmit()">
+        <form [formGroup] = "myForm" (ngSubmit)="onSubmit(emailValue,passwordValue,roleValue)">
           <div class="form-group">
             <label for="email">Email address</label>
             <input type="email" formControlName="email" class="form-control" id="email" placeholder="Enter email">

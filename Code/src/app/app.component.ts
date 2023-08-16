@@ -13,8 +13,9 @@ import { first } from 'rxjs';
 export class AppComponent {
   msg:any;
   myForm: FormGroup;
-
-  role: string;
+  emailValue:string;
+  passwordValue:string;
+  roleValue: string;
 
   constructor(private router: Router, private pService: PublicService, private authService: AuthService){
 
@@ -44,12 +45,27 @@ export class AppComponent {
     return this.myForm.controls;
   }
 
-  onSubmit() {
-    this.authService.login(this.f['email'].value, this.f['password'].value, this.f['role'].value).pipe(first()).subscribe(
-      data => {
-        console.log(data);
+  onSubmit(email:string, password:string,role:string) {
+    this.authService.login(email,password,role).subscribe(
+      (response:any) => {
+        localStorage.setItem('token', response.token);
+        localStorage.setItem('userId', response.user_id);
+        localStorage.setItem('role', response.role);
+
+        if(response.role === 'student'){
+          this.router.navigate(['/student-homepage']);
+        }
+        else if(response.role === 'teacher'){
+          this.router.navigate(['/teacher-homepage']);
+        }
+        else if(response.role === 'admin'){
+          this.router.navigate(['/admin-homepage']);
+        }
+      },
+      (error: any) => {
+        console.log('error');
       }
-    );
+    )
   }
  
 
