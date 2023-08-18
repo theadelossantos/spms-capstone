@@ -25,17 +25,7 @@ class Student(models.Model):
     phone = models.CharField(max_length=25)
     gender = models.CharField(max_length=10)
     birthdate = models.DateField(default=timezone.now)
-    email = models.EmailField(unique=True)
-    temporary_password = models.CharField(max_length=255, blank=True, null=True)
 
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-        if self.temporary_password:
-            self.password = make_password(self.temporary_password)
-            self.save()
-
-    def authenticate(self, password):
-        return check_password(password, self.password)
     
     def __str__(self):
         return f"{self.fname} {self.lname}"
@@ -54,16 +44,7 @@ class Teacher(models.Model):
     phone = models.CharField(max_length=25)
     gender = models.CharField(max_length=10)
     birthdate = models.DateField(default=timezone.now)
-    email = models.EmailField(unique=True)
 
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-        if self.temporary_password:
-            self.password = make_password(self.temporary_password)
-            self.save()
-
-    def authenticate(self, password):
-        return check_password(password, self.password)
 
 class Admin(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
@@ -74,17 +55,7 @@ class Admin(models.Model):
     phone = models.CharField(max_length=25, default='')
     gender = models.CharField(max_length=10, default='')
     address = models.CharField(max_length=255, default='')
-    email = models.EmailField(unique=True, default='')
-    temporary_password = models.CharField(max_length=255, blank=True, null=True)
 
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-        if self.temporary_password:
-            self.user.set_password(self.temporary_password)
-            self.user.save()
-
-    def authenticate(self, password):
-        return check_password(password, self.user.password)
 
 
 class Department(models.Model):

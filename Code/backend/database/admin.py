@@ -3,12 +3,12 @@ from .models import Student, Teacher, Admin, GradeLevel, Department, Section, Su
 # Register your models here.
 
 class StudentAdmin(admin.ModelAdmin):
-    list_display = ('student_id', 'dept_id', 'gradelvl_id', 'section_id', 'fname', 'mname', 'lname', 'address', 'phone', 'gender', 'birthdate', 'email')
+    list_display = ('student_id', 'dept_id', 'gradelvl_id', 'section_id', 'fname', 'mname', 'lname', 'address', 'phone', 'gender', 'birthdate')
 
 admin.site.register(Student, StudentAdmin)
 
 class TeacherAdmin(admin.ModelAdmin):
-    list_display = ('teacher_id', 'dept_id', 'gradelvl_id', 'section_id', 'subject_id', 'fname', 'mname', 'lname', 'address', 'phone', 'gender', 'birthdate', 'email')
+    list_display = ('teacher_id', 'dept_id', 'gradelvl_id', 'section_id', 'subject_id', 'fname', 'mname', 'lname', 'address', 'phone', 'gender', 'birthdate')
 
 admin.site.register(Teacher, TeacherAdmin)
 

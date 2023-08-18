@@ -46,4 +46,3 @@ class AdminHomepage(APIView):
             admin = Admin.objects.get(user=request.user)
             serializer = AdminSerializer(admin)
             return Response(serializer.data)
-
