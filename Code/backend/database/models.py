@@ -4,13 +4,16 @@ from django.utils import timezone
 from django.contrib.auth.hashers import make_password, check_password
 
 class CustomUser(AbstractUser):
-    ROLE_CHOICES = (
-        ('student', 'Student'),
-        ('teacher', 'Teacher'),
-        ('admin', 'Admin'),
-    )
-
-    role = models.CharField(max_length=10, choices=ROLE_CHOICES)
+    STUDENT = 'student'
+    TEACHER = 'teacher'
+    ADMIN = 'admin'
+    ROLE_CHOICES = [
+        (STUDENT, 'Student'),
+        (TEACHER, 'Teacher'),
+        (ADMIN, 'Admin'),
+    ]
+    
+    role = models.CharField(max_length=20, choices=ROLE_CHOICES)
 
 class Student(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
