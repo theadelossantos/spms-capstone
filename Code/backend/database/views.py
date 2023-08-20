@@ -20,8 +20,12 @@ class AddStudentView(APIView):
             user = user_serializer.save()
             student_serializer.save(user=user)
             return Response(user_serializer.data, status=status.HTTP_201_CREATED)
+        
+        student_serializer.is_valid()
+        return Response({"error": "Invalid data", "errors": student_serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
-        return Response({"error": "Invalid data"}, status=status.HTTP_400_BAD_REQUEST)
+
+
     
 class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
