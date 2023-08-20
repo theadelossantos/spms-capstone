@@ -3,6 +3,7 @@ from django.contrib.auth import get_user_model
 from .models import Student, Teacher, Admin
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.utils.translation import gettext_lazy as _
+from django.contrib.auth import authenticate
 
 
 User = get_user_model()
@@ -66,24 +67,31 @@ class AdminSerializer(serializers.ModelSerializer):
         return admin
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+    role = serializers.CharField(write_only=True)
     def validate(self, attrs):
+
         email = attrs.get("email")
         password = attrs.get("password")
         role = attrs.get("role")
 
         if email and password:
-            user = User.objects.get(email=email)
-            if user.check_password(password):
-                if role and user.role != role:
-                    raise serializers.ValidationError(_("Invalid Role"))
+            user = authenticate(self.context['request'], email=email, password=password)
 
-                refresh = self.get_token(user)
+            if user is None:
+                raise serializers.ValidationError(_("Invalid Credentials"))
 
-                data = {
-                    "refresh": str(refresh),
-                    "access": str(refresh.access_token),
-                }
+            if role and user.role != role:
+                raise serializers.ValidationError(_("Invalid Role"))
 
-                return data
+            refresh = self.get_token(user)
 
-        raise serializers.ValidationError(_("Invalid Credentials"))
+            data = {
+                "refresh": str(refresh),
+                "access": str(refresh.access_token),
+            }
+
+            return data
+
+        raise serializers.ValidationError(_("Must include 'email' and 'password'"))
+
+
