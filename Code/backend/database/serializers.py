@@ -2,13 +2,15 @@ from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from .models import Student, Teacher, Admin
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from django.utils.translation import gettext_lazy as _
+
 
 User = get_user_model()
 
 class UserSerializer(serializers.ModelSerializer):  
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'password', 'role']
+        fields = ['id', 'username','email', 'password', 'role']
         extra_kwargs = {
             'password': {'write_only': True},
             'username': {'required': False},  
@@ -64,25 +66,24 @@ class AdminSerializer(serializers.ModelSerializer):
         return admin
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
-    default_email = "tlga@example.com"  # Update this with a valid default email
-
     def validate(self, attrs):
-        data = super().validate(attrs)
-
-        email = attrs.get('email')
-        password = attrs.get('password')
+        email = attrs.get("email")
+        password = attrs.get("password")
+        role = attrs.get("role")
 
         if email and password:
-            user = User.objects.filter(email=email).first()
-            if user and user.check_password(password):
+            user = User.objects.get(email=email)
+            if user.check_password(password):
+                if role and user.role != role:
+                    raise serializers.ValidationError(_("Invalid Role"))
+
                 refresh = self.get_token(user)
 
-                data['refresh'] = str(refresh)
-                data['access'] = str(refresh.access_token)
+                data = {
+                    "refresh": str(refresh),
+                    "access": str(refresh.access_token),
+                }
 
                 return data
-            else:
-                raise serializers.ValidationError("Invalid Credentials")
-        else:
-            raise serializers.ValidationError("Must include 'email' and 'password'")
 
+        raise serializers.ValidationError(_("Invalid Credentials"))

@@ -14,6 +14,10 @@ class CustomUser(AbstractUser):
     ]
     
     role = models.CharField(max_length=20, choices=ROLE_CHOICES)
+    email = models.EmailField(unique=True)  # Use email for authentication
+    USERNAME_FIELD = 'email'  # Set email as the unique identifier
+    REQUIRED_FIELDS = []  # No additional fields are required
+
 
 class Student(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
