@@ -23,8 +23,6 @@ class UserSerializer(serializers.ModelSerializer):
         return user
 
 
-
-
 class StudentSerializer(serializers.ModelSerializer):
     user = UserSerializer(write_only=True)
 
@@ -66,24 +64,25 @@ class AdminSerializer(serializers.ModelSerializer):
         return admin
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+    default_email = "tlga@example.com"  # Update this with a valid default email
+
     def validate(self, attrs):
         data = super().validate(attrs)
 
-        email = data.get('email')
-        password = data.get('password')
+        email = attrs.get('email')
+        password = attrs.get('password')
 
-        try:
-            user = User.objects.get(email=email)
-        except User.DoesNotExist:
-            raise  serializers.ValidationError("Invalid Credentials")
+        if email and password:
+            user = User.objects.filter(email=email).first()
+            if user and user.check_password(password):
+                refresh = self.get_token(user)
 
-        if not user.check_password(password):
-            raise serializers.ValidationError("Invalid Credentials")
-        
-        refresh = self.get_token(user)
+                data['refresh'] = str(refresh)
+                data['access'] = str(refresh.access_token)
 
-        data['refresh'] = str(refresh)
-        data['access'] = str(refresh.access_token)
-
-        return data
+                return data
+            else:
+                raise serializers.ValidationError("Invalid Credentials")
+        else:
+            raise serializers.ValidationError("Must include 'email' and 'password'")
 
