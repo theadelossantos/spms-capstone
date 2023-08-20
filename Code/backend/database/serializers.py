@@ -11,7 +11,7 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ['id', 'username', 'email', 'password', 'role']
         extra_kwargs = {
             'password': {'write_only': True},
-            'username': {'required': False},
+            'username': {'required': False},  
             'role': {'read_only': True}  
         }
 
@@ -24,8 +24,9 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 
+
 class StudentSerializer(serializers.ModelSerializer):
-    user = UserSerializer()
+    user = UserSerializer(write_only=True)
 
     class Meta:
         model = Student
@@ -65,8 +66,6 @@ class AdminSerializer(serializers.ModelSerializer):
         return admin
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
-    role = serializers.ChoiceField(choices=['student', 'teacher', 'admin'])
-
     def validate(self, attrs):
         data = super().validate(attrs)
 
@@ -76,10 +75,15 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         try:
             user = User.objects.get(email=email)
         except User.DoesNotExist:
-            raise serializers.ValidationError("Invalid Credentials")
+            raise  serializers.ValidationError("Invalid Credentials")
 
         if not user.check_password(password):
             raise serializers.ValidationError("Invalid Credentials")
+        
+        refresh = self.get_token(user)
+
+        data['refresh'] = str(refresh)
+        data['access'] = str(refresh.access_token)
 
         return data
 

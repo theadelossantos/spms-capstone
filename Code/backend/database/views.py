@@ -13,19 +13,27 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 
 class AddStudentView(APIView):
     def post(self, request):
-        user_serializer = UserSerializer(data=request.data)
+        user_serializer = UserSerializer(data=request.data.get('user'))
         student_serializer = StudentSerializer(data=request.data)
 
         if user_serializer.is_valid() and student_serializer.is_valid():
             user = user_serializer.save()
-            student_serializer.save(user=user)
+            student_data = {**student_serializer.validated_data, 'user': user}
+            student = Student.objects.create(**student_data)
+
+            user.role = 'student'
+            user.save()
+
             return Response(user_serializer.data, status=status.HTTP_201_CREATED)
-        
-        student_serializer.is_valid()
-        return Response({"error": "Invalid data", "errors": student_serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            student_serializer.is_valid()
 
+            return Response({
+                "user_errors": user_serializer.errors,
+                "student_errors": student_serializer.errors
+            }, status=status.HTTP_400_BAD_REQUEST)
 
-
+       
     
 class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
