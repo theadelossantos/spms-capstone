@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { PublicService } from './services/public.service';
-import { FormControl, FormGroup } from '@angular/forms';
+import { Form, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from './services/auth.service';
 import { first } from 'rxjs';
 
@@ -12,12 +11,10 @@ import { first } from 'rxjs';
 })
 export class AppComponent {
   msg:any;
-  myForm: FormGroup;
-  emailValue:string;
-  passwordValue:string;
-  roleValue: string;
+  validationUserMessage:any;
+  validationFormUser !:FormGroup
 
-  constructor(private router: Router, private pService: PublicService, private authService: AuthService){
+  constructor(private router: Router, private authService: AuthService, private formBuilder: FormBuilder){
 
   }
   
@@ -26,47 +23,71 @@ export class AppComponent {
   }
 
   ngOnInit(){
-    this.showMessage();
-    this.myForm = new FormGroup({
-      email: new FormControl(''),
-      password: new FormControl(''),
-      role: new FormControl('')
+
+    this.validationUserMessage = {
+      email: [
+        { type: 'required', message: 'Please enter your email' },
+        { type: 'pattern', message: 'Incorrect Email. Try again.' }
+      ],
+      password: [
+        { type: 'required', message: 'Please enter your password' },
+        { type: 'minlength', message: 'The password must be at least 5 characters or more' }
+      ],
+      role: new FormControl('', Validators.required)
+    };
+
+    this.validationFormUser = this.formBuilder.group({
+      email: new FormControl('', [
+        Validators.required,
+        Validators.pattern('^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$')
+      ]),
+      password: new FormControl('', [Validators.required, Validators.minLength(5)]),
+      role: new FormControl('', Validators.required)
     });
   }
 
-  showMessage(){
-    this.pService.getMessage().subscribe(data=>{
-      this.msg = data, 
-      console.log(this.msg);
-    });
-  }
 
-  get f(){
-    return this.myForm.controls;
-  }
-
-  onSubmit(email:string, password:string,role:string) {
-    this.authService.login(email,password,role).subscribe(
-      (response:any) => {
+  onSubmit() {
+    const { email, password, role } = this.validationFormUser.value;
+  
+    this.authService.login(email, password, role).subscribe(
+      (response: any) => {
         localStorage.setItem('token', response.token);
         localStorage.setItem('userId', response.user_id);
         localStorage.setItem('role', response.role);
-
-        if(response.role === 'student'){
+  
+        if (response.role === 'student') {
           this.router.navigate(['/student-homepage']);
-        }
-        else if(response.role === 'teacher'){
+        } else if (response.role === 'teacher') {
           this.router.navigate(['/teacher-homepage']);
-        }
-        else if(response.role === 'admin'){
+        } else if (response.role === 'admin') {
           this.router.navigate(['/admin-homepage']);
         }
       },
       (error: any) => {
-        console.log('error');
+        console.log('Error response:', error);
+  
+        if (error && error.error) {
+          if (error.error.non_field_errors) {
+            this.msg = error.error.non_field_errors[0];
+          } else if (error.error.email) {
+            this.msg = error.error.email[0];
+          } else if (error.error.password) {
+            this.msg = error.error.password[0];
+          } else if (error.error.role) {
+            this.msg = error.error.role[0];
+          } else {
+            this.msg = 'An error occurred. Please try again later.';
+          }
+        } else {
+          this.msg = 'An error occurred. Please try again later.';
+        }
       }
-    )
+    );
   }
+  
+  
+  
  
 
 }

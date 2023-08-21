@@ -8,7 +8,7 @@ import { catchError } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class AuthService {
-  private api_url: string = 'http://localhost:8000/';
+  private api_url: string = 'http://localhost:8000/api/auth/';
   private httpOptions = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json'
@@ -18,16 +18,29 @@ export class AuthService {
   constructor(private http: HttpClient, private router: Router) { }
 
   private handleError(error: HttpErrorResponse): Observable<any> {
-    console.error('An error occurred:', error);
+    if (error.error instanceof ErrorEvent) {
+      console.error('Client-side error:', error.error.message);
+    } else if (error.status === 400 && error.error) {
+      return throwError(error.error);
+    } else {
+      console.error('An error occurred:', error);
+    }
+    
+    if (typeof error.error === 'string') {
+      return throwError(error.error);
+    }
+    
     return throwError('Something went wrong; please try again later.');
   }
   
+  
   login(email: string, password: string, role: string): Observable<any> {
     const data = {
-      email: email,
-      password: password,
-      role: role
+      email,
+      password,
+      role
     };
+    console.log('Request Body:', data);
     return this.http.post(`${this.api_url}login/`, data, this.httpOptions).pipe(
       catchError(this.handleError)
     );
@@ -50,34 +63,5 @@ export class AuthService {
       catchError(this.handleError)
     );
   }
-
-  // login(email: string, password: string, role: string) {
-  //   const userData = { email, password, role };
-  //   return this.http.post<any>(`${this.api_url}/api/auth/`, userData, httpOptions)
-  //     .pipe(
-  //       map(response => {
-  //         localStorage.setItem('token', response.token);
-  //         localStorage.setItem('userId', response.user_id);
-  //         localStorage.setItem('role', response.role);
-  //         return response;
-  //       })
-  //     );
-  // }
-
-  // logout() {
-  //   localStorage.removeItem('token');
-  //   localStorage.removeItem('userId');
-  //   localStorage.removeItem('role');
-  //   this.router.navigate(['/']); 
-  // }
-
-  // isAuthenticated(): boolean {
-  //   return !!localStorage.getItem('token'); 
-  // }
-  
-  // hasRole(expectedRole: string): boolean {
-  //   const userRole = localStorage.getItem('role');
-  //   return userRole === expectedRole; 
-  // }
 
 }

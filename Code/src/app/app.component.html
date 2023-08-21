@@ -35,14 +35,30 @@
         </button>
       </div>
       <div class="modal-body">
-        <form [formGroup] = "myForm" (ngSubmit)="onSubmit(emailValue,passwordValue,roleValue)">
+        <form [formGroup] = "validationFormUser" (ngSubmit)="onSubmit()">
           <div class="form-group">
             <label for="email">Email address</label>
             <input type="email" formControlName="email" class="form-control" id="email" placeholder="Enter email">
+            <div>
+              <ng-container *ngFor="let validation of validationUserMessage.email">
+                <div class="error_message"
+                  *ngIf="validationFormUser.get('email')?.hasError(validation.type) && (validationFormUser.get('email')?.dirty || validationFormUser.get('email')?.touched)">
+                  {{ validation.message }}
+                </div>
+              </ng-container>
+            </div>
           </div>
           <div class="form-group">
             <label for="password">Password</label>
             <input type="password" formControlName="password" class="form-control" id="password" placeholder="Password">
+            <div>
+              <ng-container *ngFor="let validation of validationUserMessage.password">
+                <div class="error_message"
+                  *ngIf="validationFormUser.get('password')?.hasError(validation.type) && (validationFormUser.get('password')?.dirty || validationFormUser.get('password')?.touched)">
+                  {{ validation.message }}
+                </div>
+              </ng-container>
+            </div>
           </div>
           <div class="form-group">
             <label for="role">Role</label>
@@ -52,10 +68,12 @@
               <option value="teacher">Teacher</option>
               <option value="student">Student</option>
             </select>
+            
           </div>
+          <div *ngIf="msg" class="error_message">{{msg}}</div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-primary">Login</button>
+            <button type="submit" class="btn btn-primary" [disabled]="!validationFormUser.valid">Login</button>
           </div>
         </form>
       </div>

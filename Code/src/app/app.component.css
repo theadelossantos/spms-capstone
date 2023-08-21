@@ -345,3 +345,8 @@ iframe{
   background-color: white; 
 
 }
+
+.error_message{
+  color: red;
+  font-size: 12px;
+}
