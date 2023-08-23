@@ -41,9 +41,7 @@ export class AuthService {
       role
     };
     console.log('Request Body:', data);
-    return this.http.post(`${this.api_url}login/`, data, this.httpOptions).pipe(
-      catchError(this.handleError)
-    );
+    return this.http.post(`${this.api_url}login/`, data);
   }
 
   addStudent(studentData: any): Observable<any> {

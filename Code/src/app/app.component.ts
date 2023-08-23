@@ -12,7 +12,7 @@ import { first } from 'rxjs';
 export class AppComponent {
   msg:any;
   validationUserMessage:any;
-  validationFormUser !:FormGroup
+  validationFormUser !:FormGroup;
 
   constructor(private router: Router, private authService: AuthService, private formBuilder: FormBuilder){
 
@@ -55,13 +55,17 @@ export class AppComponent {
         localStorage.setItem('token', response.token);
         localStorage.setItem('userId', response.user_id);
         localStorage.setItem('role', response.role);
-  
+        
+        this.msg = '';
+        console.log('onSubmit function triggered');
+        this.validationFormUser.reset();
+
         if (response.role === 'student') {
-          this.router.navigate(['/student-homepage']);
+          this.router.navigate(['/student/student-homepage']);
         } else if (response.role === 'teacher') {
-          this.router.navigate(['/teacher-homepage']);
+          this.router.navigate(['/teacher/teacher-homepage']);
         } else if (response.role === 'admin') {
-          this.router.navigate(['/admin-homepage']);
+          this.router.navigate(['/teacher/admin-homepage']);
         }
       },
       (error: any) => {
@@ -80,7 +84,7 @@ export class AppComponent {
             this.msg = 'An error occurred. Please try again later.';
           }
         } else {
-          this.msg = 'An error occurred. Please try again later.';
+          this.msg = 'An error occurred. Please try again laterr.';
         }
       }
     );
