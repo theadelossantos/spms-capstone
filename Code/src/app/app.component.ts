@@ -65,7 +65,7 @@ export class AppComponent {
         } else if (response.role === 'teacher') {
           this.router.navigate(['/teacher/teacher-homepage']);
         } else if (response.role === 'admin') {
-          this.router.navigate(['/teacher/admin-homepage']);
+          this.router.navigate(['/admin/admin-homepage']);
         }
       },
       (error: any) => {
