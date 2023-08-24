@@ -44,6 +44,13 @@ export class AuthService {
     return this.http.post(`${this.api_url}login/`, data);
   }
 
+  isAuthenticated(): boolean {
+    const accessToken = localStorage.getItem('token');
+    const refreshToken = localStorage.getItem('refresh');
+  
+    return !!accessToken || !!refreshToken;
+  }
+
   addStudent(studentData: any): Observable<any> {
     return this.http.post(`${this.api_url}add-student/`, studentData, this.httpOptions).pipe(
       catchError(this.handleError)

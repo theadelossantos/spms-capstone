@@ -85,9 +85,18 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
 
             refresh = self.get_token(user)
 
+            try:
+                student = Student.objects.get(user = user)
+                user_id = student.user_id
+            except Student.DoesNotExist:
+                user_id = None
+
             data = {
                 "refresh": str(refresh),
                 "access": str(refresh.access_token),
+                "email:": email,
+                "role": role,
+                "user_id": user_id
             }
 
             return data
