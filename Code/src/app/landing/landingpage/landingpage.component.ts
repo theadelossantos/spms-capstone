@@ -62,8 +62,7 @@ export class LandingpageComponent {
   
     this.authService.login(email, password, role).subscribe(
       (response: any) => {
-        this.setCookies(response);
-        
+      
         this.msg = '';
         console.log('onSubmit function triggered');
         console.log('ID:', response.user_id);
@@ -104,13 +103,5 @@ export class LandingpageComponent {
     );
   }
   
-  private setCookies(response: any) {
-    const date = new Date();
-    date.setTime(date.getTime() + (7 * 24 * 60 * 60 * 1000)); // 7 days in milliseconds
-  
-    document.cookie = `refresh=${response.refresh};expires=${date.toUTCString()};path=/`;
-    document.cookie = `access=${response.access};expires=${date.toUTCString()};path=/`;
-    document.cookie = `role=${response.role};expires=${date.toUTCString()};path=/`;
-    document.cookie = `student_id=${response.user_id};expires=${date.toUTCString()};path=/`;
-  }
+
 }

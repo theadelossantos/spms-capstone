@@ -38,7 +38,19 @@ class AddStudentView(APIView):
     
 class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
-
+    def post(self, request, *args, **kwargs):
+        response = super().post(request, *args, **kwargs)
+        refresh_token = response.data['refresh']
+        access_token = response.data['access']
+        role = response.data['role']
+        user_id = response.data['user_id']
+        
+        response.set_cookie('refresh', refresh_token, httponly=True, secure=True)
+        response.set_cookie('access', access_token, httponly=True, secure=True)
+        response.set_cookie('role', role, httponly=True, secure=True)
+        response.set_cookie('user_id', user_id, httponly=True, secure=True)
+        
+        return response
 
 # Create your views here.
 

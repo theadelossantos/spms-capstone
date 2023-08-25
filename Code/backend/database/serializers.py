@@ -94,7 +94,7 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
             data = {
                 "refresh": str(refresh),
                 "access": str(refresh.access_token),
-                "email:": email,
+                "email": email,
                 "role": role,
                 "user_id": user_id
             }
