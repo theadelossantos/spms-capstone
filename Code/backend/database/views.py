@@ -50,6 +50,7 @@ class CustomTokenObtainPairView(TokenObtainPairView):
         response.set_cookie('role', role, httponly=True, secure=True)
         response.set_cookie('user_id', user_id, httponly=True, secure=True)
         
+        
         return response
 
 # Create your views here.

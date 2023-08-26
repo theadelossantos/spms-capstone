@@ -3,21 +3,27 @@ import { RouterModule, Routes } from '@angular/router';
 import { AdminHomepageComponent } from './admin/admin-homepage/admin-homepage.component';
 import { TeacherHomepageComponent } from './teacher/teacher-homepage/teacher-homepage.component';
 import { StudentHomepageComponent } from './student/student-homepage/student-homepage.component';
-import { AuthguardService } from './services/authguard.service';
 import { LandingpageComponent } from './landing/landingpage/landingpage.component';
+import { AuthGuard } from './guard/auth.guard';
 
 const routes: Routes = [
  {
-  path: 'admin/admin-homepage', component:AdminHomepageComponent, canActivate:[AuthguardService], data:{ roles: ['student']}
+  path: 'admin/admin-homepage', component:AdminHomepageComponent
  },
  {
   path: 'teacher/teacher-homepage', component:TeacherHomepageComponent
  },
  {
-  path: 'student', component:StudentHomepageComponent
+  path: 'student', component:StudentHomepageComponent, canActivate:[AuthGuard], data:{ roles: ['student']}
  },
  {
   path:'', component:LandingpageComponent
+ },
+ {
+  path: '', redirectTo: '', pathMatch: 'full'
+ },
+ {
+  path: '**', redirectTo: ''
  }
 ];
 

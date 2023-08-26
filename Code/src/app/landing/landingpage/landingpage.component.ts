@@ -65,8 +65,7 @@ export class LandingpageComponent {
       
         this.msg = '';
         console.log('onSubmit function triggered');
-        console.log('ID:', response.user_id);
-
+        console.log('ID:', response.user_id);        
         this.validationFormUser.reset();
         this.modalService.dismissAll();
 

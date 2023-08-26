@@ -3,7 +3,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse} from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-
+import { CookieService } from 'ngx-cookie-service';
+import { tap } from 'rxjs/operators';
 @Injectable({
   providedIn: 'root'
 })
@@ -15,7 +16,7 @@ export class AuthService {
     })
   };
   
-  constructor(private http: HttpClient, private router: Router) { }
+  constructor(private http: HttpClient, private router: Router, private cookieService: CookieService) { }
 
   private handleError(error: HttpErrorResponse): Observable<any> {
     if (error.error instanceof ErrorEvent) {
@@ -41,17 +42,48 @@ export class AuthService {
       role
     };
     console.log('Request Body:', data);
-    return this.http.post(`${this.api_url}login/`, data);
+    
+    return this.http.post(`${this.api_url}login/`, data).pipe(
+      tap(response => {
+        console.log('Login Response:', response);
+      })
+    );
   }
+  
 
   
 
   isAuthenticated(): boolean {
-    const accessToken = localStorage.getItem('token');
-    const refreshToken = localStorage.getItem('refresh');
-  
-    return !!accessToken || !!refreshToken;
+    const accessToken = this.cookieService.get('access');
+    const refreshToken = this.cookieService.get('refresh');
+    
+    console.log('Access Token:', accessToken);
+    console.log('Refresh Token:', refreshToken);
+
+    return !!accessToken && !!refreshToken;
   }
+
+  getUserRoles(): string[] {
+    const accessToken = this.getCookie('access');
+    if (accessToken) {
+      const tokenPayload = accessToken.split('.')[1];
+      const decodedPayload = JSON.parse(atob(tokenPayload));
+      console.log('Decoded Token Payload:', decodedPayload);
+      return decodedPayload.roles || [];
+    }
+    return [];
+  }
+
+  private getCookie(name: string): string | null {
+    const value = "; " + document.cookie;
+    const parts = value.split("; " + name + "=");
+    if (parts.length == 2) {
+      return parts.pop()?.split(";").shift() || null;
+    }
+    return null;
+  }
+
+
 
   addStudent(studentData: any): Observable<any> {
     return this.http.post(`${this.api_url}add-student/`, studentData, this.httpOptions).pipe(
