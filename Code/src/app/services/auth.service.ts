@@ -9,7 +9,7 @@ import { tap } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class AuthService {
-  private api_url: string = 'http://localhost:8000/api/auth/';
+  private api_url: string = 'https://localhost:8000/api/auth/';
   private httpOptions = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json'
@@ -46,33 +46,53 @@ export class AuthService {
     return this.http.post(`${this.api_url}login/`, data).pipe(
       tap(response => {
         console.log('Login Response:', response);
+        
       })
     );
   }
-  
 
-  
 
   isAuthenticated(): boolean {
     const accessToken = this.cookieService.get('access');
-    const refreshToken = this.cookieService.get('refresh');
-    
-    console.log('Access Token:', accessToken);
-    console.log('Refresh Token:', refreshToken);
+    console.log('Access Token (from cookie service):', accessToken);
+    if (accessToken) {
+      try {
+        const tokenPayload = accessToken.split('.')[1];
+        const decodedPayload = JSON.parse(atob(tokenPayload));
 
-    return !!accessToken && !!refreshToken;
+        return Date.now() < decodedPayload.exp * 1000;
+      } catch (error) {
+        console.error('Error decoding token payload', error);
+        return false;
+      }
+    }
+    return false;
   }
+  
 
   getUserRoles(): string[] {
     const accessToken = this.getCookie('access');
+    console.log('Access Token (from cookie service):', accessToken);
     if (accessToken) {
-      const tokenPayload = accessToken.split('.')[1];
-      const decodedPayload = JSON.parse(atob(tokenPayload));
-      console.log('Decoded Token Payload:', decodedPayload);
-      return decodedPayload.roles || [];
+      try {
+        const tokenPayload = accessToken.split('.')[1];
+        const decodedPayload = JSON.parse(atob(tokenPayload));
+
+        if (decodedPayload && decodedPayload.roles) {
+          console.log('Decoded Token Payload:', decodedPayload);
+          return decodedPayload.roles;
+        } else {
+          console.error('Token payload does not contain roles:', decodedPayload);
+          return [];
+        }
+      } catch (error) {
+        console.error('Error decoding token payload', error);
+        return [];
+      }
     }
     return [];
   }
+  
 
   private getCookie(name: string): string | null {
     const value = "; " + document.cookie;

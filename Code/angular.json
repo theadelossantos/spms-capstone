@@ -63,7 +63,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
             "browserTarget": "spms-capstone:build",
-            "proxyConfig": "src/proxy.conf.json"
+            "proxyConfig": "src/proxy.conf.json",
+            "ssl":true,
+            "sslKey": "server.key",
+            "sslCert": "server.crt"
           },
           "configurations": {
             "production": {

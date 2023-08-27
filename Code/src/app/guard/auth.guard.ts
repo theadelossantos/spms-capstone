@@ -1,3 +1,4 @@
+// auth.guard.ts
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router } from '@angular/router';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -15,24 +16,22 @@ export class AuthGuard implements CanActivate {
     state: RouterStateSnapshot
   ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
     console.log('AuthGuard: Checking authentication status...');
+    
+    console.log('Is Authenticated:', this.authService.isAuthenticated());
+
+    const requiredRoles = next.data['roles'] || [];
+    const userRoles = this.authService.getUserRoles();
+
+    console.log('AuthGuard: Allowed Roles:', requiredRoles);
+    console.log('AuthGuard: User Role:', userRoles);
+
+    const hasRequiredRole = requiredRoles.some(role => userRoles.includes(role));
   
-    if (this.authService.isAuthenticated()) {
-      const requiredRoles = next.data['roles'] || [];
-      const userRoles = this.authService.getUserRoles();
-  
-      console.log('AuthGuard: Allowed Roles:', requiredRoles);
-      console.log('AuthGuard: User Role:', userRoles);
-  
-      const hasRequiredRole = requiredRoles.some(role => userRoles.includes(role));
-      if (hasRequiredRole) {
-        console.log('AuthGuard: Access granted');
-        return true;
-      } else {
-        console.log('AuthGuard: Access denied - Redirecting to login');
-        return this.router.navigate(['/']);
-      }
+    if (this.authService.isAuthenticated() && hasRequiredRole) {
+      console.log('AuthGuard: Access granted');
+      return true;
     } else {
-      console.log('AuthGuard: User not logged in - Redirecting to login');
+      console.log('AuthGuard: Access denied - Redirecting to login');
       this.router.navigate(['/']);
       return false;
     }

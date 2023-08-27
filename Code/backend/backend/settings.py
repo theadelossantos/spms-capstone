@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'corsheaders',
     'database',
+    'sslserver'
 ]
 
 MIDDLEWARE = [
@@ -145,7 +146,7 @@ AUTHENTICATION_BACKENDS = (
 AUTH_USER_MODEL = 'database.CustomUser'
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:4200"
+    "https://localhost:4200"
 ]
 
 REST_FRAMEWORK = {
@@ -161,3 +162,10 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_REFRESH_LIFETIME_GRACE_PERIOD': timedelta(days=2),
     'SLIDING_TOKEN_REFRESH_LIFETIME_CREATE': timedelta(days=3),
 }
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True

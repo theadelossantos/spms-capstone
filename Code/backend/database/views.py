@@ -9,6 +9,7 @@ from django.contrib.auth import authenticate
 from rest_framework import status
 from rest_framework import generics
 from rest_framework_simplejwt.views import TokenObtainPairView
+from django.http import HttpResponse
 
 
 
@@ -34,24 +35,36 @@ class AddStudentView(APIView):
                 "student_errors": student_serializer.errors
             }, status=status.HTTP_400_BAD_REQUEST)
 
-       
-    
+
 class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
+
+    def set_cookie(self, response, key, value, days_expire=7, secure=True, httponly=True, samesite='Lax'):
+        if secure:
+            response.set_cookie(key, value, max_age=days_expire * 24 * 60 * 60, secure=True, httponly=httponly, samesite=samesite, path='/', domain='localhost')
+        else:
+            response.set_cookie(key, value, max_age=days_expire * 24 * 60 * 60, httponly=httponly, samesite=samesite, path='/', domain='localhost')
+
+        print(f'Cookie set: {key}={value}')
+
     def post(self, request, *args, **kwargs):
         response = super().post(request, *args, **kwargs)
-        refresh_token = response.data['refresh']
-        access_token = response.data['access']
-        role = response.data['role']
-        user_id = response.data['user_id']
-        
-        response.set_cookie('refresh', refresh_token, httponly=True, secure=True)
-        response.set_cookie('access', access_token, httponly=True, secure=True)
-        response.set_cookie('role', role, httponly=True, secure=True)
-        response.set_cookie('user_id', user_id, httponly=True, secure=True)
-        
-        
+
+        print('CustomTokenObtainPairView: Inside post method')
+
+        refresh_token = response.data.get('refresh')
+        access_token = response.data.get('access')
+
+        samesite = 'Lax'
+        secure = True
+
+        self.set_cookie(response, 'refresh', refresh_token, secure=secure, samesite=samesite)
+        self.set_cookie(response, 'access', access_token, secure=secure, samesite=samesite)
+
+        print('CustomTokenObtainPairView: Cookies set successfully')
+
         return response
+
 
 # Create your views here.
 

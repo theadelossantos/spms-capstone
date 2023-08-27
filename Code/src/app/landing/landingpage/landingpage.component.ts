@@ -3,6 +3,8 @@ import { Router, NavigationEnd } from '@angular/router';
 import { Form, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from 'src/app/services/auth.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { CookieService } from 'ngx-cookie-service';
+
 
 @Component({
   selector: 'app-landingpage',
@@ -14,7 +16,12 @@ export class LandingpageComponent {
   validationUserMessage:any;
   validationFormUser !:FormGroup;
 
-  constructor(private router: Router, private authService: AuthService, private formBuilder: FormBuilder, private modalService:NgbModal, private renderer: Renderer2){
+  constructor(private router: Router, 
+    private authService: AuthService, 
+    private formBuilder: FormBuilder, 
+    private modalService:NgbModal, 
+    private renderer: Renderer2, 
+    private cookieService: CookieService){
     router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         console.log('NavigationEnd event triggered');
@@ -56,19 +63,24 @@ export class LandingpageComponent {
     });
   }
 
+  
 
   onSubmit() {
     const { email, password, role } = this.validationFormUser.value;
   
     this.authService.login(email, password, role).subscribe(
       (response: any) => {
-      
         this.msg = '';
         console.log('onSubmit function triggered');
-        console.log('ID:', response.user_id);        
+        console.log('ID:', response.user_id);
         this.validationFormUser.reset();
         this.modalService.dismissAll();
-
+  
+        const accessToken = this.cookieService.get('access');
+        const refreshToken = this.cookieService.get('refresh');
+        console.log('Access Token:', accessToken);
+        console.log('Refresh Token:', refreshToken);
+  
         if (response.role === 'student') {
           console.log('Navigating to student homepage...');
           this.router.navigate(['/student']);
@@ -76,7 +88,7 @@ export class LandingpageComponent {
           this.router.navigate(['/teacher/teacher-homepage']);
         } else if (response.role === 'admin') {
           this.router.navigate(['/admin/admin-homepage']);
-        }else{
+        } else {
           console.log('Role not recognized:', response.role);
         }
       },
@@ -96,11 +108,12 @@ export class LandingpageComponent {
             this.msg = 'An error occurred. Please try again later.';
           }
         } else {
-          this.msg = 'An error occurred. Please try again laterr.';
+          this.msg = 'An error occurred. Please try again later.';
         }
       }
     );
   }
+  
   
 
 }
