@@ -75,11 +75,7 @@ export class LandingpageComponent {
         console.log('ID:', response.user_id);
         this.validationFormUser.reset();
         this.modalService.dismissAll();
-  
-        const accessToken = this.cookieService.get('access');
-        const refreshToken = this.cookieService.get('refresh');
-        console.log('Access Token:', accessToken);
-        console.log('Refresh Token:', refreshToken);
+
   
         if (response.role === 'student') {
           console.log('Navigating to student homepage...');

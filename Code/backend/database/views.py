@@ -10,7 +10,8 @@ from rest_framework import status
 from rest_framework import generics
 from rest_framework_simplejwt.views import TokenObtainPairView
 from django.http import HttpResponse
-
+import json
+import base64
 
 
 class AddStudentView(APIView):
@@ -47,6 +48,10 @@ class CustomTokenObtainPairView(TokenObtainPairView):
 
         print(f'Cookie set: {key}={value}')
 
+        token_payload = value.split('.')[1]
+        decoded_payload = json.loads(base64.b64decode(token_payload + '===').decode('utf-8'))
+        roles = decoded_payload.get('roles', [])
+        print(f'User Roles: {roles}')
     def post(self, request, *args, **kwargs):
         response = super().post(request, *args, **kwargs)
 

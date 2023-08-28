@@ -5,6 +5,9 @@ import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { CookieService } from 'ngx-cookie-service';
 import { tap } from 'rxjs/operators';
+import jwt_decode from 'jwt-decode';
+
+
 @Injectable({
   providedIn: 'root'
 })
@@ -13,7 +16,8 @@ export class AuthService {
   private httpOptions = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json'
-    })
+    }),
+    withCredentials: true
   };
   
   constructor(private http: HttpClient, private router: Router, private cookieService: CookieService) { }
@@ -71,27 +75,34 @@ export class AuthService {
   
 
   getUserRoles(): string[] {
-    const accessToken = this.getCookie('access');
+    const accessToken = this.cookieService.get('access');
     console.log('Access Token (from cookie service):', accessToken);
-    if (accessToken) {
-      try {
-        const tokenPayload = accessToken.split('.')[1];
-        const decodedPayload = JSON.parse(atob(tokenPayload));
 
-        if (decodedPayload && decodedPayload.roles) {
-          console.log('Decoded Token Payload:', decodedPayload);
-          return decodedPayload.roles;
-        } else {
-          console.error('Token payload does not contain roles:', decodedPayload);
-          return [];
+    if (accessToken) {
+        try {
+            const tokenPayload = accessToken.split('.')[1];
+            console.log('Token Payload:', tokenPayload);  
+
+            const decodedPayload = JSON.parse(atob(tokenPayload));
+            console.log('Decoded Payload:', decodedPayload);  
+            
+            if (decodedPayload && decodedPayload.roles) {
+                console.log('Decoded Token Payload:', decodedPayload);
+                return decodedPayload.roles;
+            } else {
+                console.error('Token payload does not contain roles:', decodedPayload);
+                return [];
+            }
+        } catch (error) {
+            console.error('Error decoding token payload', error);
+            return [];
         }
-      } catch (error) {
-        console.error('Error decoding token payload', error);
-        return [];
-      }
     }
     return [];
-  }
+}
+
+  
+  
   
 
   private getCookie(name: string): string | null {

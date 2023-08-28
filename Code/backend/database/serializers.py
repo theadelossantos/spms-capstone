@@ -91,6 +91,15 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
             except Student.DoesNotExist:
                 user_id = None
 
+            payload = {
+                "user_id": user_id,
+                "email": email,
+                "role": role,
+                "roles": [role], 
+            }
+
+            refresh.payload = payload
+
             data = {
                 "refresh": str(refresh),
                 "access": str(refresh.access_token),
@@ -98,7 +107,7 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
                 "role": role,
                 "user_id": user_id
             }
-
+            print("Token Payload:", payload)
             return data
 
         raise serializers.ValidationError(_("Must include 'email' and 'password'"))
