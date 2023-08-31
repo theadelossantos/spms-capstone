@@ -40,7 +40,7 @@ class AddStudentView(APIView):
 class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
 
-    def set_cookie(self, response, key, value, days_expire=7, secure=True, httponly=True, samesite='Lax'):
+    def set_cookie(self, response, key, value, days_expire=7, secure=True, httponly=False, samesite='Lax'):
         if secure:
             response.set_cookie(key, value, max_age=days_expire * 24 * 60 * 60, secure=True, httponly=httponly, samesite=samesite, path='/', domain='localhost')
         else:

@@ -12,6 +12,8 @@ import { AdminHomepageComponent } from './admin/admin-homepage/admin-homepage.co
 import { StudentHomepageComponent } from './student/student-homepage/student-homepage.component';
 import { LandingpageComponent } from './landing/landingpage/landingpage.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { CookieService } from 'ngx-cookie-service';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -31,7 +33,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     BrowserAnimationsModule,
     NgbModule,
   ],
-  providers: [],
+  providers: [CookieService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
