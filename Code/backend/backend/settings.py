@@ -145,7 +145,7 @@ AUTHENTICATION_BACKENDS = (
 AUTH_USER_MODEL = 'database.CustomUser'
 
 CORS_ALLOWED_ORIGINS = [
-    "https://localhost:4200"
+    "http://localhost:4200"
 ]
 
 REST_FRAMEWORK = {
@@ -168,3 +168,23 @@ CSRF_COOKIE_SECURE = True
 
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_HEADERS = (
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+)
+CORS_ALLOW_METHODS = (
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+)
+CORS_ALLOW_ORIGIN_REGEX = r"^https://localhost:\d+$"

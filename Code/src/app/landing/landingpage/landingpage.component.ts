@@ -79,7 +79,12 @@ export class LandingpageComponent {
   
         if (response.role === 'student') {
           console.log('Navigating to student homepage...');
-          this.router.navigate(['/student']);
+          this.router.navigate(['/student']).then(() => {
+            const accessToken = this.cookieService.get('access');
+            const refreshToken = this.cookieService.get('refresh');
+            console.log('Access Token:', accessToken);
+            console.log('Refresh Token:', refreshToken);
+          });
         } else if (response.role === 'teacher') {
           this.router.navigate(['/teacher/teacher-homepage']);
         } else if (response.role === 'admin') {

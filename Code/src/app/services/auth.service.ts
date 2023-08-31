@@ -12,7 +12,7 @@ import jwt_decode from 'jwt-decode';
   providedIn: 'root'
 })
 export class AuthService {
-  private api_url: string = 'https://localhost:8000/api/auth/';
+  private api_url: string = 'http://localhost:8000/api/auth/';
   private httpOptions = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json'
@@ -47,7 +47,7 @@ export class AuthService {
     };
     console.log('Request Body:', data);
     
-    return this.http.post(`${this.api_url}login/`, data).pipe(
+    return this.http.post(`${this.api_url}login/`, data, this.httpOptions).pipe(
       tap(response => {
         console.log('Login Response:', response);
         
@@ -57,14 +57,25 @@ export class AuthService {
 
 
   isAuthenticated(): boolean {
-    const accessToken = this.cookieService.get('access');
+    const accessToken = this.cookieService.get('access'); 
     console.log('Access Token (from cookie service):', accessToken);
+
     if (accessToken) {
       try {
         const tokenPayload = accessToken.split('.')[1];
-        const decodedPayload = JSON.parse(atob(tokenPayload));
+        console.log('Token Payload:', tokenPayload);
 
-        return Date.now() < decodedPayload.exp * 1000;
+        const decodedPayload = JSON.parse(atob(tokenPayload));
+        console.log('Decoded Payload:', decodedPayload);
+
+        const expirationTimestamp = decodedPayload.exp * 1000;
+        console.log('Token Expiration Timestamp:', expirationTimestamp);
+        console.log('Current Timestamp:', Date.now());
+
+        const isExpired = Date.now() >= expirationTimestamp;
+        console.log('Is Token Expired:', isExpired);
+
+        return !isExpired;
       } catch (error) {
         console.error('Error decoding token payload', error);
         return false;
@@ -72,6 +83,7 @@ export class AuthService {
     }
     return false;
   }
+  
   
 
   getUserRoles(): string[] {

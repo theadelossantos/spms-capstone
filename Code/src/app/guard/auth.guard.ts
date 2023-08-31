@@ -17,16 +17,22 @@ export class AuthGuard implements CanActivate {
   ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
     console.log('AuthGuard: Checking authentication status...');
     console.log('Is Authenticated:', this.authService.isAuthenticated());
-  
+
+    if (!this.authService.isAuthenticated()) {
+      console.log('AuthGuard: Access denied - Redirecting to login');
+      this.router.navigate(['/']);
+      return false;
+    }
+
     const requiredRoles = next.data['roles'] || [];
     const userRoles = this.authService.getUserRoles();
-  
+
     console.log('AuthGuard: Allowed Roles:', requiredRoles);
     console.log('AuthGuard: User Roles:', userRoles);
-  
+
     const hasRequiredRole = requiredRoles.some(role => userRoles.includes(role));
-  
-    if (this.authService.isAuthenticated() && hasRequiredRole) {
+
+    if (hasRequiredRole) {
       console.log('AuthGuard: Access granted');
       return true;
     } else {
