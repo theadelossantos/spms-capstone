@@ -37,7 +37,28 @@ class AddStudentView(APIView):
                 "user_errors": user_serializer.errors,
                 "student_errors": student_serializer.errors
             }, status=status.HTTP_400_BAD_REQUEST)
-        
+
+class AddTeacherView(APIView):
+    def post(self, request):
+        user_serializer = UserSerializer(data=request.data.get('user'))
+        teacher_serializer = TeacherSerializer(data=request.data)
+
+        if user_serializer.is_valid() and teacher_serializer.is_valid():
+            user = user_serializer.save()
+            teacher_data = {**teacher_serializer.validated_data, 'user': user}
+            teacher = Teacher.objects.create(**teacher_data)
+
+            user.role = 'teacher'
+            user.save()
+
+            return Response(user_serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            teacher_serializer.is_valid()
+
+            return Response({
+                "user_errors": user_serializer.errors,
+                "teacher_errors": teacher_serializer.errors
+            }, status=status.HTTP_400_BAD_REQUEST)
 
 class AdminRegistrationView(APIView):
     def post(self, request):
@@ -63,9 +84,6 @@ class AdminRegistrationView(APIView):
                 "user_errors": user_errors,
                 "admin_errors": admin_errors
             }, status=status.HTTP_400_BAD_REQUEST)
-
-
-
 
 
 class AdminLoginView(APIView):

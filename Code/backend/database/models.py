@@ -84,4 +84,5 @@ class Section(models.Model):
 class Subject(models.Model):
     subject_id = models.AutoField(primary_key=True)
     dept_id = models.ForeignKey('Department', on_delete=models.CASCADE)
+    gradelvl_id = models.ForeignKey('GradeLevel', on_delete=models.CASCADE)
     subject_name = models.CharField(max_length=50)

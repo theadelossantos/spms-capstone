@@ -23,7 +23,6 @@ class UserSerializer(serializers.ModelSerializer):
         user = User.objects.create_user(**validated_data)
         user.set_password(password)
 
-        # Conditionally set is_staff and is_superuser based on the role
         if user.role != user.ADMIN:
             user.is_staff = False
             user.is_superuser = False
@@ -48,7 +47,7 @@ class StudentSerializer(serializers.ModelSerializer):
 
 
 class TeacherSerializer(serializers.ModelSerializer):
-    user = UserSerializer()
+    user = UserSerializer(write_only=True)
 
     class Meta:
         model = Teacher
@@ -82,10 +81,6 @@ class AdminSerializer(serializers.ModelSerializer):
 
 
 
-
-
-
-
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     role = serializers.CharField(write_only=True)
     def validate(self, attrs):
@@ -105,11 +100,20 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
 
             refresh = self.get_token(user)
 
-            try:
-                student = Student.objects.get(user = user)
-                user_id = student.user_id
-            except Student.DoesNotExist:
-                user_id = None
+            if role == "student":
+                try:
+                    student = Student.objects.get(user=user)
+                    user_id = student.user_id
+                except Student.DoesNotExist:
+                    user_id = None
+            elif role == "teacher":
+                try:
+                    teacher = Teacher.objects.get(user=user)
+                    user_id = teacher.user_id
+                except Teacher.DoesNotExist:
+                    user_id = None
+            else:
+                raise serializers.ValidationError(_("Invalid Role"))
 
             payload = {
                 "user_id": user_id,
@@ -145,7 +149,6 @@ class AdminTokenObtainPairSerializer(TokenObtainPairSerializer):
             if user is None:
                 raise serializers.ValidationError(_("Invalid Credentials"))
 
-            # Set the "role" attribute to "admin"
             role = "admin"
 
             refresh = self.get_token(user)
