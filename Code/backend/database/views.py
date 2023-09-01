@@ -4,13 +4,14 @@ from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
 from rest_framework.views import APIView
 from .models import Student, Teacher, Admin 
-from .serializers import UserSerializer, StudentSerializer, TeacherSerializer, AdminSerializer, CustomTokenObtainPairSerializer
+from .serializers import UserSerializer, StudentSerializer, TeacherSerializer, AdminSerializer, CustomTokenObtainPairSerializer, AdminLoginSerializer, AdminTokenObtainPairSerializer
 from django.contrib.auth import authenticate
 from rest_framework import status, generics, permissions
 from rest_framework_simplejwt.views import TokenObtainPairView
 from django.http import HttpResponse
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.tokens import RefreshToken
 import json
 import base64
 
@@ -36,8 +37,79 @@ class AddStudentView(APIView):
                 "user_errors": user_serializer.errors,
                 "student_errors": student_serializer.errors
             }, status=status.HTTP_400_BAD_REQUEST)
+        
+
+class AdminRegistrationView(APIView):
+    def post(self, request):
+        user_serializer = UserSerializer(data=request.data.get('user'))
+        admin_serializer = AdminSerializer(data=request.data)
+
+        if user_serializer.is_valid() and admin_serializer.is_valid():
+            user = user_serializer.save()
+            user.role = 'admin'
+            user.is_staff = True
+            user.is_superuser = True
+            user.save()
+
+            admin_data = {**admin_serializer.validated_data, 'user': user}
+            admin = Admin.objects.create(**admin_data)
+
+            return Response(user_serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            user_errors = user_serializer.errors if not user_serializer.is_valid() else {}
+            admin_errors = admin_serializer.errors if not admin_serializer.is_valid() else {}
+
+            return Response({
+                "user_errors": user_errors,
+                "admin_errors": admin_errors
+            }, status=status.HTTP_400_BAD_REQUEST)
 
 
+
+
+
+class AdminLoginView(APIView):
+    def post(self,request):
+        serializer = AdminLoginSerializer(data=request.data)
+        if serializer.is_valid():
+            email = serializer.validated_data['email']
+            password = serializer.validated_data['password']
+
+            user = authenticate(request, email=email, password = password)
+
+            if user is not None:
+                refresh = RefreshToken.for_user(user)
+                access_token = str(refresh.access_token)
+
+                return Response({'access_token': access_token}, status=status.HTTP_200_OK)
+            else:
+                return Response({'message':'Invalid Credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+            
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class AdminTokenObtainPairView(TokenObtainPairView):
+    serializer_class = AdminTokenObtainPairSerializer
+
+    def set_cookie(self, response, key, value, days_expire=7, secure=True, httponly=False, samesite='Lax'):
+        if secure:
+            response.set_cookie(key, value, max_age=days_expire * 24 * 60 * 60, secure=True, httponly=httponly, samesite=samesite, path='/', domain='localhost')
+        else:
+            response.set_cookie(key, value, max_age=days_expire * 24 * 60 * 60, httponly=httponly, samesite=samesite, path='/', domain='localhost')
+
+    def post(self, request, *args, **kwargs):
+        response = super().post(request, *args, **kwargs)
+
+        refresh_token = response.data.get('refresh')
+        access_token = response.data.get('access')
+
+        samesite = 'Lax'
+        secure = True
+
+        self.set_cookie(response, 'refresh', refresh_token, secure=secure, samesite=samesite)
+        self.set_cookie(response, 'access', access_token, secure=secure, samesite=samesite)
+
+        return response
+        
 class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
 
@@ -96,66 +168,3 @@ class UserDataView(APIView):
         return Response(user_data, status=status.HTTP_200_OK)
 
 
-# Create your views here.
-
-# class CustomAuthToken(ObtainAuthToken):
-#     def post(self, request, *args, **kwargs):
-#         serializer = self.serializer_class(data = request.data, 
-#                                            context={'request': request})
-#         serializer.is_valid(raise_exception=True)
-#         user = serializer.validated_data['user']
-#         token, create = Token.objects.get_or_create(user=user)
-
-#         role = user.role
-
-#         return Response({
-#             'token': token.key,
-#             'user_id': user.pk,
-#             'role': role,
-#         })
-
-# class CustomLoginView(APIView):
-#     def post(self, request):
-#         email = request.data.get('email')
-#         password = request.data.get('password')
-#         role = request.data.get('role')
-
-#         user = authenticate(request, username=email, password=password)
-
-#         if user is not None:
-#             if role == 'student' and user.is_student:
-#                 token, created = Token.objects.get_or_create(user=user)
-#                 return Response({'token': token.key})
-#             elif role == 'teacher' and user.is_teacher:
-#                 token, created = Token.objects.get_or_create(user=user)
-#                 return Response({'token': token.key})
-#             elif role == 'admin' and user.is_superuser:
-#                 token, created = Token.objects.get_or_create(user=user)
-#                 return Response({'token': token.key})
-#             else:
-#                 return Response({'error': 'Invalid role for this user'}, status=status.HTTP_401_UNAUTHORIZED)
-#         else:
-#             return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
-        
-        
-# class StudentHomepage(APIView):
-#     def get(self, request):
-#         if request.user.role == 'student':
-#             student = Student.objects.get(user=request.user)
-#             serializer = StudentSerializer(student)
-#             return Response(serializer.data)
-
-
-# class TeacherHomepage(APIView):
-#     def get(self, request):
-#         if request.user.role == 'teacher':
-#             teacher = Teacher.objects.get(user=request.user)
-#             serializer = TeacherSerializer(teacher)
-#             return Response(serializer.data)
-
-# class AdminHomepage(APIView):
-#     def get(self, request):
-#         if request.user.role == 'admin':
-#             admin = Admin.objects.get(user=request.user)
-#             serializer = AdminSerializer(admin)
-#             return Response(serializer.data)

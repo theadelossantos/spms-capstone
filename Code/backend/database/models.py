@@ -54,7 +54,7 @@ class Teacher(models.Model):
 
 
 class Admin(models.Model):
-    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, default=1)
     admin_id = models.AutoField(primary_key=True)
     fname = models.CharField(max_length=50, default='')
     mname = models.CharField(max_length=50, default='')
@@ -62,6 +62,7 @@ class Admin(models.Model):
     phone = models.CharField(max_length=25, default='')
     gender = models.CharField(max_length=10, default='')
     address = models.CharField(max_length=255, default='')
+
 
 
 

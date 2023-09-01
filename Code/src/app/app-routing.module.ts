@@ -10,7 +10,7 @@ import { adminGuard } from './guard/admin.guard';
 
 const routes: Routes = [
  {
-  path: 'admin', component:LoginComponent, canActivate:[adminGuard]
+  path: 'admin', component:LoginComponent
  },
  {
   path: 'teacher/teacher-homepage', component:TeacherHomepageComponent
@@ -22,11 +22,15 @@ const routes: Routes = [
   path:'', component:LandingpageComponent
  },
  {
+  path: 'admin-home', component:AdminHomepageComponent, canActivate:[AuthGuard], data:{ roles:['admin']}
+ },
+ {
   path: '', redirectTo: '', pathMatch: 'full'
  },
  {
   path: '**', redirectTo: ''
- }
+ },
+ 
 ];
 
 @NgModule({

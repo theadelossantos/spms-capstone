@@ -50,6 +50,15 @@ export class AuthService {
     return this.http.post(`${this.api_url}login/`, data, this.httpOptions)
   }
 
+  adminlogin(email:string, password:string):Observable<any>{
+    const data = {
+      email, password
+    };
+    console.log('Request Body:', data)
+
+    return this.http.post(`${this.api_url}admin-login/`, data, this.httpOptions)
+  }
+
   getUserData(): Observable<any> {
     const accessToken = this.cookieService.get('access');
     console.log('Access Token:', accessToken);

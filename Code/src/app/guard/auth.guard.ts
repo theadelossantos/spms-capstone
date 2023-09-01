@@ -36,8 +36,12 @@ export class AuthGuard implements CanActivate {
       console.log('AuthGuard: Access granted');
       return true;
     } else {
+      if (state.url === '/admin') {
+        console.log('AuthGuard: Access granted for /admin route');
+        return true;
+      }
       console.log('AuthGuard: Access denied - Redirecting to login');
-      this.router.navigate(['/']);
+      this.router.navigate(['/admin']);
       return false;
     }
   }
