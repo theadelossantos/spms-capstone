@@ -6,10 +6,11 @@ from rest_framework.views import APIView
 from .models import Student, Teacher, Admin 
 from .serializers import UserSerializer, StudentSerializer, TeacherSerializer, AdminSerializer, CustomTokenObtainPairSerializer
 from django.contrib.auth import authenticate
-from rest_framework import status
-from rest_framework import generics
+from rest_framework import status, generics, permissions
 from rest_framework_simplejwt.views import TokenObtainPairView
 from django.http import HttpResponse
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
 import json
 import base64
 
@@ -69,6 +70,30 @@ class CustomTokenObtainPairView(TokenObtainPairView):
         print('CustomTokenObtainPairView: Cookies set successfully')
 
         return response
+
+class RoleBasedPermissions(permissions.BasePermission):
+    def has_permission(self, request, view):
+        role_required = getattr(view, 'role_required', None)
+        if role_required:
+            user = request.user
+            return user.role == role_required
+        return True
+
+class UserDataView(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated, RoleBasedPermissions]
+    role_required = 'student'
+
+    def get(self, request):
+        print('Token Payload:', request.auth.payload)
+        user = request.user
+        user_data = {
+            "id": user.id,
+            "email": user.email,
+            "role": user.role
+        }
+
+        return Response(user_data, status=status.HTTP_200_OK)
 
 
 # Create your views here.

@@ -55,29 +55,39 @@ export class AuthService {
     );
   }
 
+  getUserData(): Observable<any> {
+    const accessToken = this.cookieService.get('access');
+    console.log('Access Token:', accessToken);
+    
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${accessToken}`
+    });
+  
+    return this.http.get(`${this.api_url}user-data/`, { headers })
+      .pipe(
+        catchError(error => {
+          console.log('Error fetching user data:', error);
+          throw error;
+        })
+      );
+  }
 
   isAuthenticated(): boolean {
     const accessToken = this.cookieService.get('access'); 
-    console.log('Access Token (from cookie service):', accessToken);
 
     if (accessToken) {
       try {
         const tokenPayload = accessToken.split('.')[1];
-        console.log('Token Payload:', tokenPayload);
 
         const decodedPayload = JSON.parse(atob(tokenPayload));
-        console.log('Decoded Payload:', decodedPayload);
 
         const expirationTimestamp = decodedPayload.exp * 1000;
-        console.log('Token Expiration Timestamp:', expirationTimestamp);
-        console.log('Current Timestamp:', Date.now());
+
 
         const isExpired = Date.now() >= expirationTimestamp;
-        console.log('Is Token Expired:', isExpired);
 
         return !isExpired;
       } catch (error) {
-        console.error('Error decoding token payload', error);
         return false;
       }
     }
@@ -88,18 +98,14 @@ export class AuthService {
 
   getUserRoles(): string[] {
     const accessToken = this.cookieService.get('access');
-    console.log('Access Token (from cookie service):', accessToken);
 
     if (accessToken) {
         try {
             const tokenPayload = accessToken.split('.')[1];
-            console.log('Token Payload:', tokenPayload);  
 
             const decodedPayload = JSON.parse(atob(tokenPayload));
-            console.log('Decoded Payload:', decodedPayload);  
             
             if (decodedPayload && decodedPayload.roles) {
-                console.log('Decoded Token Payload:', decodedPayload);
                 return decodedPayload.roles;
             } else {
                 console.error('Token payload does not contain roles:', decodedPayload);
@@ -114,17 +120,6 @@ export class AuthService {
 }
 
   
-  
-  
-
-  private getCookie(name: string): string | null {
-    const value = "; " + document.cookie;
-    const parts = value.split("; " + name + "=");
-    if (parts.length == 2) {
-      return parts.pop()?.split(";").shift() || null;
-    }
-    return null;
-  }
 
 
 

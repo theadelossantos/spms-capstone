@@ -142,6 +142,7 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
 )
 
+
 AUTH_USER_MODEL = 'database.CustomUser'
 
 CORS_ALLOWED_ORIGINS = [
@@ -150,6 +151,7 @@ CORS_ALLOWED_ORIGINS = [
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
 }
