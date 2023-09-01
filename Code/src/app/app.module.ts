@@ -13,6 +13,7 @@ import { StudentHomepageComponent } from './student/student-homepage/student-hom
 import { LandingpageComponent } from './landing/landingpage/landingpage.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CookieService } from 'ngx-cookie-service';
+import { LoginComponent } from './admin/login/login.component';
 
 @NgModule({
   declarations: [
@@ -23,6 +24,7 @@ import { CookieService } from 'ngx-cookie-service';
     TeacherHomepageComponent,
     AdminHomepageComponent,
     LandingpageComponent,
+    LoginComponent,
   ],
   imports: [
     BrowserModule,

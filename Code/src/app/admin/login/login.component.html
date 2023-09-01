@@ -1,0 +1,46 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">
+        <img src="assets/images/logo.png" alt="" width="30" height="30">
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse nav-text justify-content-between align-items-center" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link active nav-text" aria-current="page">THE LIPA GRACE ACADEMY</a>
+          </li>
+        </ul>
+        <button type="button" class="btn btn-custom" (click)="navigate()">Main Page <i class="bi bi-arrow-right icon-custom"></i></button>
+      </div>
+    </div>
+</nav>
+<div class="home-text-section container">
+    <form class="loginform" [formGroup] = "validationFormUser" (ngSubmit)="login()">
+        <h1 class="logintxt">LOGIN</h1>
+        <div class="form-group field">
+            <input type="email" class="form-control input" formControlName="email" aria-describedby="emailHelp" placeholder="Email">
+            <div>
+                <ng-container *ngFor="let validation of validationUserMessage.email">
+                    <div class="error_message"
+                    *ngIf="validationFormUser.get('email')?.hasError(validation.type) && (validationFormUser.get('email')?.dirty || validationFormUser.get('email')?.touched)">
+                    {{ validation.message }}
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+        <div class="form-group field">
+            <input type="password" class="form-control input" formControlName="password" placeholder="Password">
+            <div>
+                <ng-container *ngFor="let validation of validationUserMessage.password">
+                  <div class="error_message"
+                    *ngIf="validationFormUser.get('password')?.hasError(validation.type) && (validationFormUser.get('password')?.dirty || validationFormUser.get('password')?.touched)">
+                    {{ validation.message }}
+                  </div>
+                </ng-container>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary submit-btn">Submit</button>
+    </form>
+</div>

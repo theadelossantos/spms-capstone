@@ -47,12 +47,7 @@ export class AuthService {
     };
     console.log('Request Body:', data);
     
-    return this.http.post(`${this.api_url}login/`, data, this.httpOptions).pipe(
-      tap(response => {
-        console.log('Login Response:', response);
-        
-      })
-    );
+    return this.http.post(`${this.api_url}login/`, data, this.httpOptions)
   }
 
   getUserData(): Observable<any> {

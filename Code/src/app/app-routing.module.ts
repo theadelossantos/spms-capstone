@@ -4,11 +4,13 @@ import { AdminHomepageComponent } from './admin/admin-homepage/admin-homepage.co
 import { TeacherHomepageComponent } from './teacher/teacher-homepage/teacher-homepage.component';
 import { StudentHomepageComponent } from './student/student-homepage/student-homepage.component';
 import { LandingpageComponent } from './landing/landingpage/landingpage.component';
+import { LoginComponent } from './admin/login/login.component';
 import { AuthGuard } from './guard/auth.guard';
+import { adminGuard } from './guard/admin.guard';
 
 const routes: Routes = [
  {
-  path: 'admin/admin-homepage', component:AdminHomepageComponent
+  path: 'admin', component:LoginComponent, canActivate:[adminGuard]
  },
  {
   path: 'teacher/teacher-homepage', component:TeacherHomepageComponent
