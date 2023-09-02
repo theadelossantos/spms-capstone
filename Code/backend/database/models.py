@@ -36,6 +36,7 @@ class Student(models.Model):
     
     def __str__(self):
         return f"{self.fname} {self.lname}"
+        
 
 class Teacher(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
@@ -52,6 +53,8 @@ class Teacher(models.Model):
     gender = models.CharField(max_length=10)
     birthdate = models.DateField(default=timezone.now)
 
+    def __str__(self):
+        return str(self.teacher_id)
 
 class Admin(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, default=1)
@@ -70,19 +73,31 @@ class Department(models.Model):
     dept_id = models.AutoField(primary_key=True)
     dept_name = models.CharField(max_length=50)
 
+    def __str__(self):
+        return f"{self.dept_id} - {self.dept_name}"
+    
 class GradeLevel(models.Model):
     gradelvl_id = models.AutoField(primary_key=True)
     dept_id = models.ForeignKey('Department', on_delete=models.CASCADE)
     gradelvl = models.CharField(max_length=10)
 
+    def __str__(self):
+        return f"{self.gradelvl_id} - {self.gradelvl}"
+    
 class Section(models.Model):
     section_id = models.AutoField(primary_key=True)
     dept_id = models.ForeignKey('Department', on_delete=models.CASCADE)
     gradelvl_id = models.ForeignKey('GradeLevel', on_delete=models.CASCADE)
     section_name = models.CharField(max_length=50)
 
+    def __str__(self):
+        return f"{self.section_id} - {self.section_name}"
+    
 class Subject(models.Model):
     subject_id = models.AutoField(primary_key=True)
     dept_id = models.ForeignKey('Department', on_delete=models.CASCADE)
     gradelvl_id = models.ForeignKey('GradeLevel', on_delete=models.CASCADE)
     subject_name = models.CharField(max_length=50)
+
+    def __str__(self):
+        return f"{self.subject_id} - {self.subject_name}"
