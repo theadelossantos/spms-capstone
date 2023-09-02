@@ -41,6 +41,9 @@
                 </ng-container>
             </div>
         </div>
+        <ng-container *ngIf="msg">
+          <div class="error_message">{{msg}}</div>
+        </ng-container>
         <button type="submit" class="btn btn-primary submit-btn">Submit</button>
     </form>
 </div>

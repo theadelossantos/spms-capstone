@@ -14,6 +14,15 @@ import { LandingpageComponent } from './landing/landingpage/landingpage.componen
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CookieService } from 'ngx-cookie-service';
 import { LoginComponent } from './admin/login/login.component';
+import { SidenavComponent } from './admin/sidenav/sidenav.component';
+import { AdminDashboardComponent } from './admin/admin-dashboard/admin-dashboard.component';
+import { TeacherComponent } from './admin/teacher/teacher.component';
+import { StudentsComponent } from './admin/students/students.component';
+import { ClassesComponent } from './admin/classes/classes.component';
+import { CoursesComponent } from './admin/courses/courses.component';
+import { SettingsComponent } from './admin/settings/settings.component';
+import { BodyComponent } from './admin/body/body.component';
+
 
 @NgModule({
   declarations: [
@@ -25,6 +34,14 @@ import { LoginComponent } from './admin/login/login.component';
     AdminHomepageComponent,
     LandingpageComponent,
     LoginComponent,
+    SidenavComponent,
+    AdminDashboardComponent,
+    TeacherComponent,
+    StudentsComponent,
+    ClassesComponent,
+    CoursesComponent,
+    SettingsComponent,
+    BodyComponent,
   ],
   imports: [
     BrowserModule,
@@ -33,8 +50,8 @@ import { LoginComponent } from './admin/login/login.component';
     HttpClientModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
-    NgbModule,
-  ],
+    NgbModule
+],
   providers: [CookieService],
   bootstrap: [AppComponent]
 })
