@@ -16,10 +16,6 @@ import { CookieService } from 'ngx-cookie-service';
 import { LoginComponent } from './admin/login/login.component';
 import { SidenavComponent } from './admin/sidenav/sidenav.component';
 import { AdminDashboardComponent } from './admin/admin-dashboard/admin-dashboard.component';
-import { StudentsComponent } from './admin/students/students.component';
-import { ClassesComponent } from './admin/classes/classes.component';
-import { CoursesComponent } from './admin/courses/courses.component';
-import { SettingsComponent } from './admin/settings/settings.component';
 import { BodyComponent } from './admin/body/body.component';
 import { TeacherSublevelMenuComponent } from './admin/sidenav/teacher-sublevel-menu.component';
 
@@ -36,10 +32,6 @@ import { TeacherSublevelMenuComponent } from './admin/sidenav/teacher-sublevel-m
     LoginComponent,
     SidenavComponent,
     AdminDashboardComponent,
-    StudentsComponent,
-    ClassesComponent,
-    CoursesComponent,
-    SettingsComponent,
     BodyComponent,
     TeacherSublevelMenuComponent,
   ],

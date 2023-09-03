@@ -46,19 +46,19 @@ const routes: Routes = [
     },
     {
       path: 'students',
-      component: AddStudentComponent,
+      loadChildren:() => import('./admin/students/students.module').then(m => m.StudentsModule)
     },
     {
       path: 'classes',
-      component: ClassesComponent,
+      loadChildren:() => import('./admin/classes/classes.module').then(m => m.ClassesModule)
     },
     {
       path: 'courses',
-      component: CoursesComponent,
+      loadChildren:() => import('./admin/courses/courses.module').then(m => m.CoursesModule)
     },
     {
       path: 'settings',
-      component: SettingsComponent,
+      loadChildren:() => import('./admin/settings/settings.module').then(m => m.SettingsModule)
     },
     
   ],

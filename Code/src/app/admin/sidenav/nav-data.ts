@@ -93,7 +93,7 @@ export const navbarData: INavbarData[] = [
                 label: 'Profile'
             },
             {
-                routeLink: '/admin-home/teachers/hs',
+                routeLink: '/admin-home/settings/privacy',
                 label: 'Privacy'
             }
         ]
