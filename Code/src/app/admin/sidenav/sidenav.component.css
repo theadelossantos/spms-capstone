@@ -164,7 +164,7 @@ color: white;
 }
 
 .scrollwrap::-webkit-scrollbar{
-    width:10px;
+    width:5px;
 
 }
 .scrollwrap::-webkit-scrollbar-track{
@@ -172,11 +172,11 @@ color: white;
 }
 
 .scrollwrap::-webkit-scrollbar-thumb{
-    background-color: #556268;
+    background-color: #f0eded;
     border-radius: 20px;
 }
 
 .scrollwrap{
     scrollbar-width: thin;
-    scrollbar-color: #556268 transparent;
+    scrollbar-color: #f0eded transparent;
 }

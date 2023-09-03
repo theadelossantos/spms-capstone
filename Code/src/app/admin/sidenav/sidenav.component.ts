@@ -31,7 +31,7 @@ export class SidenavComponent implements OnInit{
   collapsed = false;
   screenWidth = 0;
   navData = navbarData;
-  multiple: boolean = false;
+  multiple: boolean = true;
 
   @HostListener('window: resize',['$event'])
   onResize(event:any){
