@@ -13,6 +13,7 @@ import { AddStudentComponent } from './admin/add-student/add-student.component';
 import { ClassesComponent } from './admin/classes/classes.component';
 import { CoursesComponent } from './admin/courses/courses.component';
 import { SettingsComponent } from './admin/settings/settings.component';
+import { TeacherModule } from './admin/teacher/teacher.module';
 
 const routes: Routes = [
  {
@@ -30,12 +31,18 @@ const routes: Routes = [
   data:{ roles:['admin']},
   children: [
     {
+      path:'',
+      redirectTo: 'dashboard',
+      pathMatch: 'full'
+    },
+    {
       path: 'dashboard',
       component: AdminDashboardComponent,
     },
     {
       path: 'teachers',
-      component: AddTeacherComponent,
+      loadChildren:() => import('./admin/teacher/teacher.module').then(m => m.TeacherModule)
+
     },
     {
       path: 'students',
