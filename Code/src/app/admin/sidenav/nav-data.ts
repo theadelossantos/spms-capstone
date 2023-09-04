@@ -48,20 +48,7 @@ export const navbarData: INavbarData[] = [
         routeLink: '/admin-home/classes',
         icon: 'fa-solid fa-chalkboard-user',
         label: 'Classes',
-        items: [
-            {
-                routeLink: '/admin-home/classes/elem',
-                label: 'Elementary'
-            },
-            {
-                routeLink: '/admin-home/classes/hs',
-                label: 'High School'
-            },
-            {
-                routeLink: '/admin-home/classes/shs',
-                label: 'SHS'
-            },
-        ]
+        items: []
     },
     {
         routeLink: '/admin-home/courses',

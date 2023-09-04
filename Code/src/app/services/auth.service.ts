@@ -98,8 +98,6 @@ export class AuthService {
     return false;
   }
   
-  
-
   getUserRoles(): string[] {
     const accessToken = this.cookieService.get('access');
 
@@ -124,9 +122,6 @@ export class AuthService {
 }
 
   
-
-
-
   addStudent(studentData: any): Observable<any> {
     return this.http.post(`${this.api_url}add-student/`, studentData, this.httpOptions).pipe(
       catchError(this.handleError)
@@ -143,6 +138,14 @@ export class AuthService {
     return this.http.post(`${this.api_url}add-admin/`, adminData, this.httpOptions).pipe(
       catchError(this.handleError)
     );
+  }
+
+  getDepartments():Observable<any>{
+    return this.http.get<any[]>(`${this.api_url}departments/`, this.httpOptions)
+  }
+
+  getGradeLevels(departmentId: number): Observable<any> {
+    return this.http.get(`${this.api_url}departments/${departmentId}/grade-levels/`);
   }
 
 }

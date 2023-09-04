@@ -1,8 +1,8 @@
 from django.urls import path
 from .views import AddStudentView
 from django.urls import path
-from .views import CustomTokenObtainPairView, UserDataView, AdminRegistrationView, AdminLoginView, AdminTokenObtainPairView, AddTeacherView
-
+from .views import CustomTokenObtainPairView, UserDataView, AdminRegistrationView, AdminLoginView, AdminTokenObtainPairView, AddTeacherView, get_departments
+from . import views
 
 
 urlpatterns = [
@@ -12,4 +12,5 @@ urlpatterns = [
     path('admin-login/', AdminTokenObtainPairView.as_view(), name='admin-login'),
     path('add-admin/', AdminRegistrationView.as_view(), name='add-admin'), 
     path('add-teacher/', AddTeacherView.as_view(), name='add-teacher'), 
+    path('departments/', views.get_departments, name='get-departments')
 ]

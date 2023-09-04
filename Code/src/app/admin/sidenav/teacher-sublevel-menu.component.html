@@ -13,12 +13,13 @@
             (click)="handleClick(item)"
             *ngIf="item.items && item.items.length > 0"
             [ngClass]="getActiveClass(item)">
-        <i class="sublevel-link-icon fa fa-circle">
+            <i class="sublevel-link-icon fa fa-circle">
             <span class="sublevel-link-text" @fadeInOut *ngIf="collapsed">{{item.label}}</span>
             <i *ngIf = "item.items && collapsed" class="menu-collapse-icon"
-                [ngClass]="!item.expanded ? 'fal fa-angle-right':'fal fa-angle-down'"></i>
-        </i>
+                [ngClass]="item.expanded ? 'fal fa-angle-right':'fal fa-angle-down'"></i>
+            </i>
         </a>
+        
         <a class="sublevel-nav-link"
             *ngIf="!item.items || (item.items && item.items.length === 0)"
             [routerLink]="[item.routeLink]"

@@ -14,7 +14,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
 import json
 import base64
-
+from django.http import JsonResponse
+from .models import Department
 
 class AddStudentView(APIView):
     def post(self, request):
@@ -184,5 +185,13 @@ class UserDataView(APIView):
         }
 
         return Response(user_data, status=status.HTTP_200_OK)
+
+def get_departments(request):
+    departments = Department.objects.all()
+    data = [{
+        'id': dept.dept_id, 
+        'name': dept.dept_name
+    } for dept in departments]
+    return JsonResponse({'departments': data})
 
 
