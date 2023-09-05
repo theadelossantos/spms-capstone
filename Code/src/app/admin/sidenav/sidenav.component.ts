@@ -1,5 +1,5 @@
 import { Component, EventEmitter, HostListener, OnInit, Output } from '@angular/core';
-import { navbarData, loadDepartmentsAsync } from './nav-data';
+import { navbarData, loadDepartments } from './nav-data';
 import { animate, keyframes, style, transition, trigger } from '@angular/animations';
 import { INavbarData, fadeInOut } from './helper';
 import { Router } from '@angular/router';
@@ -52,8 +52,16 @@ export class SidenavComponent implements OnInit {
   ngOnInit(): void {
     this.screenWidth = window.innerWidth;
 
-    loadDepartmentsAsync(this.navData, this.authService);
-    
+    const classesRouteLink = '/admin-home/classes';
+    loadDepartments(this.navData, this.authService, classesRouteLink);
+
+    const teacherRouteLink = '/admin-home/teachers';
+    loadDepartments(this.navData, this.authService, teacherRouteLink);
+
+    const studentsRouteLink = '/admin-home/students';
+    loadDepartments(this.navData, this.authService, studentsRouteLink)
+
+
     this.authService.getDepartments().subscribe((data) => {
       console.log('Departments:', data);
       this.departments = data.departments;

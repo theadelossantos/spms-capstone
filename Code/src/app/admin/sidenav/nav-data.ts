@@ -12,39 +12,16 @@ export const navbarData: INavbarData[] = [
         routeLink: '/admin-home/teachers',
         icon: 'fa-solid fa-users',
         label: 'Teachers',
-        items: [
-            {
-                routeLink: '/admin-home/teachers/elem',
-                label: 'Elementary'
-            },
-            {
-                routeLink: '/admin-home/teachers/hs',
-                label: 'High School'
-            },
-            {
-                routeLink: '/admin-home/teachers/shs',
-                label: 'SHS'
-            },
-        ]
+        items: [],
+        loadDepartments: true,
+
     },
     {
         routeLink: '/admin-home/students',
         icon: 'fa-solid fa-user',
         label: 'Students',
-        items: [
-            {
-                routeLink: '/admin-home/students/elem',
-                label: 'Elementary'
-            },
-            {
-                routeLink: '/admin-home/students/hs',
-                label: 'High School'
-            },
-            {
-                routeLink: '/admin-home/students/shs',
-                label: 'SHS'
-            },
-        ]
+        items: [],
+        loadDepartments: true
     },
     {
         routeLink: '/admin-home/classes',
@@ -90,34 +67,31 @@ export const navbarData: INavbarData[] = [
     },
 ];
 
-export async function loadDepartmentsAsync(navbarData: INavbarData[], authService: AuthService) {
-    console.log('loadDepartmentsAsync called');
-
-    const classesItem = navbarData.find(item => item.routeLink === '/admin-home/classes');
-    console.log('classesItem:', classesItem);
-
-    if (classesItem) {
-        try {
-            const departments = await authService.getDepartments()
-                .pipe(
-                    map((data: any) => {
-                        return data.departments.map((department: any) => ({
-                            routeLink: `/admin-home/classes/${department.id}`,
-                            label: department.name
-                        }));
-                    })
-                )
-                .toPromise();
-                
-            console.log('Departments:', departments);
-
-            if (departments.length > 0) {
-                classesItem.items = departments;
-                
-            }
-
-        } catch (error) {
-            console.error('Error loading departments:', error);
+export async function loadDepartments(navbarData: INavbarData[], authService: AuthService, routeLink: string) {
+    const item = navbarData.find(item => item.routeLink === routeLink);
+    console.log('item:', item);
+  
+    if (item) {
+      try {
+        const departments = await authService.getDepartments()
+          .pipe(
+            map((data: any) => {
+              return data.departments.map((department: any) => ({
+                routeLink: `${routeLink}/${department.id}`,
+                label: department.name
+              }));
+            })
+          )
+          .toPromise();
+          
+        console.log('Departments:', departments);
+  
+        if (departments.length > 0) {
+          item.items = departments;
         }
+      } catch (error) {
+        console.error('Error loading departments:', error);
+      }
     }
-}
+  }
+  
