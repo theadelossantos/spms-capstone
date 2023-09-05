@@ -1,4 +1,6 @@
 import { INavbarData } from "./helper";
+import { AuthService } from "src/app/services/auth.service";
+import { map } from "rxjs/operators";
 
 export const navbarData: INavbarData[] = [
     {
@@ -48,7 +50,8 @@ export const navbarData: INavbarData[] = [
         routeLink: '/admin-home/classes',
         icon: 'fa-solid fa-chalkboard-user',
         label: 'Classes',
-        items: []
+        items: [],
+        loadDepartments: true,
     },
     {
         routeLink: '/admin-home/courses',
@@ -85,4 +88,36 @@ export const navbarData: INavbarData[] = [
             }
         ]
     },
-]
+];
+
+export async function loadDepartmentsAsync(navbarData: INavbarData[], authService: AuthService) {
+    console.log('loadDepartmentsAsync called');
+
+    const classesItem = navbarData.find(item => item.routeLink === '/admin-home/classes');
+    console.log('classesItem:', classesItem);
+
+    if (classesItem) {
+        try {
+            const departments = await authService.getDepartments()
+                .pipe(
+                    map((data: any) => {
+                        return data.departments.map((department: any) => ({
+                            routeLink: `/admin-home/classes/${department.id}`,
+                            label: department.name
+                        }));
+                    })
+                )
+                .toPromise();
+                
+            console.log('Departments:', departments);
+
+            if (departments.length > 0) {
+                classesItem.items = departments;
+                
+            }
+
+        } catch (error) {
+            console.error('Error loading departments:', error);
+        }
+    }
+}

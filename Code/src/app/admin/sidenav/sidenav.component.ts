@@ -1,5 +1,5 @@
 import { Component, EventEmitter, HostListener, OnInit, Output } from '@angular/core';
-import { navbarData } from './nav-data';
+import { navbarData, loadDepartmentsAsync } from './nav-data';
 import { animate, keyframes, style, transition, trigger } from '@angular/animations';
 import { INavbarData, fadeInOut } from './helper';
 import { Router } from '@angular/router';
@@ -52,10 +52,13 @@ export class SidenavComponent implements OnInit {
   ngOnInit(): void {
     this.screenWidth = window.innerWidth;
 
+    loadDepartmentsAsync(this.navData, this.authService);
+    
     this.authService.getDepartments().subscribe((data) => {
       console.log('Departments:', data);
       this.departments = data.departments;
     });
+    
   }
 
   toggleCollapse():void{

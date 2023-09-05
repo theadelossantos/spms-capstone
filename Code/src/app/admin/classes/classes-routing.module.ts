@@ -6,16 +6,22 @@ import { ClassesShsComponent } from './classes-shs/classes-shs.component';
 
 const routes: Routes = [
   {
-    path: 'elem',
-    component: ClassesComponent
-  }, 
-  {
-    path: 'hs',
-    component: ClassesHsComponent
-  },
-  {
-    path: 'shs',
-    component: ClassesShsComponent
+    path: ':departmentId', // This route captures the departmentId from the URL
+    component: ClassesComponent, // Common component for handling department-specific logic
+    children: [
+      {
+        path: 'elem', // Department-specific route
+        component: ClassesComponent // Component for Elementary department
+      },
+      {
+        path: 'hs', // Department-specific route
+        component: ClassesHsComponent // Component for High School department
+      },
+      {
+        path: 'shs', // Department-specific route
+        component: ClassesShsComponent // Component for SHS department
+      }
+    ]
   }
 ];
 

@@ -4,7 +4,8 @@ export interface INavbarData {
     icon?: string;
     label: string;
     expanded?: boolean;
-    items?: INavbarData[]
+    items?: INavbarData[],
+    loadDepartments?:boolean
 }
 
 export const fadeInOut = trigger('fadeInOut', [

@@ -31,18 +31,6 @@
                     <i class="sidenav-link-icon" [class]="data.icon"></i>
                     <span class="sidenav-link-text" @fadeInOut *ngIf="collapsed">{{data.label}}</span>
                 </a>
-
-                <div *ngIf="data.routeLink === '/admin-home/classes' && departmentsExpanded">
-                    <ul class="sublevel-nav">
-                        <li *ngFor="let department of departments" class="sublevel-nav-item">
-                            <a class="sublevel-nav-link" [routerLink]="['/admin-home/classes', department?.id]"
-                               routerLinkActive="active-sublevel">
-                                <i class="sublevel-link-icon fa fa-circle"></i>
-                                <span class="sublevel-link-text" @fadeInOut>{{ department?.name }}</span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
                 
                 
 

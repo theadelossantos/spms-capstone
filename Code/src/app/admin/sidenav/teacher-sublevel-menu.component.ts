@@ -52,6 +52,10 @@ export class TeacherSublevelMenuComponent {
       }
     }
     item.expanded = !item.expanded;
+
+    if (item.routeLink) {
+      this.router.navigateByUrl(item.routeLink);
+    }
   }
 
   getActiveClass(item: INavbarData): string{
