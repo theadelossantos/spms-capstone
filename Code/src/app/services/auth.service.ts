@@ -4,7 +4,7 @@ import { HttpClient, HttpHeaders, HttpErrorResponse} from '@angular/common/http'
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { CookieService } from 'ngx-cookie-service';
-import { tap } from 'rxjs/operators';
+import { tap, map } from 'rxjs/operators';
 import jwt_decode from 'jwt-decode';
 
 
@@ -141,11 +141,20 @@ export class AuthService {
   }
 
   getDepartments():Observable<any>{
-    return this.http.get<any[]>(`${this.api_url}departments/`, this.httpOptions)
+    return this.http.get<any[]>(`${this.api_url}departments/`, this.httpOptions);
   }
 
-  getGradeLevels(departmentId: number): Observable<any> {
-    return this.http.get(`${this.api_url}departments/${departmentId}/grade-levels/`);
+  getGradeLevels(): Observable<any> {
+    return this.http.get(`${this.api_url}gradelevels/`, this.httpOptions)
+      .pipe(
+        map((response: any) => response.gradelevels), 
+        catchError((error) => {
+          console.error('Error fetching grade levels:', error);
+          throw error; 
+        })
+      );
   }
+
+  
 
 }

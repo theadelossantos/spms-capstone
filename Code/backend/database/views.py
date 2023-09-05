@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
 from rest_framework.views import APIView
-from .models import Student, Teacher, Admin 
+from .models import Student, Teacher, Admin, GradeLevel
 from .serializers import UserSerializer, StudentSerializer, TeacherSerializer, AdminSerializer, CustomTokenObtainPairSerializer, AdminLoginSerializer, AdminTokenObtainPairSerializer
 from django.contrib.auth import authenticate
 from rest_framework import status, generics, permissions
@@ -194,4 +194,14 @@ def get_departments(request):
     } for dept in departments]
     return JsonResponse({'departments': data})
 
+def get_gradelvl_elem(request):
+    elem_dept = Department.objects.get(dept_id = 1)
+
+    gradelevel = GradeLevel.objects.filter(dept_id = elem_dept)
+    data = [{
+        'gradelvl_id': grdlvl.gradelvl_id,
+        'dept_id': grdlvl.dept_id.dept_id,
+        'name': grdlvl.gradelvl
+        } for grdlvl in gradelevel] 
+    return JsonResponse({'gradelevels': data})
 

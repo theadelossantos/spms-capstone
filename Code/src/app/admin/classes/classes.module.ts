@@ -5,13 +5,15 @@ import { ClassesRoutingModule } from './classes-routing.module';
 import { ClassesComponent } from './classes.component';
 import { ClassesHsComponent } from './classes-hs/classes-hs.component';
 import { ClassesShsComponent } from './classes-shs/classes-shs.component';
+import { ClassesElemComponent } from './classes-elem/classes-elem.component';
 
 
 @NgModule({
   declarations: [
     ClassesComponent,
     ClassesHsComponent,
-    ClassesShsComponent
+    ClassesShsComponent,
+    ClassesElemComponent
   ],
   imports: [
     CommonModule,
