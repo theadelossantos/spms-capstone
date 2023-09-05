@@ -1,21 +1,13 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { CoursesComponent } from './courses.component';
-import { CoursesHsComponent } from './courses-hs/courses-hs.component';
-import { CoursesShsComponent } from './courses-shs/courses-shs.component';
+import { departmentIdGuard } from 'src/app/guard/department-id.guard';
 
 const routes: Routes = [
   {
-    path: 'elem',
-    component: CoursesComponent
-  },
-  {
-    path: 'hs',
-    component: CoursesHsComponent
-  },
-  {
-    path: 'shs',
-    component: CoursesShsComponent
+    path: ':departmentId',
+    component: CoursesComponent,
+    canActivate:[departmentIdGuard]
   }
 ];
 

@@ -59,8 +59,10 @@ export class SidenavComponent implements OnInit {
     loadDepartments(this.navData, this.authService, teacherRouteLink);
 
     const studentsRouteLink = '/admin-home/students';
-    loadDepartments(this.navData, this.authService, studentsRouteLink)
+    loadDepartments(this.navData, this.authService, studentsRouteLink);
 
+    const coursesRouteLink = '/admin-home/courses';
+    loadDepartments(this.navData, this.authService, coursesRouteLink);
 
     this.authService.getDepartments().subscribe((data) => {
       console.log('Departments:', data);

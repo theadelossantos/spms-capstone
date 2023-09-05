@@ -15,6 +15,7 @@ export class departmentIdGuard implements CanActivate{
       const isTeachersRoute = state.url.startsWith('/admin-home/teachers');
       const isClassesRoute = state.url.startsWith('/admin-home/classes');
       const isStudentsRoute = state.url.startsWith('/admin-home/students');
+      const courseRoute = state.url.startsWith('/admin-home/courses');
 
       if (isTeachersRoute) {
         this.router.navigate(['/admin-home/teachers/1']);
@@ -22,8 +23,9 @@ export class departmentIdGuard implements CanActivate{
         this.router.navigate(['/admin-home/classes/1']);
       } else if(isStudentsRoute){
         this.router.navigate(['/admin-home/students/1']);
+      }else if(courseRoute){
+        this.router.navigate(['/admin-home/courses/1'])
       }
-      
       else {
         this.router.navigate(['/admin-home/dashboard']);
       }
