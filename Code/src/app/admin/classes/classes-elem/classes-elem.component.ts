@@ -11,6 +11,8 @@ export class ClassesElemComponent implements OnInit {
   constructor(private authService: AuthService, private router: Router) {}
 
   gradelvl: any[] = [];
+  selectedGradeLevel:any = null;
+  filteredSections: any[] = []
 
   ngOnInit(): void {
     this.authService.getGradeLevels().subscribe((data) => {
@@ -18,10 +20,16 @@ export class ClassesElemComponent implements OnInit {
       this.gradelvl = data;
       console.log('this.gradelvl:', this.gradelvl);
     });
+    
   }
 
+  
+
   manageClasses(departmentId: number, gradelvlId: number) {
-    
+    this.authService.filterSections(gradelvlId).subscribe((data) => {
+      this.selectedGradeLevel = this.gradelvl.find((level) => level.gradelvl_id === gradelvlId);
+      this.filteredSections = data.sections;
+    });
   }
   
 }

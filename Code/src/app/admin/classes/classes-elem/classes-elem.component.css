@@ -76,6 +76,15 @@
 .table td, .table th{
     text-align: center;
 }
+
+.edit-icon{
+    color: #0247FE;
+    margin-right: 5px;
+}
+
+.trash-icon{
+    color: #A70000;
+}
 @media (min-width: 768px) {
     /* .select-opt{
         width: 10%;

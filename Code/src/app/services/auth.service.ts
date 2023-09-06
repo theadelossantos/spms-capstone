@@ -155,6 +155,16 @@ export class AuthService {
       );
   }
 
+  filterSections(gradeLevelId: number): Observable<any>{
+    return this.http.get(`${this.api_url}filter-sections/${gradeLevelId}/`, this.httpOptions).pipe(
+      catchError((error) => {
+        console.error('Error filtering sections:', error);
+        throw error;
+      })
+    );
+  }
+  
+
   
 
 }
