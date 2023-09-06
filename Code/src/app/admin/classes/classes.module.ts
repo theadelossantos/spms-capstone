@@ -13,7 +13,7 @@ import { ClassesElemComponent } from './classes-elem/classes-elem.component';
     ClassesComponent,
     ClassesHsComponent,
     ClassesShsComponent,
-    ClassesElemComponent
+    ClassesElemComponent,
   ],
   imports: [
     CommonModule,

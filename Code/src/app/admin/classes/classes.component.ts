@@ -8,6 +8,7 @@ import { Component} from '@angular/core';
 })
 export class ClassesComponent {
   departmentId: string;
+  gradelvlId: string;
 
   constructor(
     private route: ActivatedRoute,
@@ -16,17 +17,7 @@ export class ClassesComponent {
   ngOnInit(): void {
     this.route.params.subscribe(params => {
       this.departmentId = params['departmentId'];
-
-      // switch (this.departmentId) {
-      //   case '1':
-      //     break;
-      //   case '2':
-      //     break;
-      //   case '3':
-      //     break;
-      //   default:
-      //     break;
-      // }
+      this.gradelvlId = params['gradelvlId']
     });
   }
 

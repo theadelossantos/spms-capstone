@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
@@ -7,7 +8,7 @@ import { AuthService } from 'src/app/services/auth.service';
   styleUrls: ['./classes-elem.component.css']
 })
 export class ClassesElemComponent implements OnInit {
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
   gradelvl: any[] = [];
 
@@ -18,4 +19,9 @@ export class ClassesElemComponent implements OnInit {
       console.log('this.gradelvl:', this.gradelvl);
     });
   }
+
+  manageClasses(departmentId: number, gradelvlId: number) {
+    
+  }
+  
 }

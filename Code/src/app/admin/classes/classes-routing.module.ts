@@ -6,7 +6,8 @@ const routes: Routes = [
   {
     path: ':departmentId', 
     component: ClassesComponent, 
-    canActivate:[departmentIdGuard]
+    canActivate:[departmentIdGuard],
+    
   }
 ];
 
