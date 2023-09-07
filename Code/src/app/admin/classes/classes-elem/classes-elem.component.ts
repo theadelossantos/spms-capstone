@@ -22,7 +22,6 @@ export class ClassesElemComponent implements OnInit {
     });
     
   }
-
   
 
   manageClasses(departmentId: number, gradelvlId: number) {
