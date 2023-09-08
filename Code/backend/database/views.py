@@ -4,7 +4,7 @@ from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
 from rest_framework.views import APIView
 from .models import Student, Teacher, Admin, GradeLevel, Section
-from .serializers import UserSerializer, StudentSerializer, TeacherSerializer, AdminSerializer, CustomTokenObtainPairSerializer, AdminLoginSerializer, AdminTokenObtainPairSerializer
+from .serializers import UserSerializer, StudentSerializer, TeacherSerializer, AdminSerializer, CustomTokenObtainPairSerializer, SectionSerializer, AdminLoginSerializer, AdminTokenObtainPairSerializer
 from django.contrib.auth import authenticate
 from rest_framework import status, generics, permissions
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -206,6 +206,7 @@ def get_gradelvl_elem(request):
     return JsonResponse({'gradelevels': data})
 
 def filter_sections(request, grade_level_id):
+
     grade_level = GradeLevel.objects.get(pk = grade_level_id)
     sections = Section.objects.filter(gradelvl_id = grade_level_id)
 
@@ -215,3 +216,15 @@ def filter_sections(request, grade_level_id):
     grade_level_data = {'id':grade_level.gradelvl_id, 'name': grade_level.gradelvl}
 
     return JsonResponse({'grade_level': grade_level_data, 'sections':section_data})
+
+class addElemSections(APIView):
+    def post(self, request):
+        request.data['dept_id'] = 1
+        section_serializer = SectionSerializer(data=request.data)
+
+        if section_serializer.is_valid():
+            section_serializer.save()
+            return Response(section_serializer.data, status=status.HTTP_201_CREATED)
+        return Response(section_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+

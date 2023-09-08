@@ -8,7 +8,7 @@ import { ClassesShsComponent } from './classes-shs/classes-shs.component';
 import { ClassesElemComponent } from './classes-elem/classes-elem.component';
 import { AddsectionComponent } from './addsection/addsection.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -22,7 +22,9 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     CommonModule,
     ClassesRoutingModule,
     FormsModule,
-    NgbModule
+    NgbModule,
+    ReactiveFormsModule,
+
   ]
 })
 export class ClassesModule { }

@@ -146,7 +146,7 @@ AUTHENTICATION_BACKENDS = (
 AUTH_USER_MODEL = 'database.CustomUser'
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:4200"
+    "http://localhost:4200",
 ]
 
 REST_FRAMEWORK = {

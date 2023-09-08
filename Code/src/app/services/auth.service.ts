@@ -163,7 +163,12 @@ export class AuthService {
       })
     );
   }
-  
+
+  addElemSection(sectionData:any): Observable<any>{
+    return this.http.post(`${this.api_url}add-elemsection/`, sectionData, this.httpOptions)
+  }
+
+
 
   
 

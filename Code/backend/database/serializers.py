@@ -4,7 +4,7 @@ from .models import Student, Teacher, Admin
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth import authenticate
-
+from .models import Department, Section
 
 User = get_user_model()
 
@@ -181,3 +181,7 @@ class AdminTokenObtainPairSerializer(TokenObtainPairSerializer):
         raise serializers.ValidationError(_("Must include 'email' and 'password'"))
 
 
+class SectionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Section
+        fields = ['section_id', 'dept_id', 'gradelvl_id', 'section_name']

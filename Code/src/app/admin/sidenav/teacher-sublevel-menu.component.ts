@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { INavbarData, fadeInOut } from './helper';
 import { trigger,state, style, transition, animate } from '@angular/animations';
 import { Router } from '@angular/router';
@@ -61,4 +61,6 @@ export class TeacherSublevelMenuComponent {
   getActiveClass(item: INavbarData): string{
     return item.expanded && this.router.url.includes(item.routeLink) ? 'active-sublevel': '';
   }
+
+
 }

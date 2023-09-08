@@ -91,7 +91,15 @@ handleclick(item: INavbarData):void{
     }
   item.expanded = !item.expanded
   }
-getActiveClass(data: INavbarData): string{
+  getActiveClass(data: INavbarData): string{
     return this.router.url.includes(data.routeLink) ? 'active':'';
   }
+
+  @Output() departmentSelected = new EventEmitter<any>(); 
+
+  setSelectedDepartment(department: any) {
+    this.departmentSelected.emit(department);
+  }
+
+
 }
