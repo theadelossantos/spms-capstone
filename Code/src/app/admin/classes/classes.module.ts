@@ -9,6 +9,7 @@ import { ClassesElemComponent } from './classes-elem/classes-elem.component';
 import { AddsectionComponent } from './addsection/addsection.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ReactiveFormsModule } from '@angular/forms';
+import { EditSectionComponent } from './edit-section/edit-section.component';
 
 @NgModule({
   declarations: [
@@ -17,6 +18,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     ClassesShsComponent,
     ClassesElemComponent,
     AddsectionComponent,
+    EditSectionComponent,
   ],
   imports: [
     CommonModule,

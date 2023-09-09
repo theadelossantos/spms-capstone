@@ -169,7 +169,11 @@ export class AuthService {
   }
 
 
-
+  editSection(sectionId:number,  updatedSection: any): Observable<any>{
+    return this.http.put(`${this.api_url}edit-sections/${sectionId}/`,  updatedSection, this.httpOptions).pipe(
+      catchError(this.handleError)
+    )
+  }
   
 
 }

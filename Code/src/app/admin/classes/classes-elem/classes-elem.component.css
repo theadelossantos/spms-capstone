@@ -76,12 +76,20 @@
 }
 
 .edit-icon{
-    color: #0247FE;
-    margin-right: 5px;
+    color: white;
+}
+
+.btn-custom-edit{
+    background-color: #0247FE;
+}
+
+.btn-custom-delete{
+    background-color: #A70000;
+    margin-left: 5px;
 }
 
 .trash-icon{
-    color: #A70000;
+    color: white;
 }
 
 

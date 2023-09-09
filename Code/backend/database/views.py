@@ -4,9 +4,9 @@ from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
 from rest_framework.views import APIView
 from .models import Student, Teacher, Admin, GradeLevel, Section
-from .serializers import UserSerializer, StudentSerializer, TeacherSerializer, AdminSerializer, CustomTokenObtainPairSerializer, SectionSerializer, AdminLoginSerializer, AdminTokenObtainPairSerializer
+from .serializers import UserSerializer, StudentSerializer, TeacherSerializer, AdminSerializer, CustomTokenObtainPairSerializer, SectionSerializer, AdminLoginSerializer, AdminTokenObtainPairSerializer, GradeLevelSerializer
 from django.contrib.auth import authenticate
-from rest_framework import status, generics, permissions
+from rest_framework import status, generics, permissions, viewsets
 from rest_framework_simplejwt.views import TokenObtainPairView
 from django.http import HttpResponse
 from rest_framework.authentication import TokenAuthentication
@@ -16,6 +16,9 @@ import json
 import base64
 from django.http import JsonResponse
 from .models import Department
+from django.views import View
+from django.db import transaction
+
 
 class AddStudentView(APIView):
     def post(self, request):
@@ -206,16 +209,22 @@ def get_gradelvl_elem(request):
     return JsonResponse({'gradelevels': data})
 
 def filter_sections(request, grade_level_id):
+    try:
+        grade_level = GradeLevel.objects.get(pk = grade_level_id)
 
-    grade_level = GradeLevel.objects.get(pk = grade_level_id)
-    sections = Section.objects.filter(gradelvl_id = grade_level_id)
+        sections = Section.objects.filter(gradelvl_id = grade_level_id, dept_id = 1)
+        
 
-    section_data = [{'id':section.section_id,
-                     'section_name': section.section_name}
-                     for section in sections]
-    grade_level_data = {'id':grade_level.gradelvl_id, 'name': grade_level.gradelvl}
+        section_data = [{'id':section.section_id,
+                        'section_name': section.section_name,
+                        'dept_id':section.dept_id.dept_id,
+                        'gradelvl_id':section.gradelvl_id.gradelvl_id}
+                        for section in sections]
+        grade_level_data = {'id':grade_level.gradelvl_id, 'name': grade_level.gradelvl}
 
-    return JsonResponse({'grade_level': grade_level_data, 'sections':section_data})
+        return JsonResponse({'grade_level': grade_level_data, 'sections':section_data})
+    except GradeLevel.DoesNotExist:
+        return JsonResponse({'error': 'Grade level not found'}, status=404)
 
 class addElemSections(APIView):
     def post(self, request):
@@ -227,4 +236,26 @@ class addElemSections(APIView):
             return Response(section_serializer.data, status=status.HTTP_201_CREATED)
         return Response(section_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
+class EditSectionView(APIView):
+    def get(self, request, section_id):
+        try:
+            section = Section.objects.get(section_id=section_id)
+            serializer = SectionSerializer(section)
+            return Response({'section': serializer.data})
+        except Section.DoesNotExist:
+            return Response({'error': 'Section not found'}, status=status.HTTP_404_NOT_FOUND)
+
+    def put(self, request, section_id):
+        try:
+            with transaction.atomic():
+                section = Section.objects.get(section_id=section_id)
+                serializer = SectionSerializer(section, data=request.data, partial=True)
+                if serializer.is_valid():
+                    serializer.save()
+                    return Response({'message': 'Section updated successfully'})
+                else:
+                    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Section.DoesNotExist:
+            return Response({'error': 'Section not found'}, status=status.HTTP_404_NOT_FOUND)
 
