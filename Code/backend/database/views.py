@@ -18,6 +18,8 @@ from django.http import JsonResponse
 from .models import Department
 from django.views import View
 from django.db import transaction
+from rest_framework.decorators import api_view
+
 
 
 class AddStudentView(APIView):
@@ -259,3 +261,13 @@ class EditSectionView(APIView):
         except Section.DoesNotExist:
             return Response({'error': 'Section not found'}, status=status.HTTP_404_NOT_FOUND)
 
+@api_view(['DELETE'])
+def delete_section(request, section_id):
+    try:
+        section = Section.objects.get(section_id=section_id)
+    except Section.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    
+    if request.method == 'DELETE':
+        section.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)

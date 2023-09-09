@@ -174,6 +174,11 @@ export class AuthService {
       catchError(this.handleError)
     )
   }
-  
+
+  deleteSection(sectionId:number): Observable<any>{
+    return this.http.delete(`${this.api_url}del-sections/${sectionId}/`, this.httpOptions).pipe(
+      catchError(this.handleError)
+    )
+  }
 
 }

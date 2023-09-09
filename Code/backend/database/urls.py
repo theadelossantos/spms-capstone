@@ -1,7 +1,7 @@
 from django.urls import path
 from .views import AddStudentView
 from django.urls import path
-from .views import CustomTokenObtainPairView, UserDataView, AdminRegistrationView, AdminTokenObtainPairView, AddTeacherView,  addElemSections,get_departments, get_gradelvl_elem, filter_sections, EditSectionView
+from .views import CustomTokenObtainPairView, UserDataView, AdminRegistrationView, AdminTokenObtainPairView, AddTeacherView,  addElemSections, delete_section, get_departments, get_gradelvl_elem, filter_sections, EditSectionView
 from . import views
 
 
@@ -17,6 +17,7 @@ urlpatterns = [
     path('filter-sections/<int:grade_level_id>/', views.filter_sections, name='filter_sections'),
     path('add-elemsection/', addElemSections.as_view(), name="add-elemsection"),
     path('edit-sections/<int:section_id>/', EditSectionView.as_view(), name='edit-section'),  
+    path('del-sections/<int:section_id>/', views.delete_section, name='delete_section')
 
 
 ]
