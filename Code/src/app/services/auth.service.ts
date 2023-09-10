@@ -181,4 +181,35 @@ export class AuthService {
     )
   }
 
+  filterHsSections(gradeLevelId: number): Observable<any>{
+    return this.http.get(`${this.api_url}filter-hs-sections/${gradeLevelId}/`, this.httpOptions).pipe(
+      catchError((error) => {
+        console.error('Error filtering sections:', error);
+        throw error;
+      })
+    );
+  }
+
+  getHsGradeLevels(): Observable<any> {
+    return this.http.get(`${this.api_url}hs-gradelevels/`, this.httpOptions)
+      .pipe(
+        map((response: any) => response.gradelevels), 
+        catchError((error) => {
+          console.error('Error fetching grade levels:', error);
+          throw error; 
+        })
+      );
+  }
+
+  addHsSection(sectionData:any): Observable<any>{
+    return this.http.post(`${this.api_url}add-hssection/`, sectionData, this.httpOptions)
+  }
+
+
+  // editHsSection(sectionId:number,  updatedSection: any): Observable<any>{
+  //   return this.http.put(`${this.api_url}edit-sections/${sectionId}/`,  updatedSection, this.httpOptions).pipe(
+  //     catchError(this.handleError)
+  //   )
+  // }
+
 }

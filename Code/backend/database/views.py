@@ -199,6 +199,8 @@ def get_departments(request):
     } for dept in departments]
     return JsonResponse({'departments': data})
 
+# ELEM 
+
 def get_gradelvl_elem(request):
     elem_dept = Department.objects.get(dept_id = 1)
 
@@ -271,3 +273,47 @@ def delete_section(request, section_id):
     if request.method == 'DELETE':
         section.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+    
+# HIGHSCHOOL
+
+def get_gradelvl_hs(request):
+    elem_dept = Department.objects.get(dept_id = 2)
+
+    gradelevel = GradeLevel.objects.filter(dept_id = elem_dept)
+    data = [{
+        'gradelvl_id': grdlvl.gradelvl_id,
+        'dept_id': grdlvl.dept_id.dept_id,
+        'name': grdlvl.gradelvl
+        } for grdlvl in gradelevel] 
+    return JsonResponse({'gradelevels': data})
+
+def filter_hs_sections(request, grade_level_id):
+    try:
+        grade_level = GradeLevel.objects.get(pk = grade_level_id)
+
+        sections = Section.objects.filter(gradelvl_id = grade_level_id, dept_id = 2)
+        
+
+        section_data = [{'id':section.section_id,
+                        'section_name': section.section_name,
+                        'dept_id':section.dept_id.dept_id,
+                        'gradelvl_id':section.gradelvl_id.gradelvl_id}
+                        for section in sections]
+        grade_level_data = {'id':grade_level.gradelvl_id, 'name': grade_level.gradelvl}
+
+        return JsonResponse({'grade_level': grade_level_data, 'sections':section_data})
+    except GradeLevel.DoesNotExist:
+        return JsonResponse({'error': 'Grade level not found'}, status=404)
+
+class addHsSections(APIView):
+    def post(self, request):
+        request.data['dept_id'] = 2
+        section_serializer = SectionSerializer(data=request.data)
+
+        if section_serializer.is_valid():
+            section_serializer.save()
+            return Response(section_serializer.data, status=status.HTTP_201_CREATED)
+        return Response(section_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# SHS 
+
