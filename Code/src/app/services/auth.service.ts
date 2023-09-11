@@ -205,6 +205,31 @@ export class AuthService {
     return this.http.post(`${this.api_url}add-hssection/`, sectionData, this.httpOptions)
   }
 
+  filtersHsSections(gradeLevelId: number): Observable<any>{
+    return this.http.get(`${this.api_url}filter-shs-sections/${gradeLevelId}/`, this.httpOptions).pipe(
+      catchError((error) => {
+        console.error('Error filtering sections:', error);
+        throw error;
+      })
+    );
+  }
+
+  getsHsGradeLevels(): Observable<any> {
+    return this.http.get(`${this.api_url}shs-gradelevels/`, this.httpOptions)
+      .pipe(
+        map((response: any) => response.gradelevels), 
+        catchError((error) => {
+          console.error('Error fetching grade levels:', error);
+          throw error; 
+        })
+      );
+  }
+
+  addsHsSection(sectionData:any): Observable<any>{
+    return this.http.post(`${this.api_url}add-shssection/`, sectionData, this.httpOptions)
+  }
+  
+
 
   // editHsSection(sectionId:number,  updatedSection: any): Observable<any>{
   //   return this.http.put(`${this.api_url}edit-sections/${sectionId}/`,  updatedSection, this.httpOptions).pipe(
