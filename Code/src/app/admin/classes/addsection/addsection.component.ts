@@ -21,6 +21,7 @@ export class AddsectionComponent {
 
   successMessage: string = '';
   errorMessage:string = '';
+  showAlert: boolean = true;
  
   validationMessages = {
     grlevel: [{type: "required", message: "Choose Grade Level"}],
@@ -59,17 +60,23 @@ export class AddsectionComponent {
 
       this.authService.addElemSection(sectionData).subscribe(
         (response) => {
-          this.successMessage = 'Section Added Successfully';
-          this.errorMessage = ''
-          this.ValidationFormUser.reset();
+          this.showAlert = true;
+
+          setTimeout(() => {
+            this.hideAlert();
+          }, 3000);
         },
         (error) => {
-          this.errorMessage = 'Error adding Section';
-          this.successMessage = '';
+          this.showAlert = true;
+
           
         }
       );
     }
+  }
+
+  hideAlert() {
+    this.showAlert = false;
   }
 
 

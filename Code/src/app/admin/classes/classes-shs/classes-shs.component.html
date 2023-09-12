@@ -58,7 +58,7 @@
         <th scope="col">Action</th>
     </tr>
     </thead>
-    <tbody>
+    <tbody *ngIf="filteredSections.length > 0">
         <tr *ngFor="let section of filteredSections; let i = index">
             <th scope="row">{{ i + 1 }}</th>
             <td>{{ selectedGradeLevel?.name }}</td>
@@ -80,10 +80,16 @@
         </tr>
 
     </tbody>
-    <tbody *ngIf="!selectedGradeLevel">
+    <tbody *ngIf="!selectedGradeLevel && gradelvl.length > 0">
         <tr>
         <td colspan="4">Select Grade Level</td>
         </tr>
+    </tbody>
+    <tbody *ngIf="selectedGradeLevel && filteredSections.length === 0">
+        <tr>
+            <td colspan="4">No data found.</td>
+        </tr>
+
     </tbody>
 </table>
 
