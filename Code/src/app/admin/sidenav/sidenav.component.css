@@ -85,10 +85,10 @@
 
 .sidenav-nav-link:hover{
     background-color: #A70000;
-    color: white;
+    color: white !important;
 }
 .sidenav-nav-link:hover .menu-collapse-icon{
-    color: white;
+    color: white !important;
 }
 .active {
     background-color: #A70000;
@@ -180,3 +180,4 @@ color: white;
     scrollbar-width: thin;
     scrollbar-color: #f0eded transparent;
 }
+

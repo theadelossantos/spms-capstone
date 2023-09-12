@@ -1,7 +1,7 @@
 from django.urls import path
 from .views import AddStudentView
 from django.urls import path
-from .views import CustomTokenObtainPairView, UserDataView, AdminRegistrationView, AdminTokenObtainPairView, AddTeacherView,  addElemSections, addHsSections, filter_hs_sections, get_gradelvl_hs, delete_section, get_departments, get_gradelvl_elem, filter_sections, EditSectionView, filter_shs_sections, addsHsSections, get_gradelvl_shs
+from .views import *
 from . import views
 
 
@@ -21,8 +21,15 @@ urlpatterns = [
     path('filter-hs-sections/<int:grade_level_id>/',views.filter_hs_sections, name='filter-hs-sections'),
     path('hs-gradelevels/', views.get_gradelvl_hs, name='get-hs-gradelevels'),
     path('add-hssection/', addHsSections.as_view(), name='add-hssections'),
-     path('filter-shs-sections/<int:grade_level_id>/',views.filter_shs_sections, name='filter-hs-sections'),
+    path('filter-shs-sections/<int:grade_level_id>/',views.filter_shs_sections, name='filter-hs-sections'),
     path('shs-gradelevels/', views.get_gradelvl_shs, name='get-hs-gradelevels'),
     path('add-shssection/', addsHsSections.as_view(), name='add-hssections'),
-
+    path('filter-elem-courses/<int:grade_level_id>/', views.filter_elem_courses, name='filter-elem-courses'),
+    path('edit-subjects/<int:subject_id>/', EditSubjectView.as_view(), name='edit-subject'),
+    path('del-subjects/<int:subject_id>/', views.delete_subject, name='delete-subject'),
+    path('add-elem-subject/', addElemSubjects.as_view(), name='add-elem-subject'),
+    path('filter-hs-courses/<int:grade_level_id>/', views.filter_hs_courses, name='filter-hs-courses'),
+    path('add-hs-subject/', addHsSubjects.as_view(), name='add-hs-subject'),
+    path('filter-shs-courses/<int:grade_level_id>/', views.filter_shs_courses, name='filter-shs-courses'),
+    path('add-shs-subject/', addsHsSubjects.as_view(), name='add-shs-subject'),
 ]

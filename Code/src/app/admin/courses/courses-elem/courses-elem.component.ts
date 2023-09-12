@@ -2,12 +2,13 @@ import { Component, OnInit, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 import { FormGroup, FormBuilder } from '@angular/forms';
+
 @Component({
-  selector: 'app-courses-shs',
-  templateUrl: './courses-shs.component.html',
-  styleUrls: ['./courses-shs.component.css']
+  selector: 'app-courses-elem',
+  templateUrl: './courses-elem.component.html',
+  styleUrls: ['./courses-elem.component.css']
 })
-export class CoursesShsComponent {
+export class CoursesElemComponent {
   constructor(private authService: AuthService, private router: Router, private fb: FormBuilder) {
     this.form = this.fb.group({
       grlevel: [this.selectedSubject.gradeLevel], 
@@ -29,7 +30,7 @@ export class CoursesShsComponent {
   
 
   ngOnInit(): void {
-    this.authService.getsHsGradeLevels().subscribe((data) => {
+    this.authService.getGradeLevels().subscribe((data) => {
       console.log('Gradelevels:', data);
       this.gradelvl = data;
       console.log('this.gradelvl:', this.gradelvl);
@@ -42,6 +43,10 @@ export class CoursesShsComponent {
   });
     
   }
+  
+  
+  
+  
 
   manageClasses(departmentId: number, gradelvlId: number) {
     if (!gradelvlId) {
@@ -49,7 +54,7 @@ export class CoursesShsComponent {
       return;
     }
   
-    this.authService.filtersHsCourses(gradelvlId).subscribe(
+    this.authService.filterElemCourses(gradelvlId).subscribe(
       (data) => {
         this.selectedGradeLevel = this.gradelvl.find((level) => level.gradelvl_id === gradelvlId);
         this.filteredCourses = data.subjects;
@@ -149,5 +154,7 @@ export class CoursesShsComponent {
       );
     }
   }
+    
+  
     
 }

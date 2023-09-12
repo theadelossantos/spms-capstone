@@ -4,7 +4,7 @@ from .models import Student, Teacher, Admin
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth import authenticate
-from .models import Department, Section, GradeLevel
+from .models import Department, Section, GradeLevel, Subject
 
 User = get_user_model()
 
@@ -190,5 +190,10 @@ class SectionSerializer(serializers.ModelSerializer):
 class GradeLevelSerializer(serializers.ModelSerializer):
     class Meta:
         model = GradeLevel
+        fields = '__all__'
+
+class SubjectSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Subject
         fields = '__all__'
 

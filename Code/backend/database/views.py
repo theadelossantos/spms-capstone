@@ -3,8 +3,8 @@ from rest_framework.response import Response
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
 from rest_framework.views import APIView
-from .models import Student, Teacher, Admin, GradeLevel, Section
-from .serializers import UserSerializer, StudentSerializer, TeacherSerializer, AdminSerializer, CustomTokenObtainPairSerializer, SectionSerializer, AdminLoginSerializer, AdminTokenObtainPairSerializer, GradeLevelSerializer
+from .models import Student, Teacher, Admin, GradeLevel, Section, Subject
+from .serializers import UserSerializer, StudentSerializer, SubjectSerializer, TeacherSerializer, AdminSerializer, CustomTokenObtainPairSerializer, SectionSerializer, AdminLoginSerializer, AdminTokenObtainPairSerializer, GradeLevelSerializer
 from django.contrib.auth import authenticate
 from rest_framework import status, generics, permissions, viewsets
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -355,3 +355,124 @@ class addsHsSections(APIView):
             section_serializer.save()
             return Response(section_serializer.data, status=status.HTTP_201_CREATED)
         return Response(section_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+# COURSES
+
+class EditSubjectView(APIView):
+    def get(self, request, subject_id):
+        try:
+            subject = Subject.objects.get(subject_id = subject_id)
+            serializer = SubjectSerializer(subject)
+            return Response({'subject': serializer.data})
+        except Subject.DoesNotExist:
+            return Response({'error': 'Subject Not Found'}, status=status.HTTP_404_NOT_FOUND)
+        
+    def put(self, request, subject_id):
+        try:
+            with transaction.atomic():  
+                subject = Subject.objects.get(subject_id = subject_id)
+                serializer = SubjectSerializer(subject, data=request.data, partial=True)
+
+                if serializer.is_valid():
+                    serializer.save()
+                    return Response({'message':'Subject updated successfully'})
+                else:
+                    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Subject.DoesNotExist:
+            return Response({'error': 'Subject not found'}, status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(['DELETE'])
+def delete_subject(request, subject_id):
+    try:
+        subject = Subject.objects.get(subject_id = subject_id)
+    except Subject.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    
+    if request.method == 'DELETE':
+        subject.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+#  ELEM COURSES
+def filter_elem_courses(request, grade_level_id):
+    try:
+        grade_level = GradeLevel.objects.get(pk = grade_level_id)
+        subjects = Subject.objects.filter(gradelvl_id = grade_level_id, dept_id = 1)
+
+        subject_data = [{'id':subject.subject_id,
+                         'subject_name': subject.subject_name,
+                         'dept_id': subject.dept_id.dept_id,
+                         'gradelvl_id': subject.gradelvl_id.gradelvl_id
+                        } for subject in subjects]
+        
+        grade_level_data = {'id':grade_level.gradelvl_id, 'name':grade_level.gradelvl}
+        return JsonResponse({'grade level': grade_level_data, 'subjects':subject_data})
+
+    except GradeLevel.DoesNotExist:
+        return JsonResponse({'error': 'Grade Level not Found'}, status=404)
+
+class addElemSubjects(APIView):
+    def post(self, request):
+        request.data['dept_id'] = 1
+        subject_serializer = SubjectSerializer(data=request.data)
+
+        if subject_serializer.is_valid():
+            subject_serializer.save()
+            return Response(subject_serializer.data, status=status.HTTP_201_CREATED)
+        return Response(subject_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# HIGH SCHOOL COURSES
+def filter_hs_courses(request, grade_level_id):
+    try:
+        grade_level = GradeLevel.objects.get(pk = grade_level_id)
+        subjects = Subject.objects.filter(gradelvl_id = grade_level_id, dept_id = 2)
+
+        subject_data = [{'id':subject.subject_id,
+                         'subject_name': subject.subject_name,
+                         'dept_id': subject.dept_id.dept_id,
+                         'gradelvl_id': subject.gradelvl_id.gradelvl_id
+                        } for subject in subjects]
+        
+        grade_level_data = {'id':grade_level.gradelvl_id, 'name':grade_level.gradelvl}
+        return JsonResponse({'grade level': grade_level_data, 'subjects':subject_data})
+
+    except GradeLevel.DoesNotExist:
+        return JsonResponse({'error': 'Grade Level not Found'}, status=404)
+
+class addHsSubjects(APIView):
+    def post(self, request):
+        request.data['dept_id'] = 2
+        subject_serializer = SubjectSerializer(data=request.data)
+
+        if subject_serializer.is_valid():
+            subject_serializer.save()
+            return Response(subject_serializer.data, status=status.HTTP_201_CREATED)
+        return Response(subject_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# SHS COURSES
+def filter_shs_courses(request, grade_level_id):
+    try:
+        grade_level = GradeLevel.objects.get(pk = grade_level_id)
+        subjects = Subject.objects.filter(gradelvl_id = grade_level_id, dept_id = 3)
+
+        subject_data = [{'id':subject.subject_id,
+                         'subject_name': subject.subject_name,
+                         'dept_id': subject.dept_id.dept_id,
+                         'gradelvl_id': subject.gradelvl_id.gradelvl_id
+                        } for subject in subjects]
+        
+        grade_level_data = {'id':grade_level.gradelvl_id, 'name':grade_level.gradelvl}
+        return JsonResponse({'grade level': grade_level_data, 'subjects':subject_data})
+
+    except GradeLevel.DoesNotExist:
+        return JsonResponse({'error': 'Grade Level not Found'}, status=404)
+
+class addsHsSubjects(APIView):
+    def post(self, request):
+        request.data['dept_id'] = 3
+        subject_serializer = SubjectSerializer(data=request.data)
+
+        if subject_serializer.is_valid():
+            subject_serializer.save()
+            return Response(subject_serializer.data, status=status.HTTP_201_CREATED)
+        return Response(subject_serializer.errors, status=status.HTTP_400_BAD_REQUEST)

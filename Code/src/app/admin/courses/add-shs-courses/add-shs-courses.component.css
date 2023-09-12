@@ -1,0 +1,36 @@
+.input-container{
+    margin-right: 10px;
+    margin-bottom: 12px;
+}
+
+.gradelevel{
+    margin-bottom: 12px;
+}
+
+.errordiv{
+    margin:0;
+    font-size: 12px;
+    font-weight: 200;
+    color: red;
+}
+
+.addsectdiv {
+    display: flex; 
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+  }
+  
+  .addsectbutton {
+    width: 350px;
+    height: 44px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+    border-radius: 5px;
+    background: #a70000;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    color: white;
+  }

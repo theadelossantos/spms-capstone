@@ -228,13 +228,57 @@ export class AuthService {
   addsHsSection(sectionData:any): Observable<any>{
     return this.http.post(`${this.api_url}add-shssection/`, sectionData, this.httpOptions)
   }
+
+  filterElemCourses(gradeLevelId:number): Observable<any>{
+    return this.http.get(`${this.api_url}filter-elem-courses/${gradeLevelId}/`, this.httpOptions).pipe(
+      catchError((error) => {
+        console.error('Error filtering courses');
+        throw error;
+      })
+    )
+  }
+
+  editSubject(subjectId:number,  updatedSubject: any): Observable<any>{
+    return this.http.put(`${this.api_url}edit-subjects/${subjectId}/`,  updatedSubject, this.httpOptions).pipe(
+      catchError(this.handleError)
+    )
+  }
+
+  deleteSubject(subjectId:number): Observable<any>{
+    return this.http.delete(`${this.api_url}del-subjects/${subjectId}/`, this.httpOptions).pipe(
+      catchError(this.handleError)
+    )
+  }
+
+  addElemSubject(subjectData: any):  Observable<any>{
+    return this.http.post(`${this.api_url}add-elem-subject/`, subjectData, this.httpOptions)
+  }
+
+  filterHsCourses(gradeLevelId:number): Observable<any>{
+    return this.http.get(`${this.api_url}filter-hs-courses/${gradeLevelId}/`, this.httpOptions).pipe(
+      catchError((error) => {
+        console.error('Error filtering courses');
+        throw error;
+      })
+    )
+  }
+
+  addHsSubject(subjectData: any):  Observable<any>{
+    return this.http.post(`${this.api_url}add-hs-subject/`, subjectData, this.httpOptions)
+  }
+
+  filtersHsCourses(gradeLevelId:number): Observable<any>{
+    return this.http.get(`${this.api_url}filter-shs-courses/${gradeLevelId}/`, this.httpOptions).pipe(
+      catchError((error) => {
+        console.error('Error filtering courses');
+        throw error;
+      })
+    )
+  }
+
+  addsHsSubject(subjectData: any):  Observable<any>{
+    return this.http.post(`${this.api_url}add-shs-subject/`, subjectData, this.httpOptions)
+  }
+
   
-
-
-  // editHsSection(sectionId:number,  updatedSection: any): Observable<any>{
-  //   return this.http.put(`${this.api_url}edit-sections/${sectionId}/`,  updatedSection, this.httpOptions).pipe(
-  //     catchError(this.handleError)
-  //   )
-  // }
-
 }
