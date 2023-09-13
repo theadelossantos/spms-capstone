@@ -104,4 +104,170 @@
         width: 25%;
     }
 } */
+.fmname,
+.lname,
+.address,
+.gend-bday,
+.gr-sec,
+.email,
+.pw {
+align-items: center;
+margin-bottom: 12px;
+}
 
+.persoinfo{
+  font-weight: bold;
+  color: #1c2120;
+  margin-bottom: 15px;
+}
+
+.fmname {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.errordiv{
+  margin-bottom: 12px;
+}
+
+
+.gend-bday {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  
+}
+.input-container:first-child {
+  margin-right: 10px;
+}
+
+
+.gr-sec {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.input-container {
+  width: 100%;
+}
+
+.input-container-section {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.accdeets{
+  font-weight: bold;
+  color: #1c2120;
+  margin-bottom: 15px;
+}
+  
+
+/* .custom-icon {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 10px;
+  z-index: 2;
+  font-size: 16px;
+  color:#999;
+  
+} */
+
+
+.addstuddiv {
+  display: flex; 
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.addstudbutton {
+  width: 350px;
+  height: 44px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+  border-radius: 5px;
+  background: #a70000;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  color: white;
+}
+
+.error_message{
+  margin:0;
+  font-size: 12px;
+  font-weight: 200;
+  color: red;
+
+}
+
+.addsubj{
+  height: 40px;
+  font-size: 15px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  margin-bottom: 10px;
+  background-color: #a70000;
+  color: white;
+}
+.addsubjicon{
+  margin-right: 5px;
+}
+    
+.assigninfo{
+  font-weight: bold;
+  color: #1c2120;
+  margin-bottom: 5px;
+}
+.remicon{
+  margin-right: 5px;
+}
+.remsubj{
+  height: 30px;
+  font-size: 12px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  margin-bottom: 10px;
+  background-color: #a70000;
+  color: white;
+}
+
+.input-with-icon {
+  position: relative;
+}
+
+.custom-icon {
+  position: absolute;
+  top: 50%;
+  right: 10px; 
+  transform: translateY(-50%);
+  font-size: 16px;
+  color: #999;
+  cursor: pointer;
+  z-index: 2;
+}
+
+@media (max-width: 767px) {
+  .custom-icon {
+      right: 5px;
+  }
+}
+
+.custom-btn{
+  margin-left: 5px;
+  margin-bottom: 8px;
+  background-color: #a70000;
+}

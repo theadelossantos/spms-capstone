@@ -100,7 +100,6 @@ a{
 }
 
 .about-section {
-  padding: 20px 0;
   position: relative; 
   height: auto;
   margin-bottom: 10px;
@@ -118,7 +117,7 @@ a{
   height: 300px;
   position: absolute;
   top: 0; 
-  left: -50px; 
+  left: -160px; 
   z-index: 1;
 }
 
