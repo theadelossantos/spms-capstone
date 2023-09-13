@@ -69,20 +69,20 @@ class AddTeacherView(APIView):
 def filter_teachers(request, grade_level_id):
     try:
         grade_level = GradeLevel.objects.get(pk = grade_level_id)
-        teachers = Teacher.objects.filter(gradelvl_id = grade_level_id)
-        teachers_data = [{'id':teachers.teacher_id,
-                          'dept_id':teachers.dept_id.dept_id,
-                          'gradelvl_id':teachers.gradelvl_id.gradelvl_id,
-                          'section_id':teachers.section_id.section_id,
-                          'subject_id':teachers.subject_id.subject_id,
-                          'fname':teachers.fname,
-                          'mname':teachers.mname,
-                          'lname':teachers.lname,
-                          'address':teachers.address,
-                          'phone':teachers.phone,
-                          'gender':teachers.gender,
-                          'birthdate':teachers.birthdate
-                          }]
+        teachers = Teacher.objects.filter(gradelvl_id = grade_level_id, dept_id = 1)
+        teachers_data = [{'id':teacher.teacher_id,
+                          'dept_id':teacher.dept_id.dept_id,
+                          'gradelvl_id':teacher.gradelvl_id.gradelvl_id,
+                          'section_id':teacher.section_id.section_id,
+                          'subject_id':teacher.subject_id.subject_id,
+                          'fname':teacher.fname,
+                          'mname':teacher.mname,
+                          'lname':teacher.lname,
+                          'address':teacher.address,
+                          'phone':teacher.phone,
+                          'gender':teacher.gender,
+                          'birthdate':teacher.birthdate
+                          } for teacher in teachers]
         grade_level_data = {'id':grade_level.gradelvl_id, 'name':grade_level.gradelvl}
 
         return JsonResponse({'grade_level': grade_level_data, 'teachers': teachers_data})

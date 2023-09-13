@@ -4,7 +4,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { AddTeacherComponent } from './admin/add-teacher/add-teacher.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AddStudentComponent } from './admin/add-student/add-student.component';
 import { TeacherHomepageComponent } from './teacher/teacher-homepage/teacher-homepage.component';
@@ -23,7 +22,6 @@ import { TeacherSublevelMenuComponent } from './admin/sidenav/teacher-sublevel-m
 @NgModule({
   declarations: [
     AppComponent,
-    AddTeacherComponent,
     AddStudentComponent,
     StudentHomepageComponent,
     TeacherHomepageComponent,
