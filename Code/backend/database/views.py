@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
 from rest_framework.views import APIView
-from .models import Student, Teacher, Admin, GradeLevel, Section, Subject
+from .models import *
 from .serializers import UserSerializer, StudentSerializer, SubjectSerializer, TeacherSerializer, AdminSerializer, CustomTokenObtainPairSerializer, SectionSerializer, AdminLoginSerializer, AdminTokenObtainPairSerializer, GradeLevelSerializer
 from django.contrib.auth import authenticate
 from rest_framework import status, generics, permissions, viewsets
@@ -19,8 +19,6 @@ from .models import Department
 from django.views import View
 from django.db import transaction
 from rest_framework.decorators import api_view
-
-
 
 class AddStudentView(APIView):
     def post(self, request):
@@ -44,8 +42,10 @@ class AddStudentView(APIView):
                 "student_errors": student_serializer.errors
             }, status=status.HTTP_400_BAD_REQUEST)
 
+# ADD TEACHERS ELEM 
 class AddTeacherView(APIView):
     def post(self, request):
+        request.data['dept_id'] = 1
         user_serializer = UserSerializer(data=request.data.get('user'))
         teacher_serializer = TeacherSerializer(data=request.data)
 
@@ -65,6 +65,64 @@ class AddTeacherView(APIView):
                 "user_errors": user_serializer.errors,
                 "teacher_errors": teacher_serializer.errors
             }, status=status.HTTP_400_BAD_REQUEST)
+        
+def filter_teachers(request, grade_level_id):
+    try:
+        grade_level = GradeLevel.objects.get(pk = grade_level_id)
+        teachers = Teacher.objects.filter(gradelvl_id = grade_level_id)
+        teachers_data = [{'id':teachers.teacher_id,
+                          'dept_id':teachers.dept_id.dept_id,
+                          'gradelvl_id':teachers.gradelvl_id.gradelvl_id,
+                          'section_id':teachers.section_id.section_id,
+                          'subject_id':teachers.subject_id.subject_id,
+                          'fname':teachers.fname,
+                          'mname':teachers.mname,
+                          'lname':teachers.lname,
+                          'address':teachers.address,
+                          'phone':teachers.phone,
+                          'gender':teachers.gender,
+                          'birthdate':teachers.birthdate
+                          }]
+        grade_level_data = {'id':grade_level.gradelvl_id, 'name':grade_level.gradelvl}
+
+        return JsonResponse({'grade_level': grade_level_data, 'teachers': teachers_data})
+    except GradeLevel.DoesNotExist:
+        return JsonResponse({'error':'Grade Level not Found'}, status=status.HTTP_404_NOT_FOUND)
+
+class EditTeacherView(APIView):
+    def get(self, request, teacher_id):
+        try:
+            teacher = Teacher.objects.get(teacher_id = teacher_id)
+            serializer = TeacherSerializer(teacher)
+            return Response({'teacher':serializer.data})
+        except Teacher.DoesNotExist:
+            return Response({'error':'Teacher not found.'}, status=status.HTTP_404_NOT_FOUND)
+    
+    def put(self, request, teacher_id):
+        try:
+            with transaction.atomic():
+                teacher = Teacher.objects.get(teacher_id = teacher_id)
+                serializer = TeacherSerializer(teacher, data=request.data, partial=True)
+
+                if serializer.is_valid():
+                    serializer.save()
+                    return Response({'message': 'Teacher updated Successfully'})
+                else:
+                    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Teacher.DoesNotExist:
+            return Response({'error':'Teacher not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+@api_view(['DELETE'])
+def delete_teacher(request, teacher_id):
+    try:
+        teacher = Teacher.objects.get(teacher_id = teacher_id)
+    except Teacher.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    
+    if request.method == 'DELETE':
+        teacher.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
 
 class AdminRegistrationView(APIView):
     def post(self, request):

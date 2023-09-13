@@ -1,15 +1,15 @@
 <div *ngIf="departmentId === '1'">
-    <h1>Elementary Department</h1>
+    <app-t-elem></app-t-elem>
 </div>
   
 <div *ngIf="departmentId === '2'">
-    <h1>High School Department</h1>
+    <app-t-hschool></app-t-hschool>
 </div>
   
 <div *ngIf="departmentId === '3'">
-    <h1>SHS Department</h1>
+    <app-t-shschool></app-t-shschool>
 </div>
 
 <div *ngIf="departmentId !== '1' && departmentId !== '2' && departmentId !== '3'">
-    <h1>Default Department (Elementary)</h1>
+    <app-t-elem></app-t-elem>
 </div>

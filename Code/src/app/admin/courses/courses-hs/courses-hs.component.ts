@@ -119,7 +119,7 @@ export class CoursesHsComponent {
 
   }
   editSection(subject: any) {
-    console.log('Selected Section:', subject);
+    console.log('Selected Subject:', subject);
   
     this.selectedSubject = {
       subject_id: subject.id,

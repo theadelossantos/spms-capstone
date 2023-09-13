@@ -4,6 +4,7 @@ import { TeacherComponent } from './teacher.component';
 import { TeacherRoutingModule } from './teacher-routing.module';
 import { THschoolComponent } from './t-hschool/t-hschool.component';
 import { TShschoolComponent } from './t-shschool/t-shschool.component';
+import { TElemComponent } from './t-elem/t-elem.component';
 
 
 @NgModule({
@@ -11,6 +12,7 @@ import { TShschoolComponent } from './t-shschool/t-shschool.component';
     TeacherComponent,
     THschoolComponent,
     TShschoolComponent,
+    TElemComponent,
 
   ],
   imports: [

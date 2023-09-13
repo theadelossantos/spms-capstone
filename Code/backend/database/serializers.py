@@ -5,6 +5,8 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth import authenticate
 from .models import Department, Section, GradeLevel, Subject
+from django.utils.text import slugify
+
 
 User = get_user_model()
 
@@ -19,6 +21,11 @@ class UserSerializer(serializers.ModelSerializer):
         }
 
     def create(self, validated_data):
+        username = validated_data.get('username')
+        if username is None:
+            email = validated_data.get('email')
+            validated_data['username'] = self.generate_unique_username(email)
+
         password = validated_data.pop('password')
         user = User.objects.create_user(**validated_data)
         user.set_password(password)
@@ -30,7 +37,8 @@ class UserSerializer(serializers.ModelSerializer):
         user.save()
         return user
 
-
+    def generate_unique_username(self,email):
+        return slugify(email)
 
 class StudentSerializer(serializers.ModelSerializer):
     user = UserSerializer(write_only=True)
@@ -55,7 +63,7 @@ class TeacherSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         user_data = validated_data.pop('user')
-        user = User.objects.create_user(**user_data, role='teacher')
+        user = User.objects.create_user(**user_data)
         teacher = Teacher.objects.create(user=user, **validated_data)
         return teacher
 
