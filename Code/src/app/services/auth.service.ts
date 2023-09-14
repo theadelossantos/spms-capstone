@@ -302,7 +302,9 @@ export class AuthService {
     return this.http.post(`${this.api_url}add-shs-subject/`, subjectData, this.httpOptions)
   }
 
-  
+  getGradelevelsByDept(departmentId:number): Observable<any>{
+    return this.http.get(`${this.api_url}get-gradelvldept/${departmentId}/`, this.httpOptions)
+  }
 
   
 }

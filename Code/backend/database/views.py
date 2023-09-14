@@ -89,6 +89,35 @@ def filter_teachers(request, grade_level_id):
     except GradeLevel.DoesNotExist:
         return JsonResponse({'error':'Grade Level not Found'}, status=status.HTTP_404_NOT_FOUND)
 
+
+def get_grade_levels_by_department(request, department_id):
+    try:
+        department = Department.objects.get(pk=department_id)
+        grade_levels = GradeLevel.objects.filter(dept_id=department)
+        data = [{
+             'gradelvl_id': gradelvl.gradelvl_id,
+            'dept_id': gradelvl.dept_id.dept_id,
+            'name': gradelvl.gradelvl
+        } for gradelvl in grade_levels]
+        return JsonResponse({'gradelevels': data})
+    except Department.DoesNotExist:
+        return JsonResponse({'error': 'Department not found'}, status=404)
+    
+def get_sections_by_department(request, department_id, grade_level_id):
+    try:
+        department = Department.objects.get(pk=department_id)
+        gradelevel = GradeLevel.objects.get(pk=grade_level_id)
+        sections = Section.objects.filter(dept_id=department, grade_level_id=gradelevel)
+        data = [{
+            'section_id':section.section_id,
+            'gradelvl_id': section.gradelvl_id,
+            'dept_id': section.dept_id.dept_id,
+            'name': section.gradelvl
+        } for section in sections]
+        return JsonResponse({'gradelevels': data})
+    except Department.DoesNotExist:
+        return JsonResponse({'error': 'Department not found'}, status=404)
+    
 class EditTeacherView(APIView):
     def get(self, request, teacher_id):
         try:

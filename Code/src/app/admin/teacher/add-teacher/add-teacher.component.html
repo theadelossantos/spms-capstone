@@ -72,15 +72,17 @@
         <label class="personalinfo">ADVISING SECTION</label>
     </div>
     <div class="mb-2">
-      <select label-placement="floating" 
+        <select label-placement="floating" 
           fill="outline" 
           label="Department" 
           class="form-control" 
           name="department" 
-          formControlName="department">
-          <option value="" disabled selected>Department</option>
-          <!-- <option *ngFor="let gradeLevel of gradeLevels" [value]="gradeLevel">{{ gradeLevel }}</option> -->
-      </select>
+          formControlName="department"
+          [(ngModel)]="selectedDepartment"
+          (change)="onDepartmentChange(selectedDepartment)">
+          <option [value]="null" disabled selected>Department</option>
+          <option *ngFor="let department of departments" [value]="department?.id">{{ department?.name }}</option> 
+        </select>
       <ng-container *ngFor="let validation of validationMessages.department">
           <div
               class="error_message"
@@ -97,13 +99,15 @@
       <div class="input-container">
         
         <select label-placement="floating" 
-          fill="outline" 
-          label="Grade Level" 
-          class="form-control" 
-          name="gradelevel" 
-          formControlName="gradelevel">
-          <option value="" disabled selected>Grade Level</option>
-          <option *ngFor="let gradeLevel of gradeLevels" [value]="gradeLevel">{{ gradeLevel }}</option>
+        fill="outline" 
+        label="Grade Level" 
+        class="form-control" 
+        name="gradelevel" 
+        formControlName="gradelevel"
+        [(ngModel)]="selectedGradeLevel"
+          >
+          <option [value]="null" disabled selected>Grade Level</option>
+          <option *ngFor="let gradeLevel of gradeLevels" [value]="gradeLevel?.name">{{ gradeLevel.name }}</option>
         </select>
         <ng-container *ngFor="let validation of validationMessages.gradelevel">
           <div
@@ -127,7 +131,7 @@
           name="section" 
           formControlName="section">
           <option value="" disabled selected>Section</option>
-          <option *ngFor="let section of sections" [value]="section">{{section}}</option>
+          <option *ngFor="let section of filteredSections" [value]="section?.section_name">{{section?.section_name}}</option>
         </select>
         <ng-container *ngFor="let validation of validationMessages.section">
           <div

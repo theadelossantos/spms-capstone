@@ -35,4 +35,7 @@ urlpatterns = [
     path('add-hs-subject/', addHsSubjects.as_view(), name='add-hs-subject'),
     path('filter-shs-courses/<int:grade_level_id>/', views.filter_shs_courses, name='filter-shs-courses'),
     path('add-shs-subject/', addsHsSubjects.as_view(), name='add-shs-subject'),
+    path('get-gradelvldept/<int:department_id>/', views.get_grade_levels_by_department, name='get-gradelevels-by-department'),
+    path('get-sectiondept/<int:department_id>/<int:grade_level_id>/', views.get_sections_by_department, name='get-sections-by-department'),
+    
 ]

@@ -1,5 +1,10 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators, FormArray, Form} from '@angular/forms';
+import { AuthService } from 'src/app/services/auth.service';
+
+interface GradeLevelResponse {
+  gradelevels: any[]; 
+}
 
 
 @Component({
@@ -13,7 +18,7 @@ export class AddTeacherComponent {
   emailExistsError: boolean = false;
   phoneError: boolean = false;
   subjects: string[] = [];
-  gradeLevels: string[] = [];
+  gradeLevels: any[] = [];
   gradeLevelss: string[] = [];
   assignments: FormArray;
   sections: string[] = [];
@@ -21,6 +26,12 @@ export class AddTeacherComponent {
   sectionIds: number[] = [];
   selectedDate: Date = new Date();
   showDatePicker: boolean = false;
+  departments: any[] = [];
+  filteredSections: any[] = [];
+  selectedDepartment: number | null = null;
+  selectedGradeLevel: number | null = null;
+
+
 
   fname : string = "";
   mname : string = "";
@@ -66,7 +77,7 @@ export class AddTeacherComponent {
 
   
 
-  constructor(private formbuilder:FormBuilder) {
+  constructor(private formbuilder:FormBuilder, private authService: AuthService) {
 
     // this.setToday();
 
@@ -146,11 +157,43 @@ export class AddTeacherComponent {
     this.assignments.removeAt(index);
   }
 
-  ngOnInit(){
+  ngOnInit(gradelvlId:number){
     this.addSubject();
+
+    this.authService.getDepartments().subscribe(
+      (response:any) => {
+      this.departments = response.departments;
+      console.log('Departments:', this.departments);
+    })
+
+    
+
+    this.gradeLevels = [];
 
   }
 
+  onDepartmentChange(selectedDepartment: number | null): void {
+    if (selectedDepartment !== null) {
+      this.authService.getGradelevelsByDept(selectedDepartment).subscribe(
+        (data: GradeLevelResponse) => { 
+          this.gradeLevels = data.gradelevels;
+          console.log('Grade Levels:', this.gradeLevels);
+        },
+        (error) => {
+          console.error('Error fetching grade levels', error);
+        }
+      );
+    } else {
+      this.gradeLevels = [];
+    }
+  }
+
+  // onGradeLevelChange(selectedGradeLevel: number | null ): void{
+  //   if(selectedGradeLevel !== null){
+  //     this.authService.filter
+  //   }
+  // }
+  
   onDateChange(event: any): void {
     const selectedDate: Date = event.target.valueAsDate; 
     if (selectedDate){
@@ -163,7 +206,20 @@ export class AddTeacherComponent {
 toggleDatePicker() {
   this.showDatePicker = !this.showDatePicker;
 }
-  
+
+onSubmit() {
+  if (this.ValidationFormUser.valid) {
+    const teacherData = this.ValidationFormUser.value;
+    this.authService.addTeacher(teacherData).subscribe(
+      (response) => {
+        console.log('Teacher added successfully', response);
+      },
+      (error) => {
+        console.error('Error adding teacher', error);
+      }
+    );
+  }
+}
 
 }
 

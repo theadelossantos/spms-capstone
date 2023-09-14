@@ -67,8 +67,6 @@ class Admin(models.Model):
     address = models.CharField(max_length=255, default='')
 
 
-
-
 class Department(models.Model):
     dept_id = models.AutoField(primary_key=True)
     dept_name = models.CharField(max_length=50)
