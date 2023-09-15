@@ -50,7 +50,6 @@ class AddTeacherView(APIView):
         if section_id and Teacher.objects.filter(section_id=section_id).exists():
             return Response({"error": "Section already assigned to another teacher."}, status=status.HTTP_400_BAD_REQUEST)
         
-        request.data['dept_id'] = 1
         user_serializer = UserSerializer(data=request.data.get('user'))
         teacher_serializer = TeacherSerializer(data=request.data)
 
@@ -127,25 +126,44 @@ def get_sections_by_department(request, department_id, grade_level_id):
 class EditTeacherView(APIView):
     def get(self, request, teacher_id):
         try:
-            teacher = Teacher.objects.get(teacher_id = teacher_id)
+            teacher = Teacher.objects.get(teacher_id=teacher_id)
             serializer = TeacherSerializer(teacher)
-            return Response({'teacher':serializer.data})
+            serialized_data = serializer.data
+
+            serialized_data['user_email'] = teacher.user.email
+
+            return Response({'teacher': serialized_data})
         except Teacher.DoesNotExist:
-            return Response({'error':'Teacher not found.'}, status=status.HTTP_404_NOT_FOUND)
+            return Response({'error': 'Teacher not found.'}, status=status.HTTP_404_NOT_FOUND)
     
     def put(self, request, teacher_id):
         try:
             with transaction.atomic():
-                teacher = Teacher.objects.get(teacher_id = teacher_id)
-                serializer = TeacherSerializer(teacher, data=request.data, partial=True)
-
+                teacher = Teacher.objects.get(teacher_id=teacher_id)
+                serializer = TeacherSerializer(teacher, data=request.data['teacher'], partial=True)
+                
                 if serializer.is_valid():
                     serializer.save()
-                    return Response({'message': 'Teacher updated Successfully'})
                 else:
                     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                
+                # Now handle the user data
+                try:
+                    user_data = request.data['teacher']['user']
+                    user = teacher.user  
+                    user_serializer = UserSerializer(user, data=user_data, partial=True)
+                    
+                    if user_serializer.is_valid():
+                        user_serializer.save()
+                    else:
+                        return Response(user_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                except KeyError:
+                    pass  
+                
+                return Response({'message': 'Teacher updated successfully'})
         except Teacher.DoesNotExist:
-            return Response({'error':'Teacher not found.'}, status=status.HTTP_404_NOT_FOUND)
+            return Response({'error': 'Teacher not found.'}, status=status.HTTP_404_NOT_FOUND)
+
 
 @api_view(['DELETE'])
 def delete_teacher(request, teacher_id):
