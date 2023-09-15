@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Student, Teacher, Admin, GradeLevel, Department, Section, Subject, CustomUser
+from .models import *
 # Register your models here.
 
 class StudentAdmin(admin.ModelAdmin):
@@ -8,9 +8,16 @@ class StudentAdmin(admin.ModelAdmin):
 admin.site.register(Student, StudentAdmin)
 
 class TeacherAdmin(admin.ModelAdmin):
-    list_display = ('teacher_id', 'dept_id', 'gradelvl_id', 'section_id', 'subject_id', 'fname', 'mname', 'lname', 'address', 'phone', 'gender', 'birthdate', 'user_id')
+    list_display = ('teacher_id', 'dept_id', 'gradelvl_id', 'section_id', 'fname', 'mname', 'lname', 'address', 'phone', 'gender', 'birthdate', 'user_id')
 
+   
 admin.site.register(Teacher, TeacherAdmin)
+
+class AssignAdmin(admin.ModelAdmin):
+    list_display = ('teacher', 'subject_id', 'dept_id', 'gradelvl_id', 'section_id')
+
+admin.site.register(Assigned, AssignAdmin)
+
 
 class AdminMain(admin.ModelAdmin):
     list_display = ('admin_id', 'fname', 'mname', 'lname', 'address', 'phone', 'gender', 'user_id')
@@ -33,4 +40,5 @@ class SubjectAdmin(admin.ModelAdmin):
     list_display = ('subject_id','dept_id','gradelvl_id', 'subject_name')
 admin.site.register(Subject, SubjectAdmin)
 
+    
 admin.site.register(CustomUser)

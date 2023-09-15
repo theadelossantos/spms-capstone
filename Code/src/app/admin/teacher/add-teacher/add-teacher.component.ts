@@ -4,6 +4,7 @@ import { AuthService } from 'src/app/services/auth.service';
 
 interface GradeLevelResponse {
   gradelevels: any[]; 
+  sections:any[];
 }
 
 
@@ -15,13 +16,12 @@ interface GradeLevelResponse {
 export class AddTeacherComponent {
 
   ValidationFormUser: FormGroup;
-  emailExistsError: boolean = false;
+  emailExistsError: string = '';
   phoneError: boolean = false;
   subjects: string[] = [];
   gradeLevels: any[] = [];
   gradeLevelss: string[] = [];
-  assignments: FormArray;
-  sections: string[] = [];
+  sections: any[] = [];
   sectionId: string = '';
   sectionIds: number[] = [];
   selectedDate: Date = new Date();
@@ -30,8 +30,9 @@ export class AddTeacherComponent {
   filteredSections: any[] = [];
   selectedDepartment: number | null = null;
   selectedGradeLevel: number | null = null;
-
-
+  selectedSection: number | null = null;
+  birthdateControl = new FormControl(this.selectedDate, Validators.compose([]));
+  sectionAssignmentError: string = '';
 
   fname : string = "";
   mname : string = "";
@@ -42,7 +43,6 @@ export class AddTeacherComponent {
   birthdate:string= "";
   department: string ="";
   gradelevel : string = "";
-  gradelevel1 : string = "";
   section : string = "";
   email : string = "";
   password : string = "";
@@ -57,7 +57,6 @@ export class AddTeacherComponent {
     gender:[{type: "required", message: "Select Gender"}],
     department:[{type: "required", message: "Choose Department"}],
     gradelevel:[{type:"required", message:"Choose Grade Level"}],
-    gradelevel1:[{type:"required", message:"Choose Grade Level"}],
     section:[{type:"required", message:"Choose section"}],
     email:[
       {type:"required", message:"Enter Email Address"},
@@ -67,6 +66,7 @@ export class AddTeacherComponent {
       {type: "required", message:"Password required"},
       {type: "minLength", message:"Password must be atleast 5 characters"}
     ],
+    
     
     
   }
@@ -110,7 +110,7 @@ export class AddTeacherComponent {
       section: new FormControl('',Validators.compose([
         Validators.required
       ])),
-      birthdate: new FormControl('',Validators.compose([])),
+      birthdate: this.birthdateControl,
       email: new FormControl('',Validators.compose([
         Validators.required,
         Validators.pattern('^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$')
@@ -119,9 +119,8 @@ export class AddTeacherComponent {
         Validators.required,
         Validators.minLength(5)
       ])),
-      assignments: this.formbuilder.array([]),
+      
     });
-    this.assignments = this.ValidationFormUser.get('assignments') as FormArray;
   }
 
   capitalizeFirstLetter(event: any, controlName: string): void {
@@ -145,20 +144,20 @@ export class AddTeacherComponent {
     this.phoneError = false;
   }
   
-  addSubject(){
-    const assignment = this.formbuilder.group({
-      gradelevel:['',Validators.required],
-      subjects: new FormControl([], Validators.required),
-    });
-    this.assignments.push(assignment);
-  }
+  // addSubject(){
+  //   const assignment = this.formbuilder.group({
+  //     gradelevel:['',Validators.required],
+  //     subjects: new FormControl([], Validators.required),
+  //   });
+  //   this.assignments.push(assignment);
+  // }
 
-  removeAssignment(index: number){
-    this.assignments.removeAt(index);
-  }
+  // removeAssignment(index: number){
+  //   this.assignments.removeAt(index);
+  // }
 
   ngOnInit(gradelvlId:number){
-    this.addSubject();
+    // this.addSubject();
 
     this.authService.getDepartments().subscribe(
       (response:any) => {
@@ -188,11 +187,27 @@ export class AddTeacherComponent {
     }
   }
 
-  // onGradeLevelChange(selectedGradeLevel: number | null ): void{
-  //   if(selectedGradeLevel !== null){
-  //     this.authService.filter
-  //   }
-  // }
+  onGradeLevelChange(selectedGradeLevel: number | null, selectedDepartment: number | null): void {
+    if (selectedGradeLevel !== null && selectedDepartment !== null) {
+      console.log('Selected Grade Level', selectedGradeLevel)
+      
+      this.authService.getSectionsByDeptGL(selectedDepartment, selectedGradeLevel).subscribe(
+        (data: GradeLevelResponse) => {
+          console.log('API Response', data);
+          this.sections = data.sections;
+          console.log('Sections:', this.sections);
+
+          
+        },
+        (error) => {
+          console.error('Error fetching sections', error);
+        }
+      );
+    } else {
+      this.gradeLevels = [];
+    }
+  }
+  
   
   onDateChange(event: any): void {
     const selectedDate: Date = event.target.valueAsDate; 
@@ -209,17 +224,65 @@ toggleDatePicker() {
 
 onSubmit() {
   if (this.ValidationFormUser.valid) {
-    const teacherData = this.ValidationFormUser.value;
-    this.authService.addTeacher(teacherData).subscribe(
-      (response) => {
-        console.log('Teacher added successfully', response);
-      },
-      (error) => {
-        console.error('Error adding teacher', error);
-      }
-    );
+      const formattedBirthdate = this.formatDate(this.selectedDate);
+    
+      const teacherData = {
+        ...this.ValidationFormUser.value,
+        user: {
+          email: this.ValidationFormUser.value.email,
+          password: this.ValidationFormUser.value.password
+        },
+        dept_id: this.selectedDepartment,
+        gradelvl_id: this.selectedGradeLevel,
+        section_id: this.selectedSection,
+        fname: this.ValidationFormUser.value.fname,
+        mname: this.ValidationFormUser.value.mname,
+        lname: this.ValidationFormUser.value.lname,
+        address: this.ValidationFormUser.value.address,
+        phone: this.ValidationFormUser.value.phone,
+        gender: this.ValidationFormUser.value.gender,
+        birthdate: formattedBirthdate
+      };
+
+      this.authService.addTeacher(teacherData).subscribe(
+        (response) => {
+          console.log('Teacher added successfully', response);
+          this.ValidationFormUser.get('gender').setValue('Gender');
+          this.ValidationFormUser.reset();
+          this.selectedDate = new Date();
+          this.birthdateControl.setValue(this.selectedDate);
+
+          this.sectionAssignmentError = '';
+          this.emailExistsError = '';
+
+        },
+        (error) => {
+          console.log('Error', error)
+          if (error.error && error.error.user_errors && error.error.user_errors.email) {
+            // Set the emailExistsError message from the backend response
+            this.emailExistsError = error.error.user_errors.email[0];
+          } else if (error.error && error.error.error === 'Section already assigned to another teacher.') {
+            // Set the sectionAssignmentError message
+            this.sectionAssignmentError = error.error.error;
+          } else {
+            // Set a general error message
+            this.emailExistsError = 'An unknown error occurred.';
+          }
+        }
+      );
   }
 }
+
+
+formatDate(date: Date): string {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+
+
 
 }
 

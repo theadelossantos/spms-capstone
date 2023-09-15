@@ -4,8 +4,9 @@ from .models import Student, Teacher, Admin
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth import authenticate
-from .models import Department, Section, GradeLevel, Subject
+from .models import *
 from django.utils.text import slugify
+from .serializers import *
 
 
 User = get_user_model()
@@ -54,6 +55,15 @@ class StudentSerializer(serializers.ModelSerializer):
         return student
 
 
+
+
+class AssignedSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Assigned
+        fields = ['teacher', 'subject_id', 'dept_id', 'gradelvl_id', 'section_id']
+        read_only_fields = ['teacher']
+
+       
 class TeacherSerializer(serializers.ModelSerializer):
     user = UserSerializer(write_only=True)
 
@@ -66,6 +76,11 @@ class TeacherSerializer(serializers.ModelSerializer):
         user = User.objects.create_user(**user_data)
         teacher = Teacher.objects.create(user=user, **validated_data)
         return teacher
+
+
+
+
+
 
 class AdminLoginSerializer(serializers.Serializer):
     email = serializers.EmailField()

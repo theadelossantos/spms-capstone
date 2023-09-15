@@ -42,19 +42,31 @@ class Teacher(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     teacher_id = models.AutoField(primary_key=True)
     dept_id = models.ForeignKey('Department', on_delete=models.CASCADE)
-    gradelvl_id = models.ForeignKey('GradeLevel', on_delete=models.CASCADE)
-    section_id = models.ForeignKey('Section', on_delete=models.CASCADE)
-    subject_id = models.ForeignKey('Subject', on_delete=models.CASCADE)
+    gradelvl_id  = models.ForeignKey('GradeLevel', on_delete=models.CASCADE)
+    section_id  = models.ForeignKey('Section', on_delete=models.CASCADE)
     fname = models.CharField(max_length=50)
-    mname = models.CharField(max_length=50)
+    mname = models.CharField(max_length=50, blank=True, null=True)
     lname = models.CharField(max_length=50)
     address = models.CharField(max_length=255)
     phone = models.CharField(max_length=25)
     gender = models.CharField(max_length=10)
     birthdate = models.DateField(default=timezone.now)
-
+    
     def __str__(self):
         return str(self.teacher_id)
+
+
+class Assigned(models.Model):
+    teacher = models.ForeignKey('Teacher', on_delete=models.CASCADE)
+    subject_id = models.ForeignKey('Subject', on_delete=models.CASCADE)
+    dept_id = models.ForeignKey('Department', on_delete=models.CASCADE)
+    gradelvl_id = models.ForeignKey('GradeLevel', on_delete=models.CASCADE)
+    section_id = models.ForeignKey('Section', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"Assignment for Teacher {self.teacher} in {self.subject_id} for {self.dept_id}, Grade {self.gradelvl_id}, Section {self.section_id}"
+
+
 
 class Admin(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, default=1)

@@ -4,7 +4,7 @@ from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
 from rest_framework.views import APIView
 from .models import *
-from .serializers import UserSerializer, StudentSerializer, SubjectSerializer, TeacherSerializer, AdminSerializer, CustomTokenObtainPairSerializer, SectionSerializer, AdminLoginSerializer, AdminTokenObtainPairSerializer, GradeLevelSerializer
+from .serializers import *
 from django.contrib.auth import authenticate
 from rest_framework import status, generics, permissions, viewsets
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -44,7 +44,12 @@ class AddStudentView(APIView):
 
 # ADD TEACHERS ELEM 
 class AddTeacherView(APIView):
-    def post(self, request):
+   def post(self, request):
+        section_id = request.data.get('section_id')
+        
+        if section_id and Teacher.objects.filter(section_id=section_id).exists():
+            return Response({"error": "Section already assigned to another teacher."}, status=status.HTTP_400_BAD_REQUEST)
+        
         request.data['dept_id'] = 1
         user_serializer = UserSerializer(data=request.data.get('user'))
         teacher_serializer = TeacherSerializer(data=request.data)
@@ -65,7 +70,8 @@ class AddTeacherView(APIView):
                 "user_errors": user_serializer.errors,
                 "teacher_errors": teacher_serializer.errors
             }, status=status.HTTP_400_BAD_REQUEST)
-        
+
+
 def filter_teachers(request, grade_level_id):
     try:
         grade_level = GradeLevel.objects.get(pk = grade_level_id)
@@ -74,7 +80,6 @@ def filter_teachers(request, grade_level_id):
                           'dept_id':teacher.dept_id.dept_id,
                           'gradelvl_id':teacher.gradelvl_id.gradelvl_id,
                           'section_id':teacher.section_id.section_id,
-                          'subject_id':teacher.subject_id.subject_id,
                           'fname':teacher.fname,
                           'mname':teacher.mname,
                           'lname':teacher.lname,
@@ -107,17 +112,18 @@ def get_sections_by_department(request, department_id, grade_level_id):
     try:
         department = Department.objects.get(pk=department_id)
         gradelevel = GradeLevel.objects.get(pk=grade_level_id)
-        sections = Section.objects.filter(dept_id=department, grade_level_id=gradelevel)
+        sections = Section.objects.filter(dept_id=department, gradelvl_id=gradelevel)
         data = [{
             'section_id':section.section_id,
-            'gradelvl_id': section.gradelvl_id,
+            'gradelvl_id': section.gradelvl_id.gradelvl_id,
             'dept_id': section.dept_id.dept_id,
-            'name': section.gradelvl
+            'name': section.section_name
         } for section in sections]
-        return JsonResponse({'gradelevels': data})
+        return JsonResponse({'sections': data})
     except Department.DoesNotExist:
         return JsonResponse({'error': 'Department not found'}, status=404)
-    
+
+
 class EditTeacherView(APIView):
     def get(self, request, teacher_id):
         try:

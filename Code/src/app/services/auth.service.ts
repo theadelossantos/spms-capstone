@@ -130,8 +130,11 @@ export class AuthService {
 
   addTeacher(teacherData: any): Observable<any> {
     return this.http.post(`${this.api_url}add-teacher/`, teacherData, this.httpOptions).pipe(
-      catchError(this.handleError)
-    );
+      catchError((error) => {
+        return throwError(error); 
+      })
+    )
+      
   }
 
   filterTeachers(gradeLevelId: number): Observable<any>{
@@ -306,5 +309,8 @@ export class AuthService {
     return this.http.get(`${this.api_url}get-gradelvldept/${departmentId}/`, this.httpOptions)
   }
 
+  getSectionsByDeptGL(departmentId:number, gradeLevelId:number):Observable<any>{
+    return this.http.get(`${this.api_url}get-sectiondept/${departmentId}/${gradeLevelId}/`, this.httpOptions)
+  }
   
 }
