@@ -128,7 +128,8 @@
           class="form-control" 
           name="section" 
           formControlName="section"
-          [(ngModel)]="selectedSection">
+          [(ngModel)]="selectedSection"
+          (ngModelChange)="clearSectionError()">
           <option [value]="null" disabled selected>Section</option>
           <option *ngFor="let section of sections" [value]="section?.section_id">{{section?.name}}</option>
         </select>
@@ -156,7 +157,7 @@
     </div>
       
     <div class="email">
-      <input class="form-control" type="email" name="email" placeholder="Email" formControlName="email">
+      <input class="form-control" type="email" name="email" placeholder="Email" formControlName="email" (ngModelChange)="clearEmailError()">
       <ng-container *ngFor="let validation of validationMessages.email">
         <div class="error_message" *ngIf="ValidationFormUser.get('email')?.hasError(validation.type) && (ValidationFormUser.get('email')?.dirty || ValidationFormUser.get('email')?.touched)">
           {{validation.message}}

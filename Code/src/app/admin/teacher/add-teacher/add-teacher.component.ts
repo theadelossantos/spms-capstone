@@ -281,6 +281,14 @@ formatDate(date: Date): string {
   return `${year}-${month}-${day}`;
 }
 
+clearEmailError() {
+  this.emailExistsError = '';
+}
+
+clearSectionError() {
+  this.sectionAssignmentError = '';
+}
+
 
 
 
