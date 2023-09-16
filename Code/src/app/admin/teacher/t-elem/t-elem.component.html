@@ -156,7 +156,7 @@
                     <div class="input-container">
                         <select label-placement="floating" fill="outline" label="Gender" class="form-control" name="gender" formControlName="gender" [(ngModel)]="selectedTeacher.gender">
                             <option [ngValue]="null" disabled>Select Gender</option>
-                            <option [ngValue]="'female'">Female</option>
+                            <option [ngValue]="'Female'">Female</option>
                             <option [ngValue]="'Male'">Male</option>
                         </select>
                         
@@ -189,12 +189,13 @@
                           </select>
                       </div>
                     <div class="input-container-section">
-                        <select class="form-control" id="section" name="section" formControlName="section" [(ngModel)]="selectedTeacher.section_id">
+                        <select class="form-control" id="section" name="section" formControlName="section" [(ngModel)]="selectedTeacher.section_id" (ngModelChange)="clearSectionError()">
                             <option value="" disabled>Select Section</option>
                             <option *ngFor="let section of sections" [value]="section?.section_id">{{ section?.name }}</option>
                           </select>
-                     </div>
+                    </div>
                 </div>
+                <div class="error_message" *ngIf="sectionAssignmentError">{{ sectionAssignmentError }}</div>
 
                 <div class="accdeets">
                     <label>ACCOUNT DETAILS</label>

@@ -146,10 +146,27 @@ export class AuthService {
     );
   }
 
+  filterHsTeachers(gradeLevelId: number): Observable<any>{
+    return this.http.get(`${this.api_url}filter-hs-teachers/${gradeLevelId}/`, this.httpOptions).pipe(
+      catchError((error) => {
+        console.error('Error filtering sections:', error);
+        throw error;
+      })
+    );
+  }
+
+  filtersHsTeachers(gradeLevelId: number): Observable<any>{
+    return this.http.get(`${this.api_url}filter-shs-teachers/${gradeLevelId}/`, this.httpOptions).pipe(
+      catchError((error) => {
+        console.error('Error filtering sections:', error);
+        throw error;
+      })
+    );
+  }
+
+
   editTeacher(teacherId:number,  updatedTeacherData: any): Observable<any>{
-    return this.http.put(`${this.api_url}edit-teacher/${teacherId}/`,  updatedTeacherData, this.httpOptions).pipe(
-      catchError(this.handleError)
-    )
+    return this.http.put(`${this.api_url}edit-teacher/${teacherId}/`,  updatedTeacherData, this.httpOptions)
   }
 
   getTeacherById(teacherId: number): Observable<any> {

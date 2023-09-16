@@ -58,7 +58,7 @@ export class TElemComponent {
   selectedGradeLevelArray: number | null = null;
   selectedSectionName: string = '';
   teacher: any; 
-
+  sectionAssignmentError: string = '';
 
   departments: any[] = [];
   gradeLevels: any[] = [];
@@ -74,14 +74,11 @@ export class TElemComponent {
 
 
     this.authService.getGradeLevels().subscribe((data) => {
-      console.log('GradeLevels:', data);
       this.gradelvl = data;
-      console.log('this.gradelvl:', this.gradelvl)
     });
     
     this.authService.getDepartments().subscribe((response: any) => {
       this.departments = response.departments;
-      console.log('Departments:', this.departments);
   
       this.selectedDepartment = this.selectedTeacher.dept_id;
   
@@ -119,10 +116,8 @@ export class TElemComponent {
     this.authService.filterTeachers(gradelvlId).subscribe(
       (data) => {
         this.selectedGradeLevel = this.gradelvl.find((level) => level.gradelvl_id === gradelvlId);
-        console.log(this.selectedGradeLevel)
         this.filteredTeacher = data.teachers
 
-        console.log("Filtered Teachers:", this.filteredTeacher)
 
         if (this.filteredTeacher.length > 0){
           this.selectedTeacher = {
@@ -160,19 +155,10 @@ export class TElemComponent {
 
   editTeacher(teacher: any) {
     const teacherId = teacher.id;
-    console.log('teacherid:', teacher.id)
     this.authService.getTeacherById(teacherId).subscribe(
       (data) => {
-        console.log('Fetched Teacher Data:', data);
         this.selectedTeacher = data.teacher;
-        console.log('Teacher Data:', this.selectedTeacher);
 
-        
-        console.log('Selected Teacher Email:', this.selectedTeacher.user.email);
-        console.log('Selected Teacher Gender:', this.selectedTeacher.gender);
-        console.log('Selected Grade Level', this.selectedTeacher.gradelvl_id)
-        console.log('Selected Department', this.selectedTeacher.dept_id)
-        console.log('Selected Section', this.selectedTeacher.section_id)
         
         this.form.patchValue({
           grlevel: this.selectedTeacher.gradelvl_id,
@@ -188,21 +174,16 @@ export class TElemComponent {
           email: this.selectedTeacher.user.email
         });
 
-        console.log('teacher id',this.selectedTeacher.user.id)
-
   
         this.cdr.detectChanges();
   
         this.authService.getSectionsByDeptGL(this.selectedTeacher.department, this.selectedTeacher.gradelvl_id).subscribe(
           (data: GradeLevelResponse) => {
-            console.log('API Response', data);
             this.sections = data.sections;
-            console.log('Sections:', this.sections);
   
             const section = this.sections.find((section) => section.section_id === this.selectedTeacher.section_id);
             if (section) {
               this.selectedSectionName = section.name; 
-              console.log('Selected Section Name:', this.selectedSectionName);
             }
   
             this.form.patchValue({
@@ -265,6 +246,7 @@ export class TElemComponent {
         phone: this.form.value.phone,
         gender: this.form.value.gender,
         birthdate: this.form.value.birthdate,
+        gradelvl_id: this.form.value.grlevel
       }
       
     };
@@ -281,18 +263,26 @@ export class TElemComponent {
       (error) => {
         this.showAlert = false;
         console.log(error)
+
+        if (error.error && error.error.error === 'Section already assigned to another teacher.') {
+          this.sectionAssignmentError = error.error.error;
+          console.log('error', this.sectionAssignmentError); 
+        }
       }
     );
   }
+
+  clearSectionError() {
+    this.sectionAssignmentError = '';
+  }
+  
   
   
   deleteTeacher(teacherId:any){
-    console.log('Deleting subject with ID:', teacherId);
   
     const confirmDelete = window.confirm('Are you sure you want to delete this subject?');
   
     if (confirmDelete) {
-      console.log('Before API call - subjectId:', teacherId);
       this.authService.deleteTeacher(teacherId).subscribe(
         (response) => {
           this.filteredTeacher = this.filteredTeacher.filter((s) => s.id !== teacherId);
@@ -310,14 +300,10 @@ export class TElemComponent {
 
   onGradeLevelChange(): void {
     if (this.selectedTeacher.grlevel !== null && this.selectedTeacher.department !== null) {
-      console.log('ongrlvlchange Selected Grade Level', this.selectedTeacher.gradelvl_id);
-      console.log('ongrlvlchange Selected Department', this.selectedTeacher.department);
 
       this.authService.getSectionsByDeptGL(this.selectedTeacher.department, this.selectedTeacher.gradelvl_id).subscribe(
         (data: GradeLevelResponse) => {
-          console.log('API Response', data);
           this.sections = data.sections;
-          console.log('Sections:', this.sections);
         },
         (error) => {
           console.error('Error fetching sections', error);
@@ -331,14 +317,12 @@ export class TElemComponent {
 
   onDepartmentChange(){
     if (this.selectedTeacher.dept_id !== null) {
-      console.log('Selected Department', this.selectedTeacher.department)
 
       this.selectedDepartment = this.selectedTeacher.department;
 
       this.authService.getGradelevelsByDept(this.selectedTeacher.department).subscribe(
         (data: GradeLevelResponse) => { 
           this.gradeLevels = data.gradelevels;
-          console.log('Grade Levels:', this.gradeLevels);
         },
         (error) => {
           console.error('Error fetching grade levels', error);

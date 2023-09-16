@@ -51,8 +51,8 @@
         <div class="input-container">
           <select label-placement="floating" fill="outline" label="Gender" class="form-control" name="gender" formControlName="gender" >
             <option value="" disabled selected>Gender</option>
-            <option value="female">Female</option>
-            <option value="male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Male">Male</option>
           </select>
           <ng-container *ngFor="let validation of validationMessages.gender">
             <div class="error_message" *ngIf="ValidationFormUser.get('gender')?.hasError(validation.type) && (ValidationFormUser.get('gender')?.dirty || ValidationFormUser.get('gender')?.touched)">

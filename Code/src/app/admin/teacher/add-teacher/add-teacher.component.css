@@ -3,7 +3,7 @@
   }
   
 
-
+.fmname,
 .lname,
 .address,
 .gend-bday,
@@ -62,7 +62,6 @@ margin-bottom: 12px;
 .accdeets{
   font-weight: bold;
   color: #1c2120;
-  margin-bottom: 15px;
 }
   
 

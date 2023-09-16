@@ -93,6 +93,49 @@ def filter_teachers(request, grade_level_id):
     except GradeLevel.DoesNotExist:
         return JsonResponse({'error':'Grade Level not Found'}, status=status.HTTP_404_NOT_FOUND)
 
+def filter_hs_teachers(request, grade_level_id):
+    try:
+        grade_level = GradeLevel.objects.get(pk = grade_level_id)
+        teachers = Teacher.objects.filter(gradelvl_id = grade_level_id, dept_id = 2)
+        teachers_data = [{'id':teacher.teacher_id,
+                          'dept_id':teacher.dept_id.dept_id,
+                          'gradelvl_id':teacher.gradelvl_id.gradelvl_id,
+                          'section_id':teacher.section_id.section_id,
+                          'fname':teacher.fname,
+                          'mname':teacher.mname,
+                          'lname':teacher.lname,
+                          'address':teacher.address,
+                          'phone':teacher.phone,
+                          'gender':teacher.gender,
+                          'birthdate':teacher.birthdate
+                          } for teacher in teachers]
+        grade_level_data = {'id':grade_level.gradelvl_id, 'name':grade_level.gradelvl}
+
+        return JsonResponse({'grade_level': grade_level_data, 'teachers': teachers_data})
+    except GradeLevel.DoesNotExist:
+        return JsonResponse({'error':'Grade Level not Found'}, status=status.HTTP_404_NOT_FOUND)
+
+def filter_shs_teachers(request, grade_level_id):
+    try:
+        grade_level = GradeLevel.objects.get(pk = grade_level_id)
+        teachers = Teacher.objects.filter(gradelvl_id = grade_level_id, dept_id = 3)
+        teachers_data = [{'id':teacher.teacher_id,
+                          'dept_id':teacher.dept_id.dept_id,
+                          'gradelvl_id':teacher.gradelvl_id.gradelvl_id,
+                          'section_id':teacher.section_id.section_id,
+                          'fname':teacher.fname,
+                          'mname':teacher.mname,
+                          'lname':teacher.lname,
+                          'address':teacher.address,
+                          'phone':teacher.phone,
+                          'gender':teacher.gender,
+                          'birthdate':teacher.birthdate
+                          } for teacher in teachers]
+        grade_level_data = {'id':grade_level.gradelvl_id, 'name':grade_level.gradelvl}
+
+        return JsonResponse({'grade_level': grade_level_data, 'teachers': teachers_data})
+    except GradeLevel.DoesNotExist:
+        return JsonResponse({'error':'Grade Level not Found'}, status=status.HTTP_404_NOT_FOUND)
 
 def get_grade_levels_by_department(request, department_id):
     try:
@@ -178,6 +221,11 @@ class EditTeacherView(APIView):
             with transaction.atomic():
                 teacher = Teacher.objects.get(teacher_id=teacher_id)
                 user_data = request.data['teacher']
+                
+                section_id = user_data.get('section_id', None)
+
+                if section_id and Teacher.objects.filter(section_id=section_id).exclude(teacher_id=teacher_id).exists():
+                    return Response({"error": "Section already assigned to another teacher."}, status=status.HTTP_400_BAD_REQUEST)
 
                 serializer = TeacherSerializer(teacher, data=user_data, partial=True)
 
