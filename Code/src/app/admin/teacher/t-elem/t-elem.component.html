@@ -118,13 +118,14 @@
                 <div *ngIf="showAlert" class="alert alert-success alert-dismissible fade show" role="alert">
                     <strong>Success!</strong> Section updated successfully.
                     <button type="button" class="btn-close" (click)="hideAlert()" aria-label="Close"></button>
-                  </div>
+                </div>
               
                 <div class="alert alert-danger" role="alert" *ngIf="errorMessage">
                   {{ errorMessage }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             </div>
+
             <form [formGroup]="form">
                 <h3>PERSONAL INFORMATION</h3>
                 <div class="fmname">
@@ -200,12 +201,8 @@
                 </div>
                 
                 <div class="email">
-                    <input class="form-control" type="email" name="email" placeholder="Email" formControlName="email">
+                    <input class="form-control" type="email" name="email" placeholder="Email" formControlName="email" readonly>
 
-                </div>
-                <div class="pw">
-                    <input class="form-control" type="password" name="password" placeholder="Password" formControlName="password">
-                
                 </div>
 
             </form>             

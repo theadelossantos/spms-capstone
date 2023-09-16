@@ -71,6 +71,8 @@ export class TElemComponent {
   showAlert:boolean = false;
 
   ngOnInit():void{
+
+
     this.authService.getGradeLevels().subscribe((data) => {
       console.log('GradeLevels:', data);
       this.gradelvl = data;
@@ -91,7 +93,7 @@ export class TElemComponent {
         phone: this.selectedTeacher.phone,
         gender: this.selectedTeacher.gender,
         birthdate: this.selectedTeacher.birthdate,
-        email: this.teacher.email,
+        email: this.selectedTeacher.email,
         department: this.selectedTeacher.dept_id,
         grlevel: this.selectedTeacher.gradelvl_id,
         section: this.selectedTeacher.section_id, 
@@ -151,17 +153,76 @@ export class TElemComponent {
         }
       },
       (error) => {
-        console.error("Error fetching subjects:", error);
+        console.error("Error fetching teacher:", error);
       }
     )
   }
 
-  editTeacher(teacher: any){
-    console.log('Selected Teacher:', teacher);
+  editTeacher(teacher: any) {
+    const teacherId = teacher.id;
+    console.log('teacherid:', teacher.id)
+    this.authService.getTeacherById(teacherId).subscribe(
+      (data) => {
+        console.log('Fetched Teacher Data:', data);
+        this.selectedTeacher = data.teacher;
+        console.log('Teacher Data:', this.selectedTeacher);
 
-    this.selectedTeacher = {};
+        
+        console.log('Selected Teacher Email:', this.selectedTeacher.user.email);
+        console.log('Selected Teacher Gender:', this.selectedTeacher.gender);
+        console.log('Selected Grade Level', this.selectedTeacher.gradelvl_id)
+        console.log('Selected Department', this.selectedTeacher.dept_id)
+        console.log('Selected Section', this.selectedTeacher.section_id)
+        
+        this.form.patchValue({
+          grlevel: this.selectedTeacher.gradelvl_id,
+          teacherName: this.selectedTeacher.fname,
+          teacherMname: this.selectedTeacher.mname,
+          teacherLname: this.selectedTeacher.lname,
+          address: this.selectedTeacher.address,
+          phone: this.selectedTeacher.phone,
+          birthdate: this.selectedTeacher.birthdate,
+          section: this.selectedTeacher.section_id,
+          gender: this.selectedTeacher.gender, 
+          department: this.selectedTeacher.dept_id,
+          email: this.selectedTeacher.user.email
+        });
 
+        console.log('teacher id',this.selectedTeacher.user.id)
 
+  
+        this.cdr.detectChanges();
+  
+        this.authService.getSectionsByDeptGL(this.selectedTeacher.department, this.selectedTeacher.gradelvl_id).subscribe(
+          (data: GradeLevelResponse) => {
+            console.log('API Response', data);
+            this.sections = data.sections;
+            console.log('Sections:', this.sections);
+  
+            const section = this.sections.find((section) => section.section_id === this.selectedTeacher.section_id);
+            if (section) {
+              this.selectedSectionName = section.name; 
+              console.log('Selected Section Name:', this.selectedSectionName);
+            }
+  
+            this.form.patchValue({
+              section: this.selectedTeacher.section_id,
+            });
+          },
+          (error) => {
+            console.error('Error fetching sections', error);
+          }
+        );
+  
+        this.onDepartmentChange();
+      },
+      (error) => {
+        console.error('Error fetching teacher data:', error);
+      }
+    );
+  }
+
+  updateSelectedTeacher(teacher: any) {
     this.selectedTeacher = {
       teacher_id: teacher.id,
       grlevel: teacher.gradelvl_id,
@@ -171,68 +232,30 @@ export class TElemComponent {
       teacherLname: teacher.lname,
       address: teacher.address,
       phone: teacher.phone,
-      gender: teacher.gender,        
+      gender: teacher.gender,
       birthdate: teacher.birthdate,
-      section_id: teacher.section_id, 
+      section_id: teacher.section_id,
+      user: {
+        email: teacher.email
+      }
     };
-
-    if (teacher.user) {
+  
+    if (teacher.user && teacher.user.email) {
       this.selectedTeacher.email = teacher.user.email;
     }
-
-    console.log('Selected Teacher Gender:', this.selectedTeacher.gender);
-    console.log('Selected Grade Level', this.selectedTeacher.grlevel)
-    console.log('Selected Department', this.selectedTeacher.dept_id)
-    console.log('Selected Section', this.selectedTeacher.section_id)
-    
-
-    this.form.patchValue({
-      grlevel: this.selectedTeacher.grlevel,
-      teacherName: this.selectedTeacher.teacherName,
-      teacherMname: this.selectedTeacher.teacherMname,
-      teacherLname: this.selectedTeacher.teacherLname,
-      address: this.selectedTeacher.address,
-      phone: this.selectedTeacher.phone,
-      birthdate: this.selectedTeacher.birthdate,
-      section: this.selectedTeacher.section_id,
-      gender: this.selectedTeacher.gender, 
-      department: this.selectedTeacher.dept_id,
-      email: this.selectedTeacher.email
-    });
-
-    this.cdr.detectChanges();
-
-    this.authService.getSectionsByDeptGL(this.selectedTeacher.department, this.selectedTeacher.gradelvl_id).subscribe(
-      (data: GradeLevelResponse) => {
-        console.log('API Response', data);
-        this.sections = data.sections;
-        console.log('Sections:', this.sections);
-
-        const section = this.sections.find((section) => section.section_id === this.selectedTeacher.section_id);
-        if (section) {
-          this.selectedSectionName = section.name; 
-          console.log('Selected Section Name:', this.selectedSectionName);
-        }
-
-        this.form.patchValue({
-          section: this.selectedTeacher.section_id,
-        });
-      },
-      (error) => {
-        console.error('Error fetching sections', error);
-      }
-    );
-    this.onDepartmentChange();
-
   }
 
-  saveEditedSubject(){
-    if (this.selectedTeacher && this.selectedTeacher.teacher_id) {
-      const teacherId = this.selectedTeacher.teacher_id;
-      this.selectedTeacher.gradelvl_id = this.form.value.grlevel;
-
-      const updatedTeacherData = {
-        gradelvl_id: this.form.value.grlevel,
+  saveEditedSubject() {
+    if (!this.selectedTeacher || !this.selectedTeacher.teacher_id) {
+      console.error('Invalid selected subject:', this.selectedTeacher);
+      return;
+    }
+    
+    const teacherId = this.selectedTeacher.teacher_id;
+    this.selectedTeacher.gradelvl_id = this.form.value.grlevel;
+  
+    const updatedTeacherData = {
+      teacher:{
         dept_id: this.form.value.department,
         section_id: this.form.value.section,
         fname: this.form.value.teacherName,
@@ -242,36 +265,26 @@ export class TElemComponent {
         phone: this.form.value.phone,
         gender: this.form.value.gender,
         birthdate: this.form.value.birthdate,
-        email: this.form.value.email
-      };
-      this.selectedTeacher.gradelvl_id = updatedTeacherData.gradelvl_id;
-      this.selectedTeacher.section_id = updatedTeacherData.section_id;
-      this.selectedTeacher.fname = updatedTeacherData.fname;
-      this.selectedTeacher.mname = updatedTeacherData.mname;
-      this.selectedTeacher.lname = updatedTeacherData.lname;
-      this.selectedTeacher.address = updatedTeacherData.address;
-      this.selectedTeacher.phone = updatedTeacherData.phone;
-      this.selectedTeacher.gender = updatedTeacherData.gender;
-      this.selectedTeacher.birthdate = updatedTeacherData.birthdate;
-
-      this.authService.editTeacher(teacherId, updatedTeacherData).subscribe(
-        (response) => {
-
-          this.showAlert = true;
-
-          setTimeout(() => {
-            this.hideAlert();
-          }, 3000);
-        },
-        (error) => {
-          this.showAlert = true;
-        }
-      );
-    } else {
-      console.error('Invalid selected subject:', this.selectedTeacher);
-    }
-    
+      }
+      
+    };
+    Object.assign(this.selectedTeacher, updatedTeacherData);
+  
+    this.authService.editTeacher(teacherId, this.selectedTeacher).subscribe(
+      () => {
+        this.showAlert = true;
+  
+        setTimeout(() => {
+          this.hideAlert();
+        }, 3000);
+      },
+      (error) => {
+        this.showAlert = false;
+        console.log(error)
+      }
+    );
   }
+  
   
   deleteTeacher(teacherId:any){
     console.log('Deleting subject with ID:', teacherId);

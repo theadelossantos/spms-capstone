@@ -123,47 +123,72 @@ def get_sections_by_department(request, department_id, grade_level_id):
         return JsonResponse({'error': 'Department not found'}, status=404)
 
 
+# class EditTeacherView(APIView):
+#     def get(self, request, teacher_id):
+#         try:
+#             teacher = Teacher.objects.get(teacher_id=teacher_id)
+#             serializer = TeacherSerializer(teacher)
+    
+#             print({'teacher': serializer.data})
+#             return Response({'teacher': serializer.data})
+#         except Teacher.DoesNotExist:
+#             return Response({'error': 'Teacher not found.'}, status=status.HTTP_404_NOT_FOUND)
+    
+#     def put(self, request, teacher_id):
+#         try:
+#             with transaction.atomic():
+#                 teacher = Teacher.objects.get(teacher_id=teacher_id)
+#                 serializer = TeacherSerializer(teacher, data=request.data['teacher'], partial=True)
+                
+#                 if serializer.is_valid():
+#                     serializer.save()
+#                 else:
+#                     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                
+#                 # Now handle the user data
+#                 try:
+#                     user_data = request.data['teacher']['user']
+#                     user = teacher.user  
+#                     user_serializer = UserSerializer(user, data=user_data, partial=True)
+                    
+#                     if user_serializer.is_valid():
+#                         user_serializer.save()
+#                     else:
+#                         return Response(user_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#                 except KeyError:
+#                     pass  
+                
+#                 return Response({'message': 'Teacher updated successfully'})
+#         except Teacher.DoesNotExist:
+#             return Response({'error': 'Teacher not found.'}, status=status.HTTP_404_NOT_FOUND)
+
 class EditTeacherView(APIView):
     def get(self, request, teacher_id):
         try:
             teacher = Teacher.objects.get(teacher_id=teacher_id)
             serializer = TeacherSerializer(teacher)
-            serialized_data = serializer.data
 
-            serialized_data['user_email'] = teacher.user.email
-
-            return Response({'teacher': serialized_data})
+            print({'teacher': serializer.data})
+            return Response({'teacher': serializer.data})
         except Teacher.DoesNotExist:
             return Response({'error': 'Teacher not found.'}, status=status.HTTP_404_NOT_FOUND)
-    
+
     def put(self, request, teacher_id):
         try:
             with transaction.atomic():
                 teacher = Teacher.objects.get(teacher_id=teacher_id)
-                serializer = TeacherSerializer(teacher, data=request.data['teacher'], partial=True)
-                
+                user_data = request.data['teacher']
+
+                serializer = TeacherSerializer(teacher, data=user_data, partial=True)
+
                 if serializer.is_valid():
                     serializer.save()
                 else:
                     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-                
-                # Now handle the user data
-                try:
-                    user_data = request.data['teacher']['user']
-                    user = teacher.user  
-                    user_serializer = UserSerializer(user, data=user_data, partial=True)
-                    
-                    if user_serializer.is_valid():
-                        user_serializer.save()
-                    else:
-                        return Response(user_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-                except KeyError:
-                    pass  
-                
+
                 return Response({'message': 'Teacher updated successfully'})
         except Teacher.DoesNotExist:
             return Response({'error': 'Teacher not found.'}, status=status.HTTP_404_NOT_FOUND)
-
 
 @api_view(['DELETE'])
 def delete_teacher(request, teacher_id):
@@ -173,6 +198,8 @@ def delete_teacher(request, teacher_id):
         return Response(status=status.HTTP_404_NOT_FOUND)
     
     if request.method == 'DELETE':
+        user = teacher.user
+        user.delete()
         teacher.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 

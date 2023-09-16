@@ -18,7 +18,8 @@ class UserSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'password': {'write_only': True},
             'username': {'required': False},  
-            'role': {'read_only': True}  
+            'role': {'read_only': True}, 
+            'email': {'required': False}
         }
 
     def create(self, validated_data):
@@ -65,7 +66,7 @@ class AssignedSerializer(serializers.ModelSerializer):
 
        
 class TeacherSerializer(serializers.ModelSerializer):
-    user = UserSerializer(write_only=True)
+    user = UserSerializer(read_only=True)
 
     class Meta:
         model = Teacher
@@ -77,19 +78,8 @@ class TeacherSerializer(serializers.ModelSerializer):
         teacher = Teacher.objects.create(user=user, **validated_data)
         return teacher
     
-    def update(self, instance, validated_data):
-        user_data = validated_data.pop('user', {})  
-        user = instance.user
 
-        for attr, value in user_data.items():
-            setattr(user, attr, value)
-        user.save()
 
-        for attr, value in validated_data.items():
-            setattr(instance, attr, value)
-        instance.save()
-
-        return instance
 
 
 

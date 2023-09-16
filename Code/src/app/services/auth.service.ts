@@ -146,10 +146,16 @@ export class AuthService {
     );
   }
 
-  editTeacher(teacherId:number,  updatedSection: any): Observable<any>{
-    return this.http.put(`${this.api_url}edit-teacher/${teacherId}/`,  updatedSection, this.httpOptions).pipe(
+  editTeacher(teacherId:number,  updatedTeacherData: any): Observable<any>{
+    return this.http.put(`${this.api_url}edit-teacher/${teacherId}/`,  updatedTeacherData, this.httpOptions).pipe(
       catchError(this.handleError)
     )
+  }
+
+  getTeacherById(teacherId: number): Observable<any> {
+    return this.http.get(`${this.api_url}edit-teacher/${teacherId}/`, this.httpOptions).pipe(
+      catchError(this.handleError)
+    );
   }
 
   deleteTeacher(teacherId:number): Observable<any>{
