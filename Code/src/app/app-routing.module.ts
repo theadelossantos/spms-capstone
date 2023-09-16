@@ -9,7 +9,7 @@ import { AuthGuard } from './guard/auth.guard';
 import { adminGuard } from './guard/admin.guard';
 import { AdminDashboardComponent } from './admin/admin-dashboard/admin-dashboard.component';
 import { AddTeacherComponent } from './admin/teacher/add-teacher/add-teacher.component';
-import { AddStudentComponent } from './admin/add-student/add-student.component';
+import { AddStudentComponent } from './admin/students/add-student/add-student.component';
 import { ClassesComponent } from './admin/classes/classes.component';
 import { CoursesComponent } from './admin/courses/courses.component';
 import { SettingsComponent } from './admin/settings/settings.component';

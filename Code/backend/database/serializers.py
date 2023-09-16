@@ -43,7 +43,7 @@ class UserSerializer(serializers.ModelSerializer):
         return slugify(email)
 
 class StudentSerializer(serializers.ModelSerializer):
-    user = UserSerializer(write_only=True)
+    user = UserSerializer(read_only=True)
 
     class Meta:
         model = Student

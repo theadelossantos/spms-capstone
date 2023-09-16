@@ -8,6 +8,8 @@ from . import views
 urlpatterns = [
     path('login/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('add-student/', AddStudentView.as_view(), name='add_student'),
+    path('edit-student/<int:student_id>/',EditStudentView.as_view(), name='edit-student'),
+    path('del-student/<int:student_id>/', views.delete_student, name='delete-student'),
     path('user-data/', UserDataView.as_view(), name='user-data'),
     path('admin-login/', AdminTokenObtainPairView.as_view(), name='admin-login'),
     path('add-admin/', AdminRegistrationView.as_view(), name='add-admin'), 
@@ -39,5 +41,6 @@ urlpatterns = [
     path('add-shs-subject/', addsHsSubjects.as_view(), name='add-shs-subject'),
     path('get-gradelvldept/<int:department_id>/', views.get_grade_levels_by_department, name='get-gradelevels-by-department'),
     path('get-sectiondept/<int:department_id>/<int:grade_level_id>/', views.get_sections_by_department, name='get-sections-by-department'),
+    path('filter-students/<int:dept_id>/<int:grade_level_id>/<int:section_id>/', views.filter_students, name='filter_teachers'),
     
 ]

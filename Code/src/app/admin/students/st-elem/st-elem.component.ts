@@ -12,11 +12,11 @@ interface StudentResponse {
   students: any[]; 
 } 
 @Component({
-  selector: 'app-st-shs',
-  templateUrl: './st-shs.component.html',
-  styleUrls: ['./st-shs.component.css']
+  selector: 'app-st-elem',
+  templateUrl: './st-elem.component.html',
+  styleUrls: ['./st-elem.component.css']
 })
-export class StShsComponent {
+export class StElemComponent {
   constructor(private authService: AuthService, private router: Router, private fb: FormBuilder, private cdr: ChangeDetectorRef) {
     this.form = this.fb.group({
       email: [''],
@@ -62,14 +62,14 @@ export class StShsComponent {
   teacher: any; 
   sectionAssignmentError: string = '';
   isSortingAZ: boolean = true; 
-  searchText: string = '';
-  students: any[] = [];
+
 
   departments: any[] = [];
   gradeLevels: any[] = [];
   sections: any[] = [];
   selectedDepartment: number | null = null;
   selectedSection: { dept_id: number; gradelvl_id: number; section_id: number } | null = null;
+  
 
   successMessage: string = '';
   errorMessage: string = '';
@@ -78,7 +78,7 @@ export class StShsComponent {
   ngOnInit():void{
 
 
-    this.authService.getsHsGradeLevels().subscribe((data) => {
+    this.authService.getGradeLevels().subscribe((data) => {
       this.gradelvl = data;
 
       console.log('gradelvl', data)
@@ -106,24 +106,9 @@ export class StShsComponent {
       this.originalGradelvl_id = this.selectedStudent.gradelvl_id;
       
     });
-  }
-  
+    
+    
 
-  
-  
-
-  toggleSortOrder() {
-    this.isSortingAZ = !this.isSortingAZ; 
-  
-    if (this.isSortingAZ) {
-      this.filteredStudent.sort((a, b) => {
-        return a.lname.localeCompare(b.lname); 
-      });
-    } else {
-      this.filteredStudent.sort((a, b) => {
-        return b.lname.localeCompare(a.lname); 
-      });
-    }
   }
 
   getSections(): void {
@@ -140,6 +125,19 @@ export class StShsComponent {
     } else {
         this.sections = [];
     }
+}
+toggleSortOrder() {
+  this.isSortingAZ = !this.isSortingAZ; 
+
+  if (this.isSortingAZ) {
+    this.filteredStudent.sort((a, b) => {
+      return a.lname.localeCompare(b.lname); 
+    });
+  } else {
+    this.filteredStudent.sort((a, b) => {
+      return b.lname.localeCompare(a.lname); 
+    });
+  }
 }
 
   manageStudents(departmentId:number, gradelvlId: number, sectionId:number){
@@ -288,7 +286,7 @@ export class StShsComponent {
   
   deleteStudent(studentId:any){
   
-    const confirmDelete = window.confirm('Are you sure you want to delete this subject?');
+    const confirmDelete = window.confirm('Are you sure you want to delete this student?');
   
     if (confirmDelete) {
       this.authService.deleteStudent(studentId).subscribe(
@@ -296,7 +294,7 @@ export class StShsComponent {
           this.filteredStudent = this.filteredStudent.filter((s) => s.id !== studentId);
         },
         (error) => {
-          console.error('Error deleting subject: ', error);
+          console.error('Error deleting student: ', error);
         }
       );
     }

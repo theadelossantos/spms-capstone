@@ -128,6 +128,31 @@ export class AuthService {
     );
   }
 
+  editStudent(studentId:number,  updatedStudentData: any): Observable<any>{
+    return this.http.put(`${this.api_url}edit-student/${studentId}/`,  updatedStudentData, this.httpOptions)
+  }
+
+  getStudentById(studentId: number): Observable<any> {
+    return this.http.get(`${this.api_url}edit-student/${studentId}/`, this.httpOptions).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  deleteStudent(studentId:number): Observable<any>{
+    return this.http.delete(`${this.api_url}del-student/${studentId}/`, this.httpOptions).pipe(
+      catchError(this.handleError)
+    )
+  }
+
+  filterStudents(departmentId:number, gradeLevelId:number, sectionId:number){
+    return this.http.get(`${this.api_url}filter-students/${departmentId}/${gradeLevelId}/${sectionId}/`, this.httpOptions).pipe(
+      catchError((error) => {
+        console.error('Error filtering sections:', error);
+        throw error;
+      })
+    );
+  }
+
   addTeacher(teacherData: any): Observable<any> {
     return this.http.post(`${this.api_url}add-teacher/`, teacherData, this.httpOptions).pipe(
       catchError((error) => {

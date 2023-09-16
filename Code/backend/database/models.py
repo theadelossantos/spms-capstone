@@ -26,7 +26,7 @@ class Student(models.Model):
     gradelvl_id = models.ForeignKey('GradeLevel', on_delete=models.CASCADE)
     section_id = models.ForeignKey('Section', on_delete=models.CASCADE)
     fname = models.CharField(max_length=50)
-    mname = models.CharField(max_length=50)
+    mname = models.CharField(max_length=50, blank=True, null=True)
     lname = models.CharField(max_length=50)
     address = models.CharField(max_length=255)
     phone = models.CharField(max_length=25)

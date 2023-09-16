@@ -9,12 +9,13 @@ interface GradeLevelResponse {
 
 
 @Component({
-  selector: 'app-add-teacher',
-  templateUrl: './add-teacher.component.html',
-  styleUrls: ['./add-teacher.component.css']
+  selector: 'app-add-student',
+  templateUrl: './add-student.component.html',
+  styleUrls: ['./add-student.component.css']
 })
-export class AddTeacherComponent {
+export class AddStudentComponent {
 
+  
   ValidationFormUser: FormGroup;
   emailExistsError: string = '';
   phoneError: boolean = false;
@@ -35,6 +36,7 @@ export class AddTeacherComponent {
   sectionAssignmentError: string = '';
   errorMessage:string = '';
   showAlert: boolean = false;
+
 
   fname : string = "";
   mname : string = "";
@@ -80,7 +82,6 @@ export class AddTeacherComponent {
 
   constructor(private formbuilder:FormBuilder, private authService: AuthService) {
 
-    // this.setToday();
 
     this.ValidationFormUser = this.formbuilder.group({
       fname: new FormControl ('', Validators.compose([
@@ -215,7 +216,7 @@ onSubmit() {
   if (this.ValidationFormUser.valid) {
       const formattedBirthdate = this.formatDate(this.selectedDate);
     
-      const teacherData = {
+      const studentData = {
         ...this.ValidationFormUser.value,
         user: {
           email: this.ValidationFormUser.value.email,
@@ -233,7 +234,7 @@ onSubmit() {
         birthdate: formattedBirthdate
       };
 
-      this.authService.addTeacher(teacherData).subscribe(
+      this.authService.addStudent(studentData).subscribe(
         (response) => {
           this.showAlert = true;
 
@@ -254,8 +255,6 @@ onSubmit() {
           this.showAlert = true;
           if (error.error && error.error.user_errors && error.error.user_errors.email) {
             this.emailExistsError = error.error.user_errors.email[0];
-          } else if (error.error && error.error.error === 'Section already assigned to another teacher.') {
-            this.sectionAssignmentError = error.error.error;
           } else {
             this.emailExistsError = 'An unknown error occurred.';
           }
@@ -263,6 +262,7 @@ onSubmit() {
       );
   }
 }
+
 hideAlert() {
   this.showAlert = false;
 }
@@ -283,8 +283,4 @@ clearSectionError() {
   this.sectionAssignmentError = '';
 }
 
-
-
-
 }
-

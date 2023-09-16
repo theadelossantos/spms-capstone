@@ -5,7 +5,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { AddStudentComponent } from './admin/add-student/add-student.component';
 import { TeacherHomepageComponent } from './teacher/teacher-homepage/teacher-homepage.component';
 import { AdminHomepageComponent } from './admin/admin-homepage/admin-homepage.component';
 import { StudentHomepageComponent } from './student/student-homepage/student-homepage.component';
@@ -22,7 +21,6 @@ import { TeacherSublevelMenuComponent } from './admin/sidenav/teacher-sublevel-m
 @NgModule({
   declarations: [
     AppComponent,
-    AddStudentComponent,
     StudentHomepageComponent,
     TeacherHomepageComponent,
     AdminHomepageComponent,

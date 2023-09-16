@@ -1,9 +1,109 @@
 *{
-    font-family: 'DM Sans', sans-serif;
-  }
-  
+    font-family: 'Poppins', sans-serif;
+}
+
+.gradelevels{
+    background-color: #eff1f1;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+
+.text-div{
+    padding:20px;   
+}
+
+.select-opt{
+    width: auto;
+    border-color: #ced4da;
+    /* border: none;
+    background-color: transparent; */
+}
+
+.form-group{
+    margin-right: 30px;
+}
+
+.header-bar{
+    display: flex;
+    flex-direction: row;
+}
+
+.input-group .input-group-text {
+    border-left: none;
+    background-color: white;
+    border-color: #ced4da;
+}
+.input-group .form-control {
+    border-right: none;
+    box-shadow: none;
+    border-color: #ced4da;
+}
+
+.input-group .form-control:focus {
+    outline: none !important;
+}
+
+.input-group{
+    width: 50%;
+}
+
+/* .addsection{
+    margin-left: auto;
+} */
+
+.btn-custom{
+    border-radius: 5px;
+    background: var(--danger-color, #A70000);
+    border: none;
+    color: white;
+    font-size: 13px;
+    font-weight: 700;
+    margin-left: auto;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+.custom-icon {
+    font-weight: 800; 
+}
+
+.table.table-striped tbody tr:nth-child(odd) {
+    background-color: #EBF6FF; 
+}
+
+.table td, .table th{
+    text-align: center;
+}
+
+.edit-icon{
+    color: white;
+}
+
+.btn-custom-edit{
+    background-color: #0247FE;
+}
+
+.btn-custom-delete{
+    background-color: #A70000;
+    margin-left: 5px;
+}
+
+.trash-icon{
+    color: white;
+}
 
 
+@media (min-width: 768px) {
+    /* .select-opt{
+        width: 10%;
+    } */
+}
+
+/* @media (max-width: 767px) {
+    .select-opt{
+        width: 25%;
+    }
+} */
+.fmname,
 .lname,
 .address,
 .gend-bday,
@@ -56,13 +156,12 @@ margin-bottom: 12px;
 
 .input-container-section {
   width: 100%;
-  margin-bottom: 10px;
+  /* margin-bottom: 10px; */
 }
 
 .accdeets{
   font-weight: bold;
   color: #1c2120;
-  margin-bottom: 15px;
 }
   
 
@@ -163,4 +262,10 @@ margin-bottom: 12px;
   .custom-icon {
       right: 5px;
   }
+}
+
+.custom-btn{
+  margin-left: 5px;
+  margin-bottom: 8px;
+  background-color: #a70000;
 }
