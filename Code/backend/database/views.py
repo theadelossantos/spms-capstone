@@ -692,6 +692,29 @@ class AssignmentListCreateView(generics.ListCreateAPIView):
     serializer_class = AssignmentSerializer
     permission_classes = [permissions.AllowAny]
 
+    def create(self, request, *args, **kwargs):
+        assignment_data = request.data.get('assignments', [])
+        
+        assignments = []
+        for data in assignment_data:
+            serializer = self.get_serializer(data=data)
+            serializer.is_valid(raise_exception=True)
+            assignments.append(serializer.save())
+
+        serializer = self.get_serializer(assignments, many=True)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+    def get_queryset(self):
+        teacher_id = self.kwargs.get('teacher_id')
+        return Assigned.objects.filter(teacher_id=teacher_id)
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
+
 class AssignmentRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Assigned.objects.all()
     serializer_class = AssignmentSerializer

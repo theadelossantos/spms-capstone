@@ -365,8 +365,8 @@ export class AuthService {
     return this.http.post(`${this.api_url}assignments/`, assignmentData, this.httpOptions);
   }
 
-  getAssignments(): Observable<any> {
-    return this.http.get(`${this.api_url}assignments/`);
+  getAssignments(teacherId:number): Observable<any> {
+    return this.http.get(`${this.api_url}assignments/${teacherId}/`);
   }
   getSubjectsByDeptGL(departmentId:number, gradeLevelId:number):Observable<any>{
     return this.http.get(`${this.api_url}get-subjects/${departmentId}/${gradeLevelId}/`, this.httpOptions)

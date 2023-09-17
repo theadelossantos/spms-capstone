@@ -91,7 +91,7 @@ export class TElemComponent {
   selectedAssignedSection: number | null = null;
   selectedAssignedSubject: number | null = null;
   selectedAssignedGradeLevel: number | null = null;
-
+  assignedSubjects: any[] = [];
   departments: any[] = [];
   gradeLevels: any[] = [];
   sectionsAssigned: any[] = [];
@@ -209,6 +209,26 @@ export class TElemComponent {
     this.assignmentData.splice(index, 1);
   }
 
+  // fetchAssignedDataForTeacher(teacherId: number) {
+  //   this.authService.getAssignments(teacherId).subscribe(
+  //     (data: any[]) => {
+  //       this.assignedSubjects = data.map((assignment) => ({
+  //         gradeLevelName: assignment.grlevel?.name || 'N/A',
+  //         sectionName: assignment.section?.name || 'N/A',
+  //         subjectName: assignment.subject?.name || 'N/A',
+  //       }));
+  //       console.log(this.assignedSubjects)
+
+  //     },
+  //     (error) => {
+  //       console.error('Error fetching assigned data:', error);
+  //     }
+  //   );
+  // }
+  
+  
+  
+
   assignTeacher(teacherId){
     this.selectedAssTeacher = {}; 
 
@@ -255,6 +275,7 @@ export class TElemComponent {
   
     if (selectedAssignedGradeLevel !== null && selectedAssignedDepartment !== null) {
       console.log('Selected Grade Level ID:', selectedAssignedGradeLevel);
+      
 
       this.assignmentData[index].gradeLevel = selectedAssignedGradeLevel;
 
@@ -297,19 +318,19 @@ export class TElemComponent {
   }
 
   assignSubject() {    
-    const assignmentsData = {
+    const assignmentsData = this.form.value.assignments.map((assignment: any) => ({
       teacher: +this.selectedAssTeacher.teacherId,
-      subject_id: +this.form.value.assignments[0].subject,
-      gradelvl_id: +this.form.value.assignments[0].grlevel,
-      section_id: +this.form.value.assignments[0].section,
-      dept_id: +this.form.value.assignments[0].department
-  };
+      subject_id: +assignment.subject,
+      gradelvl_id: +assignment.grlevel,
+      section_id: +assignment.section,
+      dept_id: +assignment.department
+    }));
     
       
   console.log('assignmentData', assignmentsData);
 
 
-    this.authService.createAssignment(assignmentsData).subscribe(
+    this.authService.createAssignment({ assignments: assignmentsData }).subscribe(
         (response) => {
             console.log('Assignments created successfully:', response);
             this.showAlert = true;
