@@ -1,6 +1,6 @@
-from rest_framework import serializers
+from rest_framework import serializers,generics, permissions
 from django.contrib.auth import get_user_model
-from .models import Student, Teacher, Admin
+from .models import *
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth import authenticate
@@ -55,9 +55,6 @@ class StudentSerializer(serializers.ModelSerializer):
         student = Student.objects.create(user=user, **validated_data)
         return student
 
-
-
-
 class AssignedSerializer(serializers.ModelSerializer):
     class Meta:
         model = Assigned
@@ -78,11 +75,10 @@ class TeacherSerializer(serializers.ModelSerializer):
         teacher = Teacher.objects.create(user=user, **validated_data)
         return teacher
     
-
-
-
-
-
+class AssignmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Assigned
+        fields = '__all__'
 
 
 

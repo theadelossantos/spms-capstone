@@ -10,6 +10,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AddTeacherComponent } from './add-teacher/add-teacher.component';
 import { EditTElemComponent } from './edit-t-elem/edit-t-elem.component';
+import { AssignTeacherComponent } from './assign-teacher/assign-teacher.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { EditTElemComponent } from './edit-t-elem/edit-t-elem.component';
     TShschoolComponent,
     TElemComponent,
     AddTeacherComponent,
-    EditTElemComponent
+    EditTElemComponent,
+    AssignTeacherComponent
 
   ],
   imports: [

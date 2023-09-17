@@ -686,3 +686,22 @@ class addsHsSubjects(APIView):
             subject_serializer.save()
             return Response(subject_serializer.data, status=status.HTTP_201_CREATED)
         return Response(subject_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+class AssignmentListCreateView(generics.ListCreateAPIView):
+    queryset = Assigned.objects.all()
+    serializer_class = AssignmentSerializer
+    permission_classes = [permissions.AllowAny]
+
+class AssignmentRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Assigned.objects.all()
+    serializer_class = AssignmentSerializer
+    permission_classes = [permissions.AllowAny]
+
+@api_view(['GET'])
+def get_subjects_by_dept_and_grade_level(request, dept_id, gradelvl_id):
+    try:
+        subjects = Subject.objects.filter(dept_id=dept_id, gradelvl_id=gradelvl_id)
+        subject_data = [{'subject_id': subject.subject_id, 'subject_name': subject.subject_name} for subject in subjects]
+        return Response({'subjects': subject_data}, status=status.HTTP_200_OK)
+    except Subject.DoesNotExist:
+        return Response({'error': 'Subjects not found.'}, status=status.HTTP_404_NOT_FOUND)
