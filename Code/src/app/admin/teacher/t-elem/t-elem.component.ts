@@ -234,7 +234,7 @@ export class TElemComponent {
 
     this.authService.getTeacherById(teacherId).subscribe(
       (teacherDetails: any) => {
-        console.log('Response Data:', teacherDetails);
+        console.log('Response Dataa:', teacherDetails);
         this.selectedAssTeacher = {
           lastName: teacherDetails.teacher.lname,
           firstName: teacherDetails.teacher.fname,
