@@ -44,8 +44,14 @@ urlpatterns = [
     path('filter-students/<int:dept_id>/<int:grade_level_id>/<int:section_id>/', views.filter_students, name='filter_teachers'),
     path('assignments/', views.AssignmentListCreateView.as_view(), name='assignment-list-create'),
     path('assignments/<int:teacher_id>/', views.AssignmentListCreateView.as_view(), name='assignment-list-create'),
-    path('assignments/<int:pk>/', views.AssignmentRetrieveUpdateDestroyView.as_view(), name='assignment-detail'),
+    path('del-assignments/<int:pk>/', views.AssignmentRetrieveUpdateDestroyView.as_view(), name='assignment-detail'),
     path('get-subjects/<int:dept_id>/<int:gradelvl_id>/', views.get_subjects_by_dept_and_grade_level, name='et_subjects_by_dept_and_grade_level'),
+    path('get-deptbyid/<int:dept_id>/', views.getDeptById, name='getdeptbyid'),
+    path('get-grlvlbyid/<int:gradelvl_id>/', views.getGradelvlById, name='getgrlvlbyid'),   
+    path('get-sectionbyid/<int:section_id>/', views.getSectionById, name='getsectbyid'),
+    path('get-subjbyid/<int:subject_id>/', views.getSubjectById, name='getsubjbyid'),
+
+
 
 
     

@@ -97,6 +97,12 @@
                       </svg>
                 </button> -->
 
+                <button type="button" class="btn btn-info btn-custom-list" data-bs-toggle="modal" data-bs-target="#exampleModal" (click)="fetchAssignedDataForTeacher(teacher.id)">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-list-columns-reverse" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M0 .5A.5.5 0 0 1 .5 0h2a.5.5 0 0 1 0 1h-2A.5.5 0 0 1 0 .5Zm4 0a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1h-10A.5.5 0 0 1 4 .5Zm-4 2A.5.5 0 0 1 .5 2h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5Zm4 0a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5Zm-4 2A.5.5 0 0 1 .5 4h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5Zm4 0a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5Zm-4 2A.5.5 0 0 1 .5 6h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5Zm4 0a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 0 1h-8a.5.5 0 0 1-.5-.5Zm-4 2A.5.5 0 0 1 .5 8h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5Zm4 0a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 0 1h-8a.5.5 0 0 1-.5-.5Zm-4 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5Zm4 0a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1h-10a.5.5 0 0 1-.5-.5Zm-4 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5Zm4 0a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5Zm-4 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5Zm4 0a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5Z"/>
+                      </svg>                  
+                </button>            
+
             </td>
         </tr>
 
@@ -113,6 +119,39 @@
     </tbody>
 
 </table>
+
+<!-- VIEW LIST OF ASSIGNED SUBJECTS -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">List of Assigned Subjects</h5>
+          <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+                <div class="mb-5" *ngFor="let assignment  of assignedSubjects;let index = index ">
+                    <!-- <input class="form-control" [value]="assignment.gradeLevelName + ' - ' + assignment.sectionName" placeholder="Grade Level - Section" disabled>
+                    <input class="form-control" type="text" placeholder="subjectName" [(ngModel)]="assignment.subjectName" readonly> -->
+
+                    <h5><strong>Section: </strong>{{assignment.gradeLevelName}} - {{assignment.sectionName}}</h5>
+                    <h5><strong>Subject: </strong>{{assignment.subjectName}}</h5>
+                    <button type="button" class="btn btn-custom d-flex align-items-center shadow-none form-group" (click)="onDeleteItem(index)">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill" viewBox="0 0 16 16">
+                            <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5Zm-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5ZM4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06Zm6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528ZM8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5Z"/>
+                        </svg> 
+                        <span class="ms-2 align-middle">Remove</span>
+                    </button>
+
+                </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
 <!-- EDIT TEACHER MODAL -->
 
@@ -253,12 +292,9 @@
                 
                    <form [formGroup]="form">
                     <div class="teacher-fullname mb-4">
-                      <!-- <h4>{{ teacherData.lastName }}, {{ teacherData.firstName }}</h4> -->
+                      <h2>{{ selectedAssTeacher.lastName }}, {{ selectedAssTeacher.firstName }}</h2>
                     </div>
                 
-                      <div class="addsubjdiv">
-                          <button class="btn addsubj" (click)="addSubject()"><i class="bi bi-plus-circle-fill"></i> Add Subject</button>
-                      </div>
                   
                       <div formArrayName="assignments">
                           <div *ngFor="let assignment of assignments.controls; let i = index" [formGroupName]="i">
@@ -267,7 +303,7 @@
                               </div>
                               <select class="form-control" id="assdepartment" name="department" formControlName="department" (click)="onAssDepartmentChange(i)">
                                 <option value="" selected disabled>Department</option>
-                                <option *ngFor="let department of departments" [value]="department.id">{{ department.name }}</option>
+                                <option *ngFor="let department of departments" [value]="department?.id">{{ department?.name }}</option>
                               </select>
                               
                             <div class="container-ass">
@@ -292,11 +328,18 @@
                             </div>
                                 
                             </div>
-                            <button class="btn btn-danger custom-btn" (click)="removeAssignment(i)">
-                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill" viewBox="0 0 16 16">
-                                  <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5Zm-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5ZM4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06Zm6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528ZM8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5Z"/>
-                                </svg>                              
-                            </button>
+                            <div class="d-flex mb-4">
+                                <div class="addsubjdiv mr-2" width="16" height="16">
+                                    <button class="btn addsubj" (click)="addSubject()"><i class="bi bi-plus-circle-fill"></i> Add another subject</button>
+                                </div>
+                                <button class="btn btn-danger custom-btn" (click)="removeAssignment(i)">
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill" viewBox="0 0 16 16">
+                                      <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5Zm-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5ZM4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06Zm6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528ZM8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5Z"/>
+                                    </svg>                              
+                                </button>
+                                
+
+                            </div>
                             
                           </div>
                         </div>

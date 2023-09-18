@@ -209,22 +209,90 @@ export class TElemComponent {
     this.assignmentData.splice(index, 1);
   }
 
-  // fetchAssignedDataForTeacher(teacherId: number) {
-  //   this.authService.getAssignments(teacherId).subscribe(
-  //     (data: any[]) => {
-  //       this.assignedSubjects = data.map((assignment) => ({
-  //         gradeLevelName: assignment.grlevel?.name || 'N/A',
-  //         sectionName: assignment.section?.name || 'N/A',
-  //         subjectName: assignment.subject?.name || 'N/A',
-  //       }));
-  //       console.log(this.assignedSubjects)
+  onDeleteItem(index:number){
+    const assignment = this.assignedSubjects[index];
+    const assignIdToDelete = assignment.id;
 
-  //     },
-  //     (error) => {
-  //       console.error('Error fetching assigned data:', error);
-  //     }
-  //   );
-  // }
+    const confirmDelete = window.confirm('Are you sure you want to delete this item?');
+
+    if(confirmDelete){
+      console.log(assignIdToDelete)
+      this.assignedSubjects.splice(index, 1);
+  
+      
+      this.authService.delAssignments(assignIdToDelete).subscribe(
+          () => {
+              // Item deleted successfully from the backend
+          },
+          (error) => {
+              console.error('Error deleting item:', error);
+          }
+      );
+
+    }
+  }
+
+  fetchAssignedDataForTeacher(teacherId: number) {
+    this.authService.getAssignments(teacherId).subscribe(
+      (data: any[]) => {
+        const assignmentsWithNames = [];
+  
+        data.forEach((assignment) => {
+          const assignmentDetails = {
+            id:assignment.id,
+            subjectName: '',
+            departmentName: '',
+            gradeLevelName: '',
+            sectionName: '',
+          };
+          this.authService.getSubjectById(assignment.subject_id).subscribe(
+            (subjectData: any) => {
+              assignmentDetails.subjectName = subjectData.subjects[0].subject_name;
+
+            },
+            (error) => {
+              console.error('Error fetching subject name:', error);
+            }
+          );
+  
+          this.authService.getDepartmentById(assignment.dept_id).subscribe(
+            (deptData: any) => {
+              assignmentDetails.departmentName = deptData.departments[0].dept_name;
+            },
+            (error) => {
+              console.error('Error fetching department name:', error);
+            }
+          );
+  
+          this.authService.getGradeLevelById(assignment.gradelvl_id).subscribe(
+            (gradeLevelData: any) => {
+              assignmentDetails.gradeLevelName = gradeLevelData.gradelevelss[0].gradelvl;
+            },
+            (error) => {
+              console.error('Error fetching grade level name:', error);
+            }
+          );
+  
+          this.authService.getSectionById(assignment.section_id).subscribe(
+            (sectionData: any) => {
+              assignmentDetails.sectionName = sectionData.sections[0].section_name;
+            },
+            (error) => {
+              console.error('Error fetching section name:', error);
+            }
+          );
+  
+          assignmentsWithNames.push(assignmentDetails);
+        });
+  
+        this.assignedSubjects = assignmentsWithNames;
+      },
+      (error) => {
+        console.error('Error fetching assigned data:', error);
+      }
+    );
+  }
+  
   
   
   
@@ -332,9 +400,12 @@ export class TElemComponent {
 
     this.authService.createAssignment({ assignments: assignmentsData }).subscribe(
         (response) => {
-            console.log('Assignments created successfully:', response);
             this.showAlert = true;
+            setTimeout(() => {
+              this.hideAlert();
+            }, 3000);
             this.successMessage = 'Assignments created successfully.';
+            this.form.reset();
         },
         (error) => {
             console.error('Error creating assignments:', error);

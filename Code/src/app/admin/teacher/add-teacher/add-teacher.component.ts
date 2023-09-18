@@ -251,7 +251,7 @@ onSubmit() {
         },
         (error) => {
           console.log('Error', error)
-          this.showAlert = true;
+          this.showAlert = false;
           if (error.error && error.error.user_errors && error.error.user_errors.email) {
             this.emailExistsError = error.error.user_errors.email[0];
           } else if (error.error && error.error.error === 'Section already assigned to another teacher.') {

@@ -368,7 +368,31 @@ export class AuthService {
   getAssignments(teacherId:number): Observable<any> {
     return this.http.get(`${this.api_url}assignments/${teacherId}/`);
   }
+  delAssignments(assignmentId:number): Observable<any> {
+    return this.http.delete(`${this.api_url}del-assignments/${assignmentId}/`);
+  }
   getSubjectsByDeptGL(departmentId:number, gradeLevelId:number):Observable<any>{
     return this.http.get(`${this.api_url}get-subjects/${departmentId}/${gradeLevelId}/`, this.httpOptions)
+  }
+
+  getDepartmentById(deptId: number): Observable<any> {
+    return this.http.get(`${this.api_url}get-deptbyid/${deptId}/`, this.httpOptions).pipe(
+      catchError(this.handleError)
+    );
+  }
+  getGradeLevelById(gradeLevelId: number): Observable<any> {
+    return this.http.get(`${this.api_url}get-grlvlbyid/${gradeLevelId}/`, this.httpOptions).pipe(
+      catchError(this.handleError)
+    );
+  }
+  getSectionById(sectionId: number): Observable<any> {
+    return this.http.get(`${this.api_url}get-sectionbyid/${sectionId}/`, this.httpOptions).pipe(
+      catchError(this.handleError)
+    );
+  }
+  getSubjectById(subjectId: number): Observable<any> {
+    return this.http.get(`${this.api_url}get-subjbyid/${subjectId}/`, this.httpOptions).pipe(
+      catchError(this.handleError)
+    );
   }
 }

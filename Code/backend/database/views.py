@@ -728,3 +728,39 @@ def get_subjects_by_dept_and_grade_level(request, dept_id, gradelvl_id):
         return Response({'subjects': subject_data}, status=status.HTTP_200_OK)
     except Subject.DoesNotExist:
         return Response({'error': 'Subjects not found.'}, status=status.HTTP_404_NOT_FOUND)
+    
+@api_view(['GET'])
+def getDeptById(request, dept_id):
+    try:
+        departments = Department.objects.filter(dept_id=dept_id)
+        departments_data = [{'dept_id': department.dept_id, 'dept_name': department.dept_name} for department in departments]
+        return Response({'departments': departments_data}, status=status.HTTP_200_OK)
+    except Subject.DoesNotExist:
+        return Response({'error': 'Department not found.'}, status=status.HTTP_404_NOT_FOUND)
+    
+@api_view(['GET'])
+def getGradelvlById(request, gradelvl_id):
+    try:
+        gradelevelss = GradeLevel.objects.filter(gradelvl_id=gradelvl_id)
+        gradelevels_data = [{'gradelvl_id': gradelevel.gradelvl_id, 'gradelvl': gradelevel.gradelvl} for gradelevel in gradelevelss]
+        return Response({'gradelevelss': gradelevels_data}, status=status.HTTP_200_OK)
+    except Subject.DoesNotExist:
+        return Response({'error': 'Department not found.'}, status=status.HTTP_404_NOT_FOUND)
+    
+@api_view(['GET'])
+def getSectionById(request, section_id):
+    try:
+        sections = Section.objects.filter(section_id=section_id)
+        sections_data = [{'section_id': section.section_id, 'section_name': section.section_name} for section in sections]
+        return Response({'sections': sections_data}, status=status.HTTP_200_OK)
+    except Subject.DoesNotExist:
+        return Response({'error': 'Department not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+@api_view(['GET'])
+def getSubjectById(request, subject_id):
+    try:
+        subjects = Subject.objects.filter(subject_id=subject_id)
+        subjects_data = [{'subject_id': subject.subject_id, 'subject_name': subject.subject_name} for subject in subjects]
+        return Response({'subjects': subjects_data}, status=status.HTTP_200_OK)
+    except Subject.DoesNotExist:
+        return Response({'error': 'Department not found.'}, status=status.HTTP_404_NOT_FOUND)

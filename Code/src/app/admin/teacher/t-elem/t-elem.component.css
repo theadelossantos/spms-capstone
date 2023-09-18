@@ -96,6 +96,10 @@
     background-color: #A70000;
     margin-left: 5px;
 }
+.btn-custom-list{
+  margin-left: 5px;
+
+}
 
 .btn-custom-assign{
   margin-left: 5px;
@@ -227,7 +231,6 @@ margin-bottom: 12px;
   border-radius: 5px;
   font-family: 'Poppins', sans-serif;
   font-weight: 600;
-  margin-bottom: 10px;
   background-color: #a70000;
   color: white;
 }
