@@ -16,6 +16,12 @@ import { SidenavComponent } from './admin/sidenav/sidenav.component';
 import { AdminDashboardComponent } from './admin/admin-dashboard/admin-dashboard.component';
 import { BodyComponent } from './admin/body/body.component';
 import { TeacherSublevelMenuComponent } from './admin/sidenav/teacher-sublevel-menu.component';
+import { StudentContentComponent } from './student/student-content/student-content.component';
+import { StudentDashboardComponent } from './student/student-dashboard/student-dashboard.component';
+import { StudentSidenavComponent } from './student/student-sidenav/student-sidenav.component';
+import { StudentWeeklyprogComponent } from './student/student-weeklyprog/student-weeklyprog.component';
+import { StudentGradesComponent } from './student/student-grades/student-grades.component';
+import { StudentSettingsComponent } from './student/student-settings/student-settings.component';
 
 
 @NgModule({
@@ -30,6 +36,12 @@ import { TeacherSublevelMenuComponent } from './admin/sidenav/teacher-sublevel-m
     AdminDashboardComponent,
     BodyComponent,
     TeacherSublevelMenuComponent,
+    StudentContentComponent,
+    StudentDashboardComponent,
+    StudentSidenavComponent,
+    StudentWeeklyprogComponent,
+    StudentGradesComponent,
+    StudentSettingsComponent,
   ],
   imports: [
     BrowserModule,

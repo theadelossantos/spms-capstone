@@ -1,1 +1,5 @@
-<p>TABSSS</p>
+<app-student-sidenav (onToggleSideNav)="onToggleSideNav($event)"></app-student-sidenav>
+<app-body 
+[collapsed]= "isSideNavCollapsed" 
+[screenWidth]="screenWidth">
+</app-body>

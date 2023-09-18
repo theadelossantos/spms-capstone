@@ -14,6 +14,9 @@ import { ClassesComponent } from './admin/classes/classes.component';
 import { CoursesComponent } from './admin/courses/courses.component';
 import { SettingsComponent } from './admin/settings/settings.component';
 import { TeacherModule } from './admin/teacher/teacher.module';
+import { StudentDashboardComponent } from './student/student-dashboard/student-dashboard.component';
+import { StudentWeeklyprogComponent } from './student/student-weeklyprog/student-weeklyprog.component';
+import { StudentGradesComponent } from './student/student-grades/student-grades.component';
 
 const routes: Routes = [
  {
@@ -23,7 +26,33 @@ const routes: Routes = [
   path: 'teacher/teacher-homepage', component:TeacherHomepageComponent
  },
  {
-  path: 'student', component:StudentHomepageComponent, canActivate:[AuthGuard], data:{ roles: ['student']}
+  path: 'student',
+  component:StudentHomepageComponent, 
+  canActivate:[AuthGuard], 
+  data:{ roles: ['student']},
+  children: [
+    {
+      path:'',
+      redirectTo: 'dashboard',
+      pathMatch: 'full'
+    },
+    {
+      path: 'dashboard',
+      component: StudentDashboardComponent,
+    },
+    {
+      path: 'weeklyprog',
+      component: StudentWeeklyprogComponent,
+    },
+    {
+      path: 'grades',
+      component: StudentGradesComponent,
+    },
+    {
+      path: 'settings',
+      loadChildren:() => import('./student/student-settings/student-settings.module').then(m => m.StudentSettingsModule)
+    }
+  ]
  },
  {
   path: 'admin-home', component:AdminHomepageComponent,
