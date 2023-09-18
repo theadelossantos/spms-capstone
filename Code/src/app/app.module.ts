@@ -22,6 +22,14 @@ import { StudentSidenavComponent } from './student/student-sidenav/student-siden
 import { StudentWeeklyprogComponent } from './student/student-weeklyprog/student-weeklyprog.component';
 import { StudentGradesComponent } from './student/student-grades/student-grades.component';
 import { StudentSettingsComponent } from './student/student-settings/student-settings.component';
+import { TeacherDashboardComponent } from './teacher/teacher-dashboard/teacher-dashboard.component';
+import { TeacherSidenavComponent } from './teacher/teacher-sidenav/teacher-sidenav.component';
+import { TeacherContentComponent } from './teacher/teacher-content/teacher-content.component';
+import { AttendanceComponent } from './teacher/attendance/attendance.component';
+import { TeacherClassesComponent } from './teacher/teacher-classes/teacher-classes.component';
+import { TeacherWeeklyprogressComponent } from './teacher/teacher-weeklyprogress/teacher-weeklyprogress.component';
+import { TeacherGradesComponent } from './teacher/teacher-grades/teacher-grades.component';
+import { TeacherSettingsComponent } from './teacher/teacher-settings/teacher-settings.component';
 
 
 @NgModule({
@@ -42,6 +50,14 @@ import { StudentSettingsComponent } from './student/student-settings/student-set
     StudentWeeklyprogComponent,
     StudentGradesComponent,
     StudentSettingsComponent,
+    TeacherDashboardComponent,
+    TeacherSidenavComponent,
+    TeacherContentComponent,
+    AttendanceComponent,
+    TeacherClassesComponent,
+    TeacherWeeklyprogressComponent,
+    TeacherGradesComponent,
+    TeacherSettingsComponent,
   ],
   imports: [
     BrowserModule,

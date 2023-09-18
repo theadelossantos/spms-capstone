@@ -17,13 +17,47 @@ import { TeacherModule } from './admin/teacher/teacher.module';
 import { StudentDashboardComponent } from './student/student-dashboard/student-dashboard.component';
 import { StudentWeeklyprogComponent } from './student/student-weeklyprog/student-weeklyprog.component';
 import { StudentGradesComponent } from './student/student-grades/student-grades.component';
+import { TeacherDashboardComponent } from './teacher/teacher-dashboard/teacher-dashboard.component';
+import { AttendanceComponent } from './teacher/attendance/attendance.component';
+import { TeacherWeeklyprogressComponent } from './teacher/teacher-weeklyprogress/teacher-weeklyprogress.component';
+import { TeacherGradesComponent } from './teacher/teacher-grades/teacher-grades.component';
 
 const routes: Routes = [
  {
   path: 'admin', component:LoginComponent
  },
  {
-  path: 'teacher/teacher-homepage', component:TeacherHomepageComponent
+  path: 'teacher', 
+  component:TeacherHomepageComponent,
+  canActivate:[AuthGuard], 
+  data:{ roles: ['teacher']},
+  children:[
+    {
+      path:'',
+      redirectTo: 'dashboard',
+      pathMatch: 'full'
+    },
+    {
+      path: 'dashboard',
+      component: TeacherDashboardComponent,
+    },
+    {
+      path: 'attendance',
+      component: AttendanceComponent,
+    },
+    {
+      path: 'weeklyprog',
+      component: TeacherWeeklyprogressComponent,
+    },
+    {
+      path: 'grades',
+      component: TeacherGradesComponent,
+    },
+    {
+      path: 'settings',
+      loadChildren:() => import('./teacher/teacher-settings/teacher-settings.module').then(m => m.TeacherSettingsModule)
+    }
+  ]
  },
  {
   path: 'student',

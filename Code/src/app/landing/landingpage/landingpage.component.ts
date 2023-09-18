@@ -82,7 +82,7 @@ export class LandingpageComponent {
           this.router.navigate(['/student']);
           
         } else if (response.role === 'teacher') {
-          this.router.navigate(['/teacher/teacher-homepage']);
+          this.router.navigate(['/teacher']);
         } else if (response.role === 'admin') {
           this.router.navigate(['/admin/admin-homepage']);
         } else {
