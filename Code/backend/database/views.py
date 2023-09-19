@@ -694,9 +694,20 @@ class AssignmentListCreateView(generics.ListCreateAPIView):
 
     def create(self, request, *args, **kwargs):
         assignment_data = request.data.get('assignments', [])
-        
+        teacher_id = self.kwargs.get('teacher')
+
         assignments = []
         for data in assignment_data:
+            existing_assignment = Assigned.objects.filter(
+                teacher=teacher_id,
+                gradelvl_id=data['gradelvl_id'],  
+                section_id=data['section_id'],      
+                subject_id=data['subject_id']       
+            ).first()
+
+            if existing_assignment:
+                return Response({"detail": "This assignment already exists for another teacher."}, status=status.HTTP_400_BAD_REQUEST)
+
             serializer = self.get_serializer(data=data)
             serializer.is_valid(raise_exception=True)
             assignments.append(serializer.save())
@@ -704,7 +715,7 @@ class AssignmentListCreateView(generics.ListCreateAPIView):
         serializer = self.get_serializer(assignments, many=True)
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-
+    
     def get_queryset(self):
         teacher_id = self.kwargs.get('teacher_id')
         return Assigned.objects.filter(teacher_id=teacher_id)
@@ -764,3 +775,10 @@ def getSubjectById(request, subject_id):
         return Response({'subjects': subjects_data}, status=status.HTTP_200_OK)
     except Subject.DoesNotExist:
         return Response({'error': 'Department not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+class LogoutView(APIView):
+    def post(self, request):
+        response = JsonResponse({"message": "Logged out successfully."})
+        response.delete_cookie('access', path='/', domain='localhost')
+        response.delete_cookie('refresh', path='/', domain='localhost')
+        return response

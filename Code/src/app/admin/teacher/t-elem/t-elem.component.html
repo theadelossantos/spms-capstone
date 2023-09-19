@@ -91,11 +91,6 @@
                         <path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1z"/>
                       </svg>
                 </button>
-                <!-- <button (click)="fetchAssignedDataForTeacher(teacher.id)" class="btn btn-warning btn-custom-assign align-items-center shadow-none" data-bs-toggle="modal" data-bs-target="#viewList">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-list-columns-reverse" viewBox="0 0 16 16">
-                        <path fill-rule="evenodd" d="M0 .5A.5.5 0 0 1 .5 0h2a.5.5 0 0 1 0 1h-2A.5.5 0 0 1 0 .5Zm4 0a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1h-10A.5.5 0 0 1 4 .5Zm-4 2A.5.5 0 0 1 .5 2h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5Zm4 0a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5Zm-4 2A.5.5 0 0 1 .5 4h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5Zm4 0a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5Zm-4 2A.5.5 0 0 1 .5 6h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5Zm4 0a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 0 1h-8a.5.5 0 0 1-.5-.5Zm-4 2A.5.5 0 0 1 .5 8h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5Zm4 0a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 0 1h-8a.5.5 0 0 1-.5-.5Zm-4 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5Zm4 0a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1h-10a.5.5 0 0 1-.5-.5Zm-4 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5Zm4 0a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5Zm-4 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5Zm4 0a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5Z"/>
-                      </svg>
-                </button> -->
 
                 <button type="button" class="btn btn-info btn-custom-list" data-bs-toggle="modal" data-bs-target="#exampleModal" (click)="fetchAssignedDataForTeacher(teacher.id)">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-list-columns-reverse" viewBox="0 0 16 16">
@@ -131,9 +126,9 @@
           </button>
         </div>
         <div class="modal-body">
+            <ng-container *ngIf="assignedSubjects.length > 0; else noDataFound">
+
                 <div class="mb-5" *ngFor="let assignment  of assignedSubjects;let index = index ">
-                    <!-- <input class="form-control" [value]="assignment.gradeLevelName + ' - ' + assignment.sectionName" placeholder="Grade Level - Section" disabled>
-                    <input class="form-control" type="text" placeholder="subjectName" [(ngModel)]="assignment.subjectName" readonly> -->
 
                     <h5><strong>Section: </strong>{{assignment.gradeLevelName}} - {{assignment.sectionName}}</h5>
                     <h5><strong>Subject: </strong>{{assignment.subjectName}}</h5>
@@ -145,13 +140,18 @@
                     </button>
 
                 </div>
+            </ng-container>
+            <ng-template #noDataFound>
+                <p>No data found</p>
+            </ng-template>
+
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
         </div>
       </div>
     </div>
-  </div>
+</div>
 
 <!-- EDIT TEACHER MODAL -->
 
@@ -278,15 +278,15 @@
                 </button>
             </div>
             <div class="modal-body">
-                <div *ngIf="showAlert" class="alert alert-success alert-dismissible fade show" role="alert">
+                <div *ngIf="successMessage" class="alert alert-success alert-dismissible fade show" role="alert">
                     <strong>Success!</strong> Assigned successfully.
                     <button type="button" class="btn-close" (click)="hideAlert()" aria-label="Close"></button>
-                </div>
-                
-                <div class="alert alert-danger" role="alert" *ngIf="errorMessage">
-                {{ errorMessage }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
+                  </div>
+                   
+                  <div class="alert alert-danger alert-dismissible fade show" role="alert" *ngIf="errorMessage">
+                    Subject is already assigned  
+                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                  </div>
                 
                 
                 
@@ -320,7 +320,7 @@
                                       <option *ngFor="let section of assignmentData[i].sections" [value]="section?.section_id">{{ section?.name }}</option>
                                     </select>
                               </div>
-                              <div class="input-container">
+                              <div class="input-container-subject">
                                 <select class="form-control" id="subject" name="subject" formControlName="subject" (change)="onSubjectChange($event, i)">
                                     <option value="" disabled>Subject</option>
                                     <option *ngFor="let subject of assignmentData[i].subject" [value]="subject?.subject_id">{{ subject?.subject_name }}</option>
@@ -350,37 +350,12 @@
                 
                 <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" (click)="assignSubject()">Assign Subject</button>
+                <button type="button" class="btn btn-primary" (click)="assignSubject()" [disabled]="!form.valid">Assign Subject</button>
                 </div>
             </div>
         </div>
 </div>
 
-<div class="modal fade" id="viewList" tabindex="-1" role="dialog" aria-labelledby="viewListLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="assignTeacherModalLabel">View List</h5>
-                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <ul>
-                    <li *ngFor="let subject of assignedSubjects">
-                      Grade Level: {{ subject.grlevel?.name || 'N/A' }},
-                      Section: {{ subject.section?.name || 'N/A' }},
-                      Subject: {{ subject.subject?.name || 'N/A' }}
-                    </li>
-                  </ul>
-                  
-                
-                <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" (click)="assignSubject()">Assign Subject</button>
-                </div>
-            </div>
-        </div>
-</div>
+
 
 

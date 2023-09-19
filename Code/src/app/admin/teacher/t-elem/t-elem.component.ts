@@ -105,9 +105,9 @@ export class TElemComponent {
   createTeacherFormGroup() {
     return this.fb.group({
       department: ['', Validators.required], 
-      grlevel: [''],
-      section: [''],
-      subject:['']
+      grlevel: ['', Validators.required],
+      section: ['', Validators.required],
+      subject:['', Validators.required]
     });
   }
 
@@ -523,7 +523,7 @@ export class TElemComponent {
         }, 3000);
       },
       (error) => {
-        this.showAlert = false;
+        this.showAlert = true;
         console.log(error)
 
         if (error.error && error.error.error === 'Section already assigned to another teacher.') {

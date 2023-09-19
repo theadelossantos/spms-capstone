@@ -169,6 +169,11 @@ margin-bottom: 12px;
 
 .input-container {
   width: 100%;
+  margin-right: 10px;
+
+}
+.input-container-subject {
+  width: 100%;
 }
 
 .input-container-section {

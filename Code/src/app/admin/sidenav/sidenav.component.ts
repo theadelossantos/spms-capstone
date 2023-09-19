@@ -36,6 +36,7 @@ export class SidenavComponent implements OnInit {
   navData = navbarData;
   multiple: boolean = true;
 
+
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
     this.screenWidth = window.innerWidth;
@@ -94,11 +95,25 @@ handleclick(item: INavbarData):void{
   getActiveClass(data: INavbarData): string{
     return this.router.url.includes(data.routeLink) ? 'active':'';
   }
+  
 
   @Output() departmentSelected = new EventEmitter<any>(); 
 
   setSelectedDepartment(department: any) {
     this.departmentSelected.emit(department);
+  }
+
+  logout(){
+    console.log('Logout function called');
+    this.authService.logout().subscribe(
+      () => {
+        console.log('Logged out successfully.');
+        this.router.navigate(['/login']);
+      },
+      (error) => {
+        console.error('Error logging out:', error);
+      }
+    )
   }
 
 

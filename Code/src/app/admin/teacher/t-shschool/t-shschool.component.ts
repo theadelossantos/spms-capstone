@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { FormGroup, FormBuilder, FormArray, Validators } from '@angular/forms';
 import { ChangeDetectorRef } from '@angular/core';
 
 interface GradeLevelResponse {
@@ -29,7 +29,11 @@ export class TShschoolComponent {
       birthdate: [this.selectedTeacher.birthdate],
       section: [this.selectedTeacher.section_id],
       department: [this.selectedTeacher.dept_id],
+      assignments: this.fb.array([
+        this.createTeacherFormGroup()
+      ]),
     });
+    this.assignments = this.form.get('assignments') as FormArray;  
   }
   form: FormGroup;
   gradelvl: any [] = [];
@@ -58,18 +62,51 @@ export class TShschoolComponent {
   selectedSectionName: string = '';
   teacher: any; 
   sectionAssignmentError: string = '';
-  
+  assignedTeacherId: number | null = null;
+  selectedAssTeacher: any = {};
+  subjects: any[] = [];
+  assignmentData: {
+    department: number | null;
+    gradeLevel: number | null;
+    gradeLevels: any[];
+    section: number | null;
+    sections: any[];
+    subject: any [];
+  }[] = [{ department: null, gradeLevel: null, gradeLevels: [], section: null, sections: [], subject:[] }];  
 
+  gradelvlAssigned: any [] = [];
+  departmentsAssigned: any[] = [];
+  gradeLevelsAssigned: any[] = [];
+  subjectsAssigned: any[] = [];
+  selectedAssignedDepartment: number | null = null;
+  selectedAssignedSection: number | null = null;
+  selectedAssignedSubject: number | null = null;
+  selectedAssignedGradeLevel: number | null = null;
+  assignedSubjects: any[] = [];
+  sectionsAssigned: any[] = [];
+  assignments: FormArray;
 
   departments: any[] = [];
   gradeLevels: any[] = [];
   sections: any[] = [];
   selectedDepartment: number | null = null;
   selectedSection: number | null = null;
+  selectedSubject: number | null = null;
 
   successMessage: string = '';
+  successAssignMessage: string = '';
   errorMessage: string = '';
+  errorAssignMessage: string = '';
   showAlert:boolean = false;
+
+  createTeacherFormGroup() {
+    return this.fb.group({
+      department: ['', Validators.required], 
+      grlevel: ['', Validators.required],
+      section: ['', Validators.required],
+      subject:['', Validators.required]
+    });
+  }
 
   ngOnInit():void{
 
@@ -153,6 +190,228 @@ export class TShschoolComponent {
       }
     )
   }
+  addSubject() {
+    this.assignments.push(this.createTeacherFormGroup());
+  
+    this.assignmentData.push({
+      department: null,
+      gradeLevel: null,
+      gradeLevels: [],
+      section: null,
+      sections: [],
+      subject: []
+    });
+  }
+  removeAssignment(index: number) {
+    this.assignments.removeAt(index);
+    
+    this.assignmentData.splice(index, 1);
+  }
+
+  onDeleteItem(index:number){
+    const assignment = this.assignedSubjects[index];
+    const assignIdToDelete = assignment.id;
+
+    const confirmDelete = window.confirm('Are you sure you want to delete this item?');
+
+    if(confirmDelete){
+      console.log(assignIdToDelete)
+      this.assignedSubjects.splice(index, 1);
+  
+      
+      this.authService.delAssignments(assignIdToDelete).subscribe(
+          () => {
+              // Item deleted successfully from the backend
+          },
+          (error) => {
+              console.error('Error deleting item:', error);
+          }
+      );
+
+    }
+  }
+
+  fetchAssignedDataForTeacher(teacherId: number) {
+    this.authService.getAssignments(teacherId).subscribe(
+      (data: any[]) => {
+        const assignmentsWithNames = [];
+  
+        data.forEach((assignment) => {
+          const assignmentDetails = {
+            id:assignment.id,
+            subjectName: '',
+            departmentName: '',
+            gradeLevelName: '',
+            sectionName: '',
+          };
+          this.authService.getSubjectById(assignment.subject_id).subscribe(
+            (subjectData: any) => {
+              assignmentDetails.subjectName = subjectData.subjects[0].subject_name;
+
+            },
+            (error) => {
+              console.error('Error fetching subject name:', error);
+            }
+          );
+  
+          this.authService.getDepartmentById(assignment.dept_id).subscribe(
+            (deptData: any) => {
+              assignmentDetails.departmentName = deptData.departments[0].dept_name;
+            },
+            (error) => {
+              console.error('Error fetching department name:', error);
+            }
+          );
+  
+          this.authService.getGradeLevelById(assignment.gradelvl_id).subscribe(
+            (gradeLevelData: any) => {
+              assignmentDetails.gradeLevelName = gradeLevelData.gradelevelss[0].gradelvl;
+            },
+            (error) => {
+              console.error('Error fetching grade level name:', error);
+            }
+          );
+  
+          this.authService.getSectionById(assignment.section_id).subscribe(
+            (sectionData: any) => {
+              assignmentDetails.sectionName = sectionData.sections[0].section_name;
+            },
+            (error) => {
+              console.error('Error fetching section name:', error);
+            }
+          );
+  
+          assignmentsWithNames.push(assignmentDetails);
+        });
+  
+        this.assignedSubjects = assignmentsWithNames;
+      },
+      (error) => {
+        console.error('Error fetching assigned data:', error);
+      }
+    );
+  }
+
+  assignTeacher(teacherId){
+    this.selectedAssTeacher = {}; 
+
+    this.authService.getTeacherById(teacherId).subscribe(
+      (teacherDetails: any) => {
+        console.log('Response Dataa:', teacherDetails);
+        this.selectedAssTeacher = {
+          lastName: teacherDetails.teacher.lname,
+          firstName: teacherDetails.teacher.fname,
+          teacherId: teacherDetails.teacher.teacher_id
+        };
+        console.log('Selected Teacher:', this.selectedAssTeacher);
+        console.log('Teacher Id', this.selectedAssTeacher.teacherId)
+      },
+      (error) => {
+        console.error('Error fetching teacher details:', error);
+      }
+    );
+  }
+
+  onAssDepartmentChange(index: number) {
+    const selectedAssignedDepartment = this.assignments.at(index).get('department').value;
+    if (selectedAssignedDepartment !== null) {
+      console.log('Selected Department ID:', selectedAssignedDepartment);
+
+      this.assignmentData[index].department = selectedAssignedDepartment;
+  
+      this.authService.getGradelevelsByDept(selectedAssignedDepartment).subscribe(
+        (data: GradeLevelResponse) => {
+          this.assignmentData[index].gradeLevels = data.gradelevels;
+          console.log(this.assignmentData[index].gradeLevels);
+        },
+        (error) => {
+          console.error('Error fetching grade levels', error);
+        }
+      );
+    }
+  }
+  
+  onAssGradeLevelChange(index: number) {
+    const selectedAssignedGradeLevel = this.assignments.at(index).get('grlevel').value;
+    const selectedAssignedDepartment = this.assignments.at(index).get('department').value;
+
+  
+    if (selectedAssignedGradeLevel !== null && selectedAssignedDepartment !== null) {
+      console.log('Selected Grade Level ID:', selectedAssignedGradeLevel);
+      
+
+      this.assignmentData[index].gradeLevel = selectedAssignedGradeLevel;
+
+      this.authService.getSectionsByDeptGL(selectedAssignedDepartment, selectedAssignedGradeLevel).subscribe(
+        (data: GradeLevelResponse) => {
+          this.assignmentData[index].sections = data.sections;
+          console.log('section', this.assignmentData[index].sections);
+
+          this.authService.getSubjectsByDeptGL(selectedAssignedDepartment, selectedAssignedGradeLevel).subscribe(
+            (subjectData: any) => {
+              this.assignmentData[index].subject = subjectData.subjects;
+              console.log('Subjects:', this.assignmentData[index].subject);
+
+            },
+            (subjectError) => {
+              console.error('Error fetching subjects', subjectError);
+            }
+          );
+        },
+        (error) => {
+          console.error('Error fetching sections', error);
+        }
+      );
+    } else {
+      this.assignmentData[index].sections = [];
+    }
+  }
+
+  onSectionChange(event: Event, index: number) {
+    const selectedAssignedSection = this.assignments.at(index).get('section').value;
+    console.log('Selected Section ID:', selectedAssignedSection);
+
+    this.assignmentData[index].section = selectedAssignedSection;
+
+  }
+  
+  onSubjectChange(event: Event, index: number) {
+    const selectedAssignedSubject = this.assignments.at(index).get('subject').value;
+    console.log('Selected Subject ID:', selectedAssignedSubject);
+  }
+
+  assignSubject() {    
+    const assignmentsData = this.form.value.assignments.map((assignment: any) => ({
+      teacher: +this.selectedAssTeacher.teacherId,
+      subject_id: +assignment.subject,
+      gradelvl_id: +assignment.grlevel,
+      section_id: +assignment.section,
+      dept_id: +assignment.department
+    }));
+    
+      
+  console.log('assignmentData', assignmentsData);
+
+
+    this.authService.createAssignment({ assignments: assignmentsData }).subscribe(
+        (response) => {
+            this.showAlert = true;
+            setTimeout(() => {
+              this.hideAlert();
+            }, 3000);
+            this.successAssignMessage = 'Assignments created successfully.';
+            this.form.reset();
+        },
+        (error) => {
+            console.error('Error creating assignments:', error);
+            this.showAlert = true;
+            setTimeout(() => {
+              this.hideAlert();
+            }, 3000);
+            this.errorAssignMessage = 'Error creating assignments.';
+        }
+    );
+}
 
   editTeacher(teacher: any) {
     const teacherId = teacher.id;

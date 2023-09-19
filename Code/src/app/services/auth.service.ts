@@ -395,4 +395,8 @@ export class AuthService {
       catchError(this.handleError)
     );
   }
+
+  logout(): Observable<any>{
+    return this.http.post(`${this.api_url}logout/`, this.httpOptions)
+  }
 }

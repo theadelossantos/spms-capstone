@@ -50,6 +50,8 @@ urlpatterns = [
     path('get-grlvlbyid/<int:gradelvl_id>/', views.getGradelvlById, name='getgrlvlbyid'),   
     path('get-sectionbyid/<int:section_id>/', views.getSectionById, name='getsectbyid'),
     path('get-subjbyid/<int:subject_id>/', views.getSubjectById, name='getsubjbyid'),
+    path('logout/', LogoutView.as_view(), name='logout'),
+
 
 
 

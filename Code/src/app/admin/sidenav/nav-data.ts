@@ -53,6 +53,7 @@ export const navbarData: INavbarData[] = [
             }
         ]
     },
+    
 ];
 
 export async function loadDepartments(navbarData: INavbarData[], authService: AuthService, routeLink: string) {

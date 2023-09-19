@@ -66,6 +66,8 @@ class Assigned(models.Model):
     def __str__(self):
         return f"Assignment for Teacher {self.teacher} in {self.subject_id} for {self.dept_id}, Grade {self.gradelvl_id}, Section {self.section_id}"
 
+    class Meta:
+        unique_together = ('subject_id', 'dept_id', 'gradelvl_id', 'section_id')
 
 
 class Admin(models.Model):

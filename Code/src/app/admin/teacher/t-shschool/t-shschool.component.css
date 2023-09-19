@@ -87,7 +87,14 @@
     background-color: #A70000;
     margin-left: 5px;
 }
+.btn-custom-list{
+  margin-left: 5px;
 
+}
+
+.btn-custom-assign{
+  margin-left: 5px;
+}
 .trash-icon{
     color: white;
 }
@@ -150,6 +157,14 @@ margin-bottom: 12px;
   justify-content: space-between;
   align-items: center;
 }
+.container-ass {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: 10px;
+  margin-bottom: 10px;
+
+}
 
 .input-container {
   width: 100%;
@@ -159,6 +174,10 @@ margin-bottom: 12px;
   width: 100%;
   /* margin-bottom: 10px; */
 }
+.input-container-subject {
+  width: 100%;
+}
+
 
 .accdeets{
   font-weight: bold;

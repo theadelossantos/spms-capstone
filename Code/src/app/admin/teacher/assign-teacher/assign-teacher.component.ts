@@ -168,16 +168,24 @@ export class AssignTeacherComponent {
         return;
     }
 
+    this.showAlert = false;
+
     this.authService.createAssignment(assignmentsData).subscribe(
         (response) => {
+          setTimeout(() => {
+            this.hideAlert();
+          }, 3000);
             console.log('Assignments created successfully:', response);
             this.showAlert = true;
             this.successMessage = 'Assignments created successfully.';
         },
         (error) => {
+          setTimeout(() => {
+            this.hideAlert();
+          }, 3000);
             console.error('Error creating assignments:', error);
             this.showAlert = true;
-            this.errorMessage = 'Error creating assignments.';
+            this.errorMessage = 'Subject is already assigned.';
         }
     );
 }
