@@ -4,6 +4,7 @@ import { animate, keyframes, style, transition, trigger } from '@angular/animati
 import { INavbarData, fadeInOut } from './helper';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
+import { ActivatedRoute } from '@angular/router';
 
 interface SideNavToggle {
   screenWidth: number;
@@ -46,7 +47,7 @@ export class TeacherSidenavComponent {
 
   departments: any[] = [];
   departmentsExpanded = false;
-  constructor(public router: Router, private authService: AuthService) {}
+  constructor(public router: Router, private authService: AuthService,private activatedRoute: ActivatedRoute) {}
 
   ngOnInit(): void {
     this.screenWidth = window.innerWidth;
@@ -91,6 +92,7 @@ handleclick(item: INavbarData):void{
   item.expanded = !item.expanded
   }
   getActiveClass(data: INavbarData): string{
+    
     return this.router.url.includes(data.routeLink) ? 'active':'';
   }
 
@@ -98,5 +100,23 @@ handleclick(item: INavbarData):void{
 
   setSelectedDepartment(department: any) {
     this.departmentSelected.emit(department);
+  }
+  isGradesActive(): boolean {
+    const urlSegments = this.activatedRoute.snapshot.url.map(segment => segment.path);
+    
+    return urlSegments.includes('teacher') && urlSegments.includes('grades');
+  }
+
+  logout(){
+    console.log('Logout function called');
+    this.authService.logout().subscribe(
+      () => {
+        console.log('Logged out successfully.');
+        this.router.navigate(['/login']);
+      },
+      (error) => {
+        console.error('Error logging out:', error);
+      }
+    )
   }
 }

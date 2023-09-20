@@ -42,3 +42,5 @@ admin.site.register(Subject, SubjectAdmin)
 
     
 admin.site.register(CustomUser)
+admin.site.register(StudentGrade)
+

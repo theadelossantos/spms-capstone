@@ -12,13 +12,16 @@ from django.http import HttpResponse
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
 import json
 import base64
 from django.http import JsonResponse
 from .models import Department
 from django.views import View
 from django.db import transaction
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 
 class AddStudentView(APIView):
     def post(self, request):
@@ -776,9 +779,70 @@ def getSubjectById(request, subject_id):
     except Subject.DoesNotExist:
         return Response({'error': 'Department not found.'}, status=status.HTTP_404_NOT_FOUND)
 
-class LogoutView(APIView):
+@method_decorator(csrf_exempt, name='dispatch')
+class LogoutView(View):
     def post(self, request):
-        response = JsonResponse({"message": "Logged out successfully."})
-        response.delete_cookie('access', path='/', domain='localhost')
-        response.delete_cookie('refresh', path='/', domain='localhost')
+        response = JsonResponse({'message': 'Logout successful'})
+
+        response.delete_cookie('access', domain='localhost', path='/')
+        response.delete_cookie('refresh', domain='localhost', path='/')
+
         return response
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated]) 
+def teacher_profile(request):
+    teacher = request.user.teacher  
+
+    serializer = TeacherSerializer(teacher)
+
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated]) 
+def admin_profile(request):
+    admin = request.user.admin  
+
+    serializer = AdminSerializer(admin)
+
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+def calculate_weighted_scores_view(request, student_id):
+    try:
+        student = Student.objects.get(pk=student_id)
+
+        student_grade = StudentGrade.objects.get(student=student)
+
+        total_hps_ww = sum(getattr(student_grade, f'hps_ww_{i}', 0) for i in range(1, 11))
+        total_hps_pt = sum(getattr(student_grade, f'hps_pt_{i}', 0) for i in range(1, 11))
+        total_hps_qa = getattr(student_grade, 'hps_qa_10', 0)
+
+        ww_scores = [getattr(student_grade, f'ww_score_{i}', 0) for i in range(1, 11)]
+        pt_scores = [getattr(student_grade, f'pt_score_{i}', 0) for i in range(1, 11)]
+        qa_score = getattr(student_grade, 'qa_score', 0)
+
+        ww_total_score = sum(ww_scores)
+        ww_weighted_score = (ww_total_score / total_hps_ww) * 30 if total_hps_ww > 0 else 0
+
+        pt_total_score = sum(pt_scores)
+        pt_weighted_score = (pt_total_score / total_hps_pt) * 50 if total_hps_pt > 0 else 0
+
+        qa_weighted_score = (qa_score / total_hps_qa) * 20 if total_hps_qa > 0 else 0
+
+        # Calculate percentage score
+        percentage_score = (ww_total_score / pt_total_score) * 100 if pt_total_score > 0 else 0
+
+        # Calculate initial grade
+        initial_grade = ww_weighted_score + pt_weighted_score + qa_weighted_score
+
+        response_data = {
+            'ww_weighted_score': ww_weighted_score,
+            'pt_weighted_score': pt_weighted_score,
+            'qa_weighted_score': qa_weighted_score,
+            'percentage_score': percentage_score,  # Add percentage score to response
+            'initial_grade': initial_grade,  # Add initial grade to response
+        }
+
+        return JsonResponse(response_data)
+    except StudentGrade.DoesNotExist:
+        return JsonResponse({'error': 'StudentGrade not found'}, status=404)

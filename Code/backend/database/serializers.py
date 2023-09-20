@@ -187,6 +187,8 @@ class AdminTokenObtainPairSerializer(TokenObtainPairSerializer):
                 "email": email,
                 "role": role,  
                 "roles": [role],  
+                "refresh": str(refresh),
+                "access": str(refresh.access_token),
             }
 
             refresh.payload = payload

@@ -28,7 +28,6 @@ import { TeacherContentComponent } from './teacher/teacher-content/teacher-conte
 import { AttendanceComponent } from './teacher/attendance/attendance.component';
 import { TeacherClassesComponent } from './teacher/teacher-classes/teacher-classes.component';
 import { TeacherWeeklyprogressComponent } from './teacher/teacher-weeklyprogress/teacher-weeklyprogress.component';
-import { TeacherGradesComponent } from './teacher/teacher-grades/teacher-grades.component';
 import { TeacherSettingsComponent } from './teacher/teacher-settings/teacher-settings.component';
 
 
@@ -56,7 +55,6 @@ import { TeacherSettingsComponent } from './teacher/teacher-settings/teacher-set
     AttendanceComponent,
     TeacherClassesComponent,
     TeacherWeeklyprogressComponent,
-    TeacherGradesComponent,
     TeacherSettingsComponent,
   ],
   imports: [

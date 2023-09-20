@@ -15,7 +15,8 @@ export class AuthService {
   private api_url: string = 'http://localhost:8000/api/auth/';
   private httpOptions = {
     headers: new HttpHeaders({
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      // 'Authorization': `Bearer ${this.getAccessToken()}`,
     }),
     withCredentials: true
   };
@@ -37,7 +38,11 @@ export class AuthService {
     
     return throwError('Something went wrong; please try again later.');
   }
-  
+
+  private getAccessToken(): string {
+    return this.cookieService.get('access') || '';
+
+  }
   
   login(email: string, password: string, role: string): Observable<any> {
     const data = {
@@ -45,16 +50,14 @@ export class AuthService {
       password,
       role
     };
-    console.log('Request Body:', data);
-    
     return this.http.post(`${this.api_url}login/`, data, this.httpOptions)
   }
+
 
   adminlogin(email:string, password:string):Observable<any>{
     const data = {
       email, password
     };
-    console.log('Request Body:', data)
 
     return this.http.post(`${this.api_url}admin-login/`, data, this.httpOptions)
   }
@@ -396,7 +399,30 @@ export class AuthService {
     );
   }
 
-  logout(): Observable<any>{
-    return this.http.post(`${this.api_url}logout/`, this.httpOptions)
+  private setAuthHeader(): HttpHeaders {
+    const accessToken = this.getAccessToken();
+    if (accessToken) {
+      return new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${accessToken}`,
+      });
+    }
+    return new HttpHeaders({
+      'Content-Type': 'application/json',
+    });
   }
+
+  getTeacherProfile(): Observable<any> {
+    const authHeader = this.setAuthHeader();
+    return this.http.get(`${this.api_url}teacher-profile/`, { headers: authHeader });
+  }
+  getAdminProfile(): Observable<any> {
+    const authHeader = this.setAuthHeader();
+    return this.http.get(`${this.api_url}admin-profile/`, { headers: authHeader });
+  }
+
+  logout(): Observable<any> {
+    return this.http.post(`${this.api_url}logout/`, null);
+  }
+  
 }

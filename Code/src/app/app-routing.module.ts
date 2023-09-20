@@ -51,7 +51,7 @@ const routes: Routes = [
     },
     {
       path: 'grades',
-      component: TeacherGradesComponent,
+      loadChildren:() => import('./teacher/teacher-grades/teacher-grades.module').then(m => m.TeacherGradesModule),
     },
     {
       path: 'settings',

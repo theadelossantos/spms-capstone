@@ -113,3 +113,92 @@ class Subject(models.Model):
 
     def __str__(self):
         return f"{self.subject_id} - {self.subject_name}"
+
+class StudentGrade(models.Model):
+    student = models.ForeignKey('Student', on_delete=models.CASCADE)
+    subject = models.ForeignKey('Subject', on_delete=models.CASCADE)
+
+    hps_ww_1 = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    hps_ww_2 = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    hps_ww_3 = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    hps_ww_4 = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    hps_ww_5 = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    hps_ww_6 = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    hps_ww_7 = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    hps_ww_8 = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    hps_ww_9 = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    hps_ww_10 = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+
+    hps_pt_1 = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    hps_pt_2 = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    hps_pt_3 = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    hps_pt_4 = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    hps_pt_5 = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    hps_pt_6 = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    hps_pt_7 = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    hps_pt_8 = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    hps_pt_9 = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    hps_pt_10 = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+
+    hps_qa_10 = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+
+    ww_score_1 = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    ww_score_2 = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    ww_score_3 = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    ww_score_4 = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    ww_score_5 = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    ww_score_6 = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    ww_score_7 = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    ww_score_8 = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    ww_score_9 = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    ww_score_10 = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    
+    ww_total_score = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    ww_percentage_score = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    ww_weighted_score = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    
+    pt_score_1 = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    pt_score_2 = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    pt_score_3 = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    pt_score_4 = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    pt_score_5 = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    pt_score_6 = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    pt_score_7 = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    pt_score_8 = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    pt_score_9 = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    pt_score_10 = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+
+    pt_total_score = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    pt_percentage_score = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    pt_weighted_score = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    
+    qa_score = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    qa_percentage_score = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    qa_weighted_score = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    
+    initial_grade = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    
+    quarterly_grade = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+
+    # def calculate_weighted_scores(self):
+    #     total_hps_ww = sum(getattr(self, f'hps_ww_{i}', 0) for i in range(1, 11))
+    #     total_hps_pt = sum(getattr(self, f'hps_pt_{i}', 0) for i in range(1, 11))
+    #     total_hps_qa = getattr(self, 'hps_qa_10', 0)  
+
+    #     ww_scores = [getattr(self, f'ww_score_{i}', 0) for i in range(1, 11)]
+    #     pt_scores = [getattr(self, f'pt_score_{i}', 0) for i in range(1, 11)]
+    #     qa_score = getattr(self, 'qa_score', 0)
+
+    #     ww_total_score = sum(ww_scores)
+    #     ww_weighted_score = (ww_total_score / total_hps_ww) * 30 if total_hps_ww > 0 else 0
+
+    #     pt_total_score = sum(pt_scores)
+    #     pt_weighted_score = (pt_total_score / total_hps_pt) * 50 if total_hps_pt > 0 else 0
+
+    #     # Calculate QA weighted score
+    #     qa_weighted_score = (qa_score / total_hps_qa) * 20 if total_hps_qa > 0 else 0
+
+    #     return ww_weighted_score, pt_weighted_score, qa_weighted_score
+
+    def __str__(self):
+        return f"Grade for {self.student} in {self.subject} - {self.assignment_name}"

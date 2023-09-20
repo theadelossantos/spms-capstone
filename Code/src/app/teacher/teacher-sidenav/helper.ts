@@ -5,6 +5,7 @@ export interface INavbarData {
     label: string;
     expanded?: boolean;
     items?: INavbarData[],
+    nonitems?: INavbarData[],
     loadDepartments?:boolean
 }
 

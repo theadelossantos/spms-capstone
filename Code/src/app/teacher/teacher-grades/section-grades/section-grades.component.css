@@ -1,0 +1,51 @@
+*{
+    font-family: 'Poppins', sans-serif;
+}
+
+a{
+    color: #000;
+    margin-right: 3px;
+    text-decoration: none;
+}
+a:hover{
+    text-decoration: underline;
+}
+.next{
+    margin-right: 3px;
+}
+
+.links .active{
+    text-decoration: underline;
+}
+input[type="text"] {
+    width: 30px; 
+    font-size: 13px;
+    border: none;
+    text-align: center;
+}
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+table, th, td {
+    border: 1px solid #000; 
+    text-align: center; 
+    font-size: 13px;
+}
+
+th {
+    background-color: #f2f2f2; 
+    font-size: 17px;
+}
+th[ rowspan="3" ] {
+    width: 60px; 
+    font-size: 14px;
+
+}
+.hps{
+    text-align: right;
+}
+.student-name{
+    text-align: left;
+}

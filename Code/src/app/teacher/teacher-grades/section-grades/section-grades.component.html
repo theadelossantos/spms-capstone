@@ -1,0 +1,132 @@
+<div class="links d-flex">
+    <a [routerLink]="['/teacher/grades']">Classes </a>
+    <p class="next">></p>
+    <a class="active">{{gradeLevelName}} - {{ sectionName }}</a>
+
+</div>
+
+<table>
+    <thead>
+      <tr>
+        <th>No.</th>
+        <th>Student Name</th>
+        <th colspan="13">Written Works</th>
+        <th colspan="13">Performance Tasks</th>
+        <th colspan="3">Quarterly Assessment</th>
+        <th rowspan="3">Initial Grade</th>
+        <th rowspan="3">Quarterly Grade</th>
+      </tr>
+      <tr>
+        <td></td>
+            <td></td>
+            <td><b>1</b></td>
+            <td><b>2</b></td>
+            <td><b>3</b></td>
+            <td><b>4</b></td>
+            <td><b>5</b></td>
+            <td><b>6</b></td>
+            <td><b>7</b></td>
+            <td><b>8</b></td>
+            <td><b>9</b></td>
+            <td><b>10</b></td>
+            <td><b>Total</b></td>
+            <td><b>PS</b></td>
+            <td><b>WS</b></td>
+
+            <td><b>1</b></td>
+            <td><b>2</b></td>
+            <td><b>3</b></td>
+            <td><b>4</b></td>
+            <td><b>5</b></td>
+            <td><b>6</b></td>
+            <td><b>7</b></td>
+            <td><b>8</b></td>
+            <td><b>9</b></td>
+            <td><b>10</b></td>
+            <td><b>Total</b></td>
+            <td><b>PS</b></td>
+            <td><b>WS</b></td>
+
+            <td><b>1</b></td>
+            <td><b>PS</b></td>
+            <td><b>WS</b></td>
+      </tr>
+      <tr>
+            <td></td>
+            <td class="hps"><b>HIGHEST POSSIBLE SCORE</b></td>
+
+            <td><input type="text" [(ngModel)]="writtenWorkHPS[0]" (input)="updateTotalWrittenWorkHPS()" /></td>
+            <td><input type="text" [(ngModel)]="writtenWorkHPS[1]" (input)="updateTotalWrittenWorkHPS()" /></td>
+            <td><input type="text" [(ngModel)]="writtenWorkHPS[2]" (input)="updateTotalWrittenWorkHPS()"/></td>
+            <td><input type="text" [(ngModel)]="writtenWorkHPS[3]" (input)="updateTotalWrittenWorkHPS()"/></td>
+            <td><input type="text" [(ngModel)]="writtenWorkHPS[4]" (input)="updateTotalWrittenWorkHPS()"/></td>
+            <td><input type="text" [(ngModel)]="writtenWorkHPS[5]" (input)="updateTotalWrittenWorkHPS()"/></td>
+            <td><input type="text" [(ngModel)]="writtenWorkHPS[6]" (input)="updateTotalWrittenWorkHPS()"/></td>
+            <td><input type="text" [(ngModel)]="writtenWorkHPS[7]" (input)="updateTotalWrittenWorkHPS()"/></td>
+            <td><input type="text" [(ngModel)]="writtenWorkHPS[8]" (input)="updateTotalWrittenWorkHPS()"/></td>
+            <td><input type="text" [(ngModel)]="writtenWorkHPS[9]" (input)="updateTotalWrittenWorkHPS()"/></td>
+
+            <td class="WWtotalHPS"><b>{{ totalWrittenWorkHPS }}</b></td>
+            <td><b>100</b></td>
+            <td><b>50%</b></td>
+
+            <td><input type="text" [(ngModel)]="performanceTaskHPS[0]" (input)="updateTotalPerformanceTaskHPS()" /></td>
+            <td><input type="text" [(ngModel)]="performanceTaskHPS[1]" (input)="updateTotalPerformanceTaskHPS()" /></td>
+            <td><input type="text" [(ngModel)]="performanceTaskHPS[2]" (input)="updateTotalPerformanceTaskHPS()"/></td>
+            <td><input type="text" [(ngModel)]="performanceTaskHPS[3]" (input)="updateTotalPerformanceTaskHPS()"/></td>
+            <td><input type="text" [(ngModel)]="performanceTaskHPS[4]" (input)="updateTotalPerformanceTaskHPS()"/></td>
+            <td><input type="text" [(ngModel)]="performanceTaskHPS[5]" (input)="updateTotalPerformanceTaskHPS()"/></td>
+            <td><input type="text" [(ngModel)]="performanceTaskHPS[6]" (input)="updateTotalPerformanceTaskHPS()"/></td>
+            <td><input type="text" [(ngModel)]="performanceTaskHPS[7]" (input)="updateTotalPerformanceTaskHPS()"/></td>
+            <td><input type="text" [(ngModel)]="performanceTaskHPS[8]" (input)="updateTotalPerformanceTaskHPS()"/></td>
+            <td><input type="text" [(ngModel)]="performanceTaskHPS[9]" (input)="updateTotalPerformanceTaskHPS()"/></td>
+            <td>{{totalPerformanceTaskHPS}}</td>
+            <td><b>100</b></td>
+            <td><b>40%</b></td>
+
+
+            <td><input type="text" /></td>
+            <td><b>100</b></td>
+            <td><b>20%</b></td>
+      </tr>
+      
+    </thead>
+    <tbody>
+      <tr *ngFor="let student of students; let i = index">
+        <td>{{ i + 1}}</td>
+        <td class="student-name" >{{student.lname}}, {{student.fname}}</td>
+        <td><input type="text" [(ngModel)]="ww_scores[0][i]" (input)="updateWrittenWorkRS(i)" /></td>
+        <td><input type="text" [(ngModel)]="ww_scores[1][i]" (input)="updateWrittenWorkRS(i)"/></td>
+        <td><input type="text" [(ngModel)]="ww_scores[2][i]" (input)="updateWrittenWorkRS(i)"/></td>
+        <td><input type="text" [(ngModel)]="ww_scores[3][i]" (input)="updateWrittenWorkRS(i)"/></td>
+        <td><input type="text" [(ngModel)]="ww_scores[4][i]" (input)="updateWrittenWorkRS(i)"/></td>
+        <td><input type="text" [(ngModel)]="ww_scores[5][i]" (input)="updateWrittenWorkRS(i)"/></td>
+        <td><input type="text" [(ngModel)]="ww_scores[6][i]" (input)="updateWrittenWorkRS(i)"/></td>
+        <td><input type="text" [(ngModel)]="ww_scores[7][i]" (input)="updateWrittenWorkRS(i)"/></td>
+        <td><input type="text" [(ngModel)]="ww_scores[8][i]" (input)="updateWrittenWorkRS(i)"/></td>
+        <td><input type="text" [(ngModel)]="ww_scores[9][i]" (input)="updateWrittenWorkRS(i)"/></td>
+        <td>{{ student.totalWrittenWorkRS }}</td>
+        <td><input type="text" /></td>
+        <td><input type="text" /></td>
+
+        <td><input type="text" /></td>
+        <td><input type="text" /></td>
+        <td><input type="text" /></td>
+        <td><input type="text" /></td>
+        <td><input type="text"/></td>
+        <td><input type="text"  /></td>
+        <td><input type="text" /></td>
+        <td><input type="text" /></td>
+        <td><input type="text" /></td>
+        <td><input type="text" /></td>
+        <td><input type="text" /></td>
+        <td><input type="text" /></td>
+        <td><input type="text" /></td>
+        <td><input type="text" /></td>
+        <td><input type="text" /></td>
+        <td><input type="text" /></td>
+        <td><input class="inigrade" type="text" /></td>
+        <td ><input type="text" /></td>
+      </tr>
+    </tbody>
+  </table>
