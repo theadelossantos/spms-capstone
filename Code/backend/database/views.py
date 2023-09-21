@@ -23,6 +23,7 @@ from django.db import transaction
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 
+
 class AddStudentView(APIView):
     def post(self, request):
         user_serializer = UserSerializer(data=request.data.get('user'))
@@ -804,6 +805,15 @@ def admin_profile(request):
     admin = request.user.admin  
 
     serializer = AdminSerializer(admin)
+
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated]) 
+def student_profile(request):
+    student = request.user.student  
+
+    serializer = StudentSerializer(student)
 
     return Response(serializer.data, status=status.HTTP_200_OK)
 
