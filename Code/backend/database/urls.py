@@ -54,7 +54,7 @@ urlpatterns = [
     path('teacher-profile/', views.teacher_profile, name='user-profile'),
     path('admin-profile/', views.admin_profile, name='admin-profile'),
     path('calculate_weighted_scores/<int:student_id>/', views.calculate_weighted_scores_view, name='calculate_weighted_scores'),
-
+    path('student-profile/', views.student_profile, name='student-profile'),
 
 
 

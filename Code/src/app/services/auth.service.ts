@@ -209,6 +209,7 @@ export class AuthService {
     )
   }
 
+  
 
   addAdmin(adminData: any): Observable<any> {
     return this.http.post(`${this.api_url}add-admin/`, adminData, this.httpOptions).pipe(
@@ -411,6 +412,14 @@ export class AuthService {
       'Content-Type': 'application/json',
     });
   }
+
+  getStudentProfile(): Observable<any> {
+    const authHeader = this.setAuthHeader();
+    return this.http.get(`${this.api_url}student-profile/`, { headers: authHeader });
+
+  }
+
+  
 
   getTeacherProfile(): Observable<any> {
     const authHeader = this.setAuthHeader();
