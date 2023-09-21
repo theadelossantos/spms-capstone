@@ -190,7 +190,7 @@
           <input
             *ngIf="calculateQAPercentageScore(student.id) !== 0"
             type="text"
-            [value]="calculateQAPercentageScore(student.id)?.toString()"
+            [value]="calculateQAPercentageScore(student.id)?.toString() || ''"
             readonly
             (click)="showStudentId(student.id)"
             style="font-weight: bold;"
@@ -201,8 +201,10 @@
         <td><input type="text" [value]="student.totalQuarterlyAssessmentWS?.toString() || ''" readonly (click)="showStudentId(student.id)" style="font-weight: bold;" /></td>
 
 
-        <td><input class="inigrade" type="text" /></td>
-        <td ><input type="text" /></td>
+        <td><input class="inigrade" type="text" *ngIf="calculateInitialGrade(student) !== 0" [value]="calculateInitialGrade(student)?.toString() || ''" readonly (click)="showStudentId(student.id)" /></td>
+        <td>
+          <input class="quarterly grade" type="text" *ngIf="student.totalQuarterlyAssessmentWS !== undefined && student.totalQuarterlyAssessmentWS !== null && student.totalWrittenWorkWS !== undefined && student.totalPerfTaskWS !== undefined" [value]="student.quarterlyGrade !== undefined ? student.quarterlyGrade.toString() : ''" (click)="updateQuarterlyGrade(student)" />
+        </td>
       </tr>
     </tbody>
   </table>

@@ -15,6 +15,8 @@ interface Student {
   totalQaWS: number;
 
   totalQuarterlyAssessmentWS: number;
+  initialGrade?: number;
+  quarterlyGrade?: number;
 }
 
 
@@ -209,8 +211,8 @@ calculateWeightedScores() {
 // percentage score of performance task
 
 calculatePTPercentageScore(studentId: number) {
-  const totalPT= this.ww_scores.map((ww_scoresRow) => {
-    const score = ww_scoresRow[studentId] ? Number(ww_scoresRow[studentId]) : 0;
+  const totalPT= this.pt_scores.map((pt_scoresRow) => {
+    const score = pt_scoresRow[studentId] ? Number(pt_scoresRow[studentId]) : 0;
     return isNaN(score) ? 0 : score;
   }).reduce((acc, score) => acc + score, 0);
 
@@ -234,8 +236,8 @@ calculatePTWeightedScores() {
 
   if (!isNaN(parsedPercentage)) {
     this.students.forEach((student) => {
-      const totalPT = this.ww_scores.map((ww_scoresRow) => {
-        const score = ww_scoresRow[student.id] ? Number(ww_scoresRow[student.id]) : 0;
+      const totalPT = this.pt_scores.map((pt_scoresRow) => {
+        const score = pt_scoresRow[student.id] ? Number(pt_scoresRow[student.id]) : 0;
         return isNaN(score) ? 0 : score;
       }).reduce((acc, score) => acc + score, 0);
 
@@ -280,6 +282,72 @@ calculateQAPercentageScore(studentId: number): number {
     return 0;
   }
 }
+
+updateQuarterlyGrade(student: Student): void {
+  const initialGrade = this.calculateInitialGrade(student);
+  student.initialGrade = initialGrade;
+  console.log('Initial grade', initialGrade);
+  const quarterlyGrade = this.calculateQuarterlyGrade(initialGrade);
+  student.quarterlyGrade = quarterlyGrade;
+  console.log('Quarterly grade', quarterlyGrade);
+}
+
+
+calculateInitialGrade(student: Student): number {
+  const totalWrittenWorkWS = student.totalWrittenWorkWS || 0;
+  const totalPerfTaskWS = student.totalPerfTaskWS || 0;
+  const totalQuarterlyAssessmentWS = student.totalQuarterlyAssessmentWS || 0;
+  
+  return totalWrittenWorkWS + totalPerfTaskWS + totalQuarterlyAssessmentWS;
+}
+
+calculateQuarterlyGrade(initialGrade: number): number {
+  console.log('Initial Grade:', initialGrade);
+
+  if (initialGrade >= 100) return 100;
+  if (initialGrade >= 98.4) return 99;
+  if (initialGrade >= 96.8) return 98;
+  if (initialGrade >= 95.2) return 97;
+  if (initialGrade >= 93.6) return 96;
+  if (initialGrade >= 92) return 95;
+  if (initialGrade >= 90.4) return 94;
+  if (initialGrade >= 88.8) return 93;
+  if (initialGrade >= 87.2) return 92;
+  if (initialGrade >= 85.6) return 91;
+  if (initialGrade >= 84) return 90;
+  if (initialGrade >= 82.4) return 89;
+  if (initialGrade >= 80.8) return 88;
+  if (initialGrade >= 79.2) return 87;
+  if (initialGrade >= 77.6) return 86;
+  if (initialGrade >= 76) return 85;
+  if (initialGrade >= 74.4) return 84;
+  if (initialGrade >= 72.8) return 83;
+  if (initialGrade >= 71.2) return 82;
+  if (initialGrade >= 69.6) return 81;
+  if (initialGrade >= 68) return 80;
+  if (initialGrade >= 66.4) return 79;
+  if (initialGrade >= 64.8) return 78;
+  if (initialGrade >= 63.2) return 77;
+  if (initialGrade >= 61.6) return 76;
+  if (initialGrade >= 60) return 75;
+  if (initialGrade >= 56) return 74;
+  if (initialGrade >= 52) return 73;
+  if (initialGrade >= 48) return 72;
+  if (initialGrade >= 44) return 71;
+  if (initialGrade >= 40) return 70;
+  if (initialGrade >= 36) return 69;
+  if (initialGrade >= 32) return 68;
+  if (initialGrade >= 28) return 67;
+  if (initialGrade >= 24) return 66;
+  if (initialGrade >= 20) return 65;
+  if (initialGrade >= 16) return 64;
+  if (initialGrade >= 12) return 63;
+  if (initialGrade >= 8) return 62;
+  if (initialGrade >= 4) return 61;
+  return 60;
+}
+
+
 
 
 // onPercentageInput(event: any) {
