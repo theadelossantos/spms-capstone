@@ -1,10 +1,23 @@
 <div class="user-profile">
-    <h2>User Profile</h2>
-    <p><strong>First Name:</strong> {{ user?.fname }}</p>
-    <p><strong>Middle Name:</strong> {{ user?.mname }}</p>
-    <p><strong>Last Name:</strong> {{ user?.lname }}</p>
-    <p><strong>Address:</strong> {{ user?.address }}</p>
-    <p><strong>Phone Number:</strong> {{ user?.phone }}</p>
-    <p><strong>Email:</strong> {{ user?.user.email }}</p>
-    
+    <h2>User Profile</h2> 
+   
+    <form [formGroup] = "form">
+      <label>First Name:</label>
+      <input type="email" class="form-control" aria-describedby="emailHelp" formControlName="studentName">
+      <label>Middle Name:</label>
+      <input type="email" class="form-control" aria-describedby="emailHelp" formControlName="studentMname">
+      <label> Last Name: </label>
+      <input type="email" class="form-control" aria-describedby="emailHelp" formControlName="studentLname">
+      <label>Gender: </label>
+      <input type="email" class="form-control" aria-describedby="emailHelp" formControlName="gender">
+      <label>Address:</label>
+      <input type="email" class="form-control" aria-describedby="emailHelp" formControlName="address">
+      <label>Phone Number:</label>
+      <input type="email" class="form-control" aria-describedby="emailHelp" formControlName="phone">
+      <Label>Email:</Label>
+      <input type="email" class="form-control" aria-describedby="emailHelp" formControlName="email">
+    </form>
+
+
   </div>
+
