@@ -222,3 +222,13 @@ class SubjectSerializer(serializers.ModelSerializer):
         model = Subject
         fields = '__all__'
 
+class StudentGradesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = StudentGrade
+        fields = '__all__'
+
+class QuarterSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Quarter
+        fields = '__all__'
+

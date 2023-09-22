@@ -856,3 +856,14 @@ def calculate_weighted_scores_view(request, student_id):
         return JsonResponse(response_data)
     except StudentGrade.DoesNotExist:
         return JsonResponse({'error': 'StudentGrade not found'}, status=404)
+
+class StudentGradeListCreateView(generics.ListCreateAPIView):
+    queryset = StudentGrade.objects.all()
+    serializer_class = StudentGradesSerializer
+    permission_classes = [permissions.AllowAny]
+
+
+class QuarterListCreateView(generics.ListCreateAPIView):
+    queryset = Quarter.objects.all()
+    serializer_class = QuarterSerializer
+    permission_classes = [permissions.AllowAny]

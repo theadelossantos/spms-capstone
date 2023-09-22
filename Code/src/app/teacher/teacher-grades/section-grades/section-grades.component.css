@@ -21,6 +21,7 @@ input[type="text"] {
     width: 30px; 
     font-size: 13px;
     border: none;
+    background-color: transparent;
     text-align: center;
 }
 table {
@@ -45,7 +46,11 @@ th[ rowspan="3" ] {
 }
 .hps{
     text-align: right;
+    font-size: 12px;
 }
 .student-name{
     text-align: left;
+}
+tr:hover{
+    background-color: rgb(225, 225, 235);
 }

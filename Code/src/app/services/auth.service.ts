@@ -419,8 +419,6 @@ export class AuthService {
 
   }
 
-  
-
   getTeacherProfile(): Observable<any> {
     const authHeader = this.setAuthHeader();
     return this.http.get(`${this.api_url}teacher-profile/`, { headers: authHeader });
@@ -432,6 +430,10 @@ export class AuthService {
 
   logout(): Observable<any> {
     return this.http.post(`${this.api_url}logout/`, null);
+  }
+
+  addStudentGrades(studentGrades:any): Observable<any> {
+    return this.http.post(`${this.api_url}student-grade/`, studentGrades, this.httpOptions);
   }
   
 }

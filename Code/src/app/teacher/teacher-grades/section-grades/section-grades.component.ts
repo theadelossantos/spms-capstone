@@ -43,9 +43,9 @@ export class SectionGradesComponent {
   ww_scores: number[][] = Array(10).fill([]).map(() => Array(this.students.length).fill(0));
   pt_scores: number[][] = Array(10).fill([]).map(() => Array(this.students.length).fill(0));
 
-  ww_ws_percentage: number = 0;
-  pt_ws_percentage: number = 0
-  qa_ws_percentage: number = 0
+  // ww_ws_percentage: number = 0;
+  // pt_ws_percentage: number = 0
+  // qa_ws_percentage: number = 0
   weightedScores: number[] = [];
   
   totalWrittenWorkHPS: number = 0;
@@ -59,6 +59,14 @@ export class SectionGradesComponent {
   quarterlyAssessmentHPS: number = 0;
   qa_scores: { [studentId: number]: number } = {};
 
+  selectedSubject: {
+    subjectName: string;
+    wwPercentage: number;
+    ptPercentage: number;
+    qaPercentage: number;
+  };
+
+  showRawScoreAlert = false;
 
 
 
@@ -79,9 +87,38 @@ export class SectionGradesComponent {
       console.log('Assignment ID:', assignmentId);
 
     });
+    const subjectPercentageMapping = {
+      'Araling Panlipunan': {
+        wwPercentage: 30,
+        ptPercentage: 50,
+        qaPercentage: 20
+      },
+      'Mathematics': {
+        wwPercentage: 40,
+        ptPercentage: 40,
+        qaPercentage: 20
+      },
+      'Mother Tongue': {
+        wwPercentage: 30,
+        ptPercentage: 50,
+        qaPercentage: 20
+      },
+
+    };
     this.authService.getSubjectById(this.subjectId).subscribe(
       (subjectData: any) => {
         this.subjectName = subjectData.subjects[0].subject_name;
+
+        const percentages = subjectPercentageMapping[this.subjectName];
+
+        if (percentages) {
+          this.selectedSubject = {
+            subjectName: this.subjectName,
+            wwPercentage: percentages.wwPercentage,
+            ptPercentage: percentages.ptPercentage,
+            qaPercentage: percentages.qaPercentage
+          };
+        }
       },
       (error) => {
         console.error('Error fetching subject name:', error);
@@ -105,6 +142,22 @@ export class SectionGradesComponent {
     );
     this.authService.filterStudents(this.deptId, this.gradeLevelId, this.sectionId).subscribe(
       (studentsData: any) => {
+        this.students = studentsData.students.map((student: Student) => ({
+          ...student,
+          totalWrittenWorkRS: 0,
+          totalWrittenWorkWS: 0,
+          totalPerfTaskRS: 0,
+          totalPerfTaskWS: 0,
+          totalQuarterlyAssessmentWS: 0,
+          initialGrade: 0,
+          quarterlyGrade: 0,
+          ww_scores: Array(10).fill(0),
+          pt_scores: Array(10).fill(0),
+          qa_scores: 0,
+        }));
+  
+        console.log(this.students);
+        
         this.students = studentsData.students;
         console.log(this.students)
 
@@ -114,13 +167,13 @@ export class SectionGradesComponent {
 
           console.log(`Last Name: ${lastName}, First Name: ${firstName}`);
 
-
         })
       },
       (error) => {
         console.error('Error fetching students:', error);
       }
     )
+    
     
   }
 updateTotalWrittenWorkHPS() {
@@ -138,8 +191,6 @@ updateTotalPerformanceTaskHPS() {
 }
 
 updateWrittenWorkRS(studentId: number, column: number) {
-  console.log('Selected Student ID:', studentId);
-
   const ww_rsValue = this.ww_scores.map((ww_scoresRow) => {
     return ww_scoresRow[studentId]; 
   }).reduce((acc, score) => {
@@ -148,7 +199,28 @@ updateWrittenWorkRS(studentId: number, column: number) {
   }, 0);
 
   this.students.find(student => student.id === studentId).totalWrittenWorkRS = ww_rsValue;
+
+  const writtenWorkHPSValue = this.writtenWorkHPS[column];
+
+  const anyScoreHigher = this.students.some(student => {
+    const rawScore = this.ww_scores[column][student.id];
+    const parsedScore = typeof rawScore === 'string' && rawScore !== '' ? parseInt(rawScore, 10) : 0;
+    return Number(parsedScore) > Number(writtenWorkHPSValue);
+  });
+
+  this.showRawScoreAlert = anyScoreHigher;
+
+  this.students.forEach(student => {
+    const rawScore = this.ww_scores[column][student.id];
+    const parsedScore = typeof rawScore === 'string' && rawScore !== '' ? parseInt(rawScore, 10) : 0;
+    const hpsValue = parseInt(writtenWorkHPSValue, 10); 
+  
+    if (!isNaN(parsedScore) && !isNaN(hpsValue) && parsedScore > hpsValue) {
+      this.ww_scores[column][student.id] = 0; 
+    }
+  });
 }
+
 
 updatePerfTaskRS(studentId: number, column: number) {
   console.log('Selected Student ID:', studentId);
@@ -161,6 +233,26 @@ updatePerfTaskRS(studentId: number, column: number) {
   }, 0);
 
   this.students.find(student => student.id === studentId).totalPerfTaskRS = pt_rsValue;
+
+  const perfTaskHPSValue = this.performanceTaskHPS[column];
+
+  const anyScoreHigher = this.students.some(student => {
+    const rawScore = this.pt_scores[column][student.id];
+    const parsedScore = typeof rawScore === 'string' && rawScore !== '' ? parseInt(rawScore, 10) : 0;
+    return Number(parsedScore) > Number(perfTaskHPSValue);
+  });
+
+  this.showRawScoreAlert = anyScoreHigher;
+
+  this.students.forEach(student => {
+    const rawScore = this.pt_scores[column][student.id];
+    const parsedScore = typeof rawScore === 'string' && rawScore !== '' ? parseInt(rawScore, 10) : 0;
+    const hpsValue = parseInt(perfTaskHPSValue, 10); 
+  
+    if (!isNaN(parsedScore) && !isNaN(hpsValue) && parsedScore > hpsValue) {
+      this.pt_scores[column][student.id] = 0; 
+    }
+  });
 }
 
 calculateWWPercentageScore(studentId: number) {
@@ -184,7 +276,7 @@ calculateWWPercentageScore(studentId: number) {
 // weighted score of written work
 calculateWeightedScores() {
 
-  const parsedPercentage = parseFloat(String(this.ww_ws_percentage));
+  const parsedPercentage = parseFloat(String(this.selectedSubject.wwPercentage));
 
   if (!isNaN(parsedPercentage)) {
     this.students.forEach((student) => {
@@ -201,7 +293,7 @@ calculateWeightedScores() {
       }
     });
   } else {
-    console.log('Invalid ww_ws_percentage:', this.ww_ws_percentage);
+    console.log('Invalid selectedSubject.wwPercentage:', this.selectedSubject.wwPercentage);
     this.students.forEach((student) => {
       student.totalWrittenWorkWS = 0;
     });
@@ -229,10 +321,11 @@ calculatePTPercentageScore(studentId: number) {
 }
 
 
+
 // weighted score of performance task
 calculatePTWeightedScores() {
   
-  const parsedPercentage = parseFloat(String(this.pt_ws_percentage));
+  const parsedPercentage = parseFloat(String(this.selectedSubject.ptPercentage));
 
   if (!isNaN(parsedPercentage)) {
     this.students.forEach((student) => {
@@ -249,7 +342,7 @@ calculatePTWeightedScores() {
       }
     });
   } else {
-    console.log('Invalid ww_ws_percentage:', this.ww_ws_percentage);
+    console.log('Invalid selectedSubject.ptPercentage', this.selectedSubject.ptPercentage);
     this.students.forEach((student) => {
       student.totalWrittenWorkWS = 0;
     });
@@ -258,29 +351,47 @@ calculatePTWeightedScores() {
 
 updateQARawScore(studentId: number) {
 
-  this.calculateQAWeightedScores();
+  const rawScore = this.qa_scores[studentId];
+  const quarterlyAssessmentHPSNumber = typeof this.quarterlyAssessmentHPS === 'string'
+    ? parseInt(this.quarterlyAssessmentHPS, 10)
+    : this.quarterlyAssessmentHPS;
+
+  if (rawScore > quarterlyAssessmentHPSNumber) {
+    this.showRawScoreAlert = true; 
+  } else {
+    this.showRawScoreAlert = false;
+  }
+  
 }
 
 calculateQAWeightedScores() {
-
   this.students.forEach((student) => {
     const rawScore = this.qa_scores[student.id] || 0;
-    const totalQA = (rawScore / this.quarterlyAssessmentHPS) * (this.qa_ws_percentage / 100) * 100;
-    student.totalQuarterlyAssessmentWS = isNaN(totalQA) ? 0 : totalQA;
+
+    const quarterlyAssessmentHPSNumber = typeof this.quarterlyAssessmentHPS === 'string'
+      ? parseInt(this.quarterlyAssessmentHPS, 10)
+      : this.quarterlyAssessmentHPS;
+
+    const totalQA = !isNaN(quarterlyAssessmentHPSNumber)
+      ? (rawScore / quarterlyAssessmentHPSNumber) * (this.selectedSubject.qaPercentage / 100) * 100
+      : undefined; 
+
+    student.totalQuarterlyAssessmentWS = totalQA;
   });
 }
 
-calculateQAPercentageScore(studentId: number): number {
-  const rawScore = this.qa_scores[studentId] || 0;
-  console.log(`rawScore for Student ID ${studentId}:`, rawScore);
+
+calculateQAPercentageScore(studentId: number) {
+  const totalQA = this.qa_scores[studentId] ? Number(this.qa_scores[studentId]) : 0;
+
+  const quarterlyAssessmentHPSNumber = typeof this.quarterlyAssessmentHPS === 'string' ? parseInt(this.quarterlyAssessmentHPS, 10) : this.quarterlyAssessmentHPS;
+  const totalHPS = !isNaN(quarterlyAssessmentHPSNumber) ? quarterlyAssessmentHPSNumber : 0;
   
-  if (this.quarterlyAssessmentHPS !== 0) {
-    const percentageScore = (rawScore / this.quarterlyAssessmentHPS) * 100;
-    console.log(`Percentage Score for Student ID ${studentId}:`, percentageScore);
-    return percentageScore;
-  } else {
+  if (totalHPS === 0 || isNaN(totalQA)) {
     return 0;
   }
+
+  return (totalQA / totalHPS) * 100;
 }
 
 updateQuarterlyGrade(student: Student): void {
@@ -297,9 +408,14 @@ calculateInitialGrade(student: Student): number {
   const totalWrittenWorkWS = student.totalWrittenWorkWS || 0;
   const totalPerfTaskWS = student.totalPerfTaskWS || 0;
   const totalQuarterlyAssessmentWS = student.totalQuarterlyAssessmentWS || 0;
-  
-  return totalWrittenWorkWS + totalPerfTaskWS + totalQuarterlyAssessmentWS;
+
+  const initialGrade = totalWrittenWorkWS + totalPerfTaskWS + totalQuarterlyAssessmentWS;
+
+  student.quarterlyGrade = totalQuarterlyAssessmentWS > 0 ? this.calculateQuarterlyGrade(initialGrade) : null;
+
+  return initialGrade;
 }
+
 
 calculateQuarterlyGrade(initialGrade: number): number {
   console.log('Initial Grade:', initialGrade);
@@ -345,14 +461,20 @@ calculateQuarterlyGrade(initialGrade: number): number {
   if (initialGrade >= 8) return 62;
   if (initialGrade >= 4) return 61;
   return 60;
+  
 }
 
-
-
-
-// onPercentageInput(event: any) {
-//   console.log('input', event)
-// }
+getRank(quarterlyGrade: number): string {
+  if (quarterlyGrade >= 90 && quarterlyGrade <= 94) {
+    return 'lightyellow';
+  } else if (quarterlyGrade >= 95 && quarterlyGrade <= 97) {
+    return 'greenyellow';
+  } else if (quarterlyGrade >= 98 && quarterlyGrade <= 100) {
+    return 'Yellow';
+  } else {
+    return 'transparent';
+  }
+}
 
 
 showStudentId(studentId: number){
@@ -360,8 +482,11 @@ showStudentId(studentId: number){
 }
 
 
+submitForm(){
 
-onSubmit(){
+  const studentGradesRS = {
+
+  }
   
 }
   
