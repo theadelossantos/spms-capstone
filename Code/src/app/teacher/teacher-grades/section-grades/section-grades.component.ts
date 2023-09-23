@@ -84,8 +84,12 @@ export class SectionGradesComponent {
     pt_scores:[],
     totalPerfTaskRS: 0,
     totalPTPercentage:0,
+    totalPerfTaskWS: 0,
     qa_score: null,
     totalQAPercentage: 0,
+    totalQuarterlyAssessmentWS:0,
+    quarterlyGrade: null,
+    initialGrade:null,
     
   };
 
@@ -217,9 +221,15 @@ export class SectionGradesComponent {
     const numStudents = this.students.length; 
     const numColumns = 10; 
     this.formData.ww_scores = new Array(numColumns).fill([]).map(() => new Array(numStudents).fill(null));
-    this.formData.pt_scores = new Array(numColumns).fill([]).map(() => new Array(numStudents).fill(null));
-    this.formData.qa_score = new Array(numColumns).fill([]).map(() => new Array(numStudents).fill(0));
-
+    this.formData.pt_scores = []
+    this.formData.qa_score = new Array(numStudents).fill(0);   
+    for (let i = 0; i < numColumns; i++) {
+      const column = [];
+      for (let j = 0; j < numStudents; j++) {
+        column.push(null);
+      }
+      this.formData.pt_scores.push(column);
+    }
   }
 
   onQuarterChange(){
@@ -292,8 +302,15 @@ updatePerfTaskRS(studentId: number, column: number) {
   this.students.forEach(student => {
     totalPerfTaskRSForAllStudents[student.id] = this.formData.pt_scores.reduce((acc, scores) => {
       const rawScore = scores[student.id];
-      const parsedScore = typeof rawScore === 'string' && rawScore !== '' ? parseInt(rawScore, 10) : 0;
-      return acc + parsedScore;
+
+      // Check if rawScore is not null and is defined
+      if (rawScore !== null && rawScore !== undefined) {
+        const parsedScore = typeof rawScore === 'string' && rawScore !== '' ? parseInt(rawScore, 10) : 0;
+        return acc + parsedScore;
+      } else {
+        // Handle the case where rawScore is null or undefined, e.g., set it to 0 or handle it according to your logic.
+        return acc;
+      }
     }, 0);
   });
 
@@ -309,16 +326,21 @@ updatePerfTaskRS(studentId: number, column: number) {
 
   this.students.forEach(student => {
     const rawScore = this.formData.pt_scores[column][student.id];
-    const parsedScore = typeof rawScore === 'string' && rawScore !== '' ? parseInt(rawScore, 10) : 0;
-    const hpsValue = parseInt(perfTaskHPSValue, 10); 
-  
-    if (!isNaN(parsedScore) && !isNaN(hpsValue) && parsedScore > hpsValue) {
-      this.formData.pt_scores[column][student.id] = 0; 
+
+    // Check if rawScore is not null and is defined
+    if (rawScore !== null && rawScore !== undefined) {
+      const parsedScore = typeof rawScore === 'string' && rawScore !== '' ? parseInt(rawScore, 10) : 0;
+      const hpsValue = parseInt(perfTaskHPSValue, 10);
+
+      if (!isNaN(parsedScore) && !isNaN(hpsValue) && parsedScore > hpsValue) {
+        this.formData.pt_scores[column][student.id] = 0;
+      }
     }
   });
-  console.log('total ww rs', this.formData.totalPerfTaskRS);
 
+  console.log('total ww rs', this.formData.totalPerfTaskRS);
 }
+
 
 calculateWWPercentageScore(studentId: number) {
   const totalWW = this.formData.ww_scores.map((ww_scoresRow) => {
@@ -393,47 +415,59 @@ calculatePTPercentageScore(studentId: number) {
 
 // weighted score of performance task
 calculatePTWeightedScores() {
-  if(this.selectedSubject){
+  if (this.selectedSubject) {
     const parsedPercentage = parseFloat(String(this.selectedSubject.ptPercentage));
-  
+
     if (!isNaN(parsedPercentage)) {
-      this.students.forEach((student) => {
-        const totalPT = this.formData.pt_scores.map((pt_scoresRow) => {
-          const score = pt_scoresRow[student.id] ? Number(pt_scoresRow[student.id]) : 0;
-          return isNaN(score) ? 0 : score;
-        }).reduce((acc, score) => acc + score, 0);
-  
-        if (this.formData.totalPerformanceTaskHPS !== 0) {
-          student.totalPerfTaskWS = (totalPT / this.formData.totalPerformanceTaskHPS) * (parsedPercentage / 100) * 100;
-        } else {
-          student.totalPerfTaskWS = 0;
-        }
-      });
+      const totalPerformanceTaskHPSNumber = typeof this.formData.totalPerformanceTaskHPS === 'string'
+        ? parseInt(this.formData.totalPerformanceTaskHPS, 10)
+        : this.formData.totalPerformanceTaskHPS;
+
+      if (!isNaN(totalPerformanceTaskHPSNumber) && totalPerformanceTaskHPSNumber !== 0) {
+        const totalPT = this.students.reduce((acc, student) => {
+          const totalPTForStudent = this.formData.pt_scores.map((pt_scoresRow) => {
+            const score = pt_scoresRow[student.id] ? Number(pt_scoresRow[student.id]) : 0;
+            return isNaN(score) ? 0 : score;
+          }).reduce((studentAcc, score) => studentAcc + score, 0);
+
+          student.totalPerfTaskWS = (totalPTForStudent / totalPerformanceTaskHPSNumber) * (parsedPercentage / 100) * 100;
+
+          return acc + totalPTForStudent;
+        }, 0);
+
+        this.formData.totalPerfTaskWS = totalPT;
+        this.formData.totalPTPercentage = (totalPT / totalPerformanceTaskHPSNumber) * 100;
+      } else {
+        this.formData.totalPerfTaskWS = 0;
+        this.formData.totalPTPercentage = 0;
+      }
     } else {
       console.log('Invalid selectedSubject.ptPercentage', this.selectedSubject.ptPercentage);
-      this.students.forEach((student) => {
-        student.totalPerfTaskWS = 0;
-      });
     }
-
   }
-  
 }
+
 
 updateQARawScore(studentId: number) {
-
   const rawScore = this.formData.qa_score[studentId];
-  const quarterlyAssessmentHPSNumber = typeof this.formData.quarterlyAssessmentHPS === 'string'
-    ? parseInt(this.formData.quarterlyAssessmentHPS, 10)
-    : this.formData.quarterlyAssessmentHPS;
 
-  if (rawScore > quarterlyAssessmentHPSNumber) {
-    this.showRawScoreAlert = true; 
+  // Check if rawScore is not null and is defined
+  if (rawScore !== null && rawScore !== undefined) {
+    const quarterlyAssessmentHPSNumber = typeof this.formData.quarterlyAssessmentHPS === 'string'
+      ? parseInt(this.formData.quarterlyAssessmentHPS, 10)
+      : this.formData.quarterlyAssessmentHPS;
+
+    if (rawScore > quarterlyAssessmentHPSNumber) {
+      this.showRawScoreAlert = true;
+    } else {
+      this.showRawScoreAlert = false;
+    }
   } else {
+    // Handle the case where rawScore is null or undefined, e.g., set showRawScoreAlert to false or handle it according to your logic.
     this.showRawScoreAlert = false;
   }
-  
 }
+
 
 calculateQAWeightedScores() {
   this.students.forEach((student) => {
@@ -482,9 +516,10 @@ calculateInitialGrade(student: Student): number {
   const totalQuarterlyAssessmentWS = student.totalQuarterlyAssessmentWS || 0;
 
   const initialGrade = totalWrittenWorkWS + totalPerfTaskWS + totalQuarterlyAssessmentWS;
+  this.formData.initialGrade = initialGrade
 
   student.quarterlyGrade = totalQuarterlyAssessmentWS > 0 ? this.calculateQuarterlyGrade(initialGrade) : null;
-
+  this.formData.quarterlyGrade = student.quarterlyGrade;
   return initialGrade;
 }
 
@@ -554,11 +589,107 @@ showStudentId(studentId: number){
 }
 
 
-submitForm(){
+submitForm() {
+  console.log('gradelevel', this.gradeLevelId)
+  console.log('section', this.sectionId)
+  console.log('subject', this.subjectId)
+  console.log('quarter id', this.selectedQuarter)
 
-  const studentGradesRS = {
-  }
+  this.students.forEach((student) => {
+    const studentGrades = {
+      student: student.id, 
+      gradelevel: this.gradeLevelId,
+      section: this.sectionId,
+      subject: this.subjectId,
+      quarter: this.selectedQuarter,
+      ww_score_1:this.formData.ww_scores[0][student.id],
+      ww_score_2:this.formData.ww_scores[1][student.id],
+      ww_score_3:this.formData.ww_scores[2][student.id],
+      ww_score_4:this.formData.ww_scores[3][student.id],
+      ww_score_5:this.formData.ww_scores[4][student.id],
+      ww_score_6:this.formData.ww_scores[5][student.id],
+      ww_score_7:this.formData.ww_scores[6][student.id],
+      ww_score_8:this.formData.ww_scores[7][student.id],
+      ww_score_9:this.formData.ww_scores[8][student.id],
+      ww_score_10:this.formData.ww_scores[9][student.id],
+      ww_total_score: this.formData.totalWrittenWorkRS,
+      ww_percentage_score: this.formData.totalWWPercentage,
+      ww_weighted_score: this.formData.totalWrittenWorkWS,
+      pt_score_1: this.formData.pt_scores[0][student.id],
+      pt_score_2: this.formData.pt_scores[1][student.id],
+      pt_score_3: this.formData.pt_scores[2][student.id],
+      pt_score_4: this.formData.pt_scores[3][student.id],
+      pt_score_5: this.formData.pt_scores[4][student.id],
+      pt_score_6: this.formData.pt_scores[5][student.id],
+      pt_score_7: this.formData.pt_scores[6][student.id],
+      pt_score_8: this.formData.pt_scores[7][student.id],
+      pt_score_9: this.formData.pt_scores[8][student.id],
+      pt_score_10: this.formData.pt_scores[9][student.id],
+      pt_total_score: this.formData.totalPerfTaskRS,
+      pt_percentage_score: this.formData.totalPTPercentage,
+      pt_weighted_score: this.formData.totalPerfTaskWS,
+      qa_score: this.formData.qa_score,
+      qa_percentage_score: this.formData.totalQAPercentage,
+      qa_weighted_score: this.formData.totalQuarterlyAssessmentWS,
+      initial_grade: this.formData.initialGrade,
+      quarterly_grade: this.formData.quarterlyGrade
+
+    };
+
+    console.log('student grades', studentGrades);
+
+    this.authService.addStudentGrades(studentGrades).subscribe(
+      (response) => {
+        console.log('Student grades added:', response);
+      },
+      (error) => {
+        console.error('Error adding student grades:', error);
+      }
+    );
+  });
   
+  const hpsData = {
+    gradelevel: this.gradeLevelId,
+    section: this.sectionId,
+    subject: this.subjectId,
+    quarter: this.selectedQuarter,
+    hps_ww_total_score: this.formData.totalWrittenWorkHPS,
+    hps_pt_total_score: this.formData.totalPerformanceTaskHPS,
+    hps_qa_total_score: this.formData.quarterlyAssessmentHPS,
+    hps_pt_1: this.formData.performanceTaskHPS[0],
+    hps_pt_2: this.formData.performanceTaskHPS[1],
+    hps_pt_3: this.formData.performanceTaskHPS[2],
+    hps_pt_4: this.formData.performanceTaskHPS[3],
+    hps_pt_5: this.formData.performanceTaskHPS[4],
+    hps_pt_6: this.formData.performanceTaskHPS[5],
+    hps_pt_7: this.formData.performanceTaskHPS[6],
+    hps_pt_8: this.formData.performanceTaskHPS[7],
+    hps_pt_9: this.formData.performanceTaskHPS[8],
+    hps_pt_10: this.formData.performanceTaskHPS[9],
+    hps_ww_1: this.formData.writtenWorkHPS[0],
+    hps_ww_2: this.formData.writtenWorkHPS[1],
+    hps_ww_3: this.formData.writtenWorkHPS[2],
+    hps_ww_4: this.formData.writtenWorkHPS[3],
+    hps_ww_5: this.formData.writtenWorkHPS[4],
+    hps_ww_6: this.formData.writtenWorkHPS[5],
+    hps_ww_7: this.formData.writtenWorkHPS[6],
+    hps_ww_8: this.formData.writtenWorkHPS[7],
+    hps_ww_9: this.formData.writtenWorkHPS[8],
+    hps_ww_10: this.formData.writtenWorkHPS[9],
+  };
+  console.log('hps', hpsData)
+
+
+
+  this.authService.addHPS(hpsData).subscribe(
+    (response) => {
+      console.log('HPS data added:', response);
+    },
+    (error) => {
+      console.error('Error adding HPS data:', error);
+    }
+  );
 }
+
   
 }

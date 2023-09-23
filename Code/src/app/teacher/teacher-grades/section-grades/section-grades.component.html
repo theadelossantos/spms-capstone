@@ -146,7 +146,7 @@
           <input
             *ngIf="calculateWWPercentageScore(student.id) !== 0"
             type="text"
-            [value]="calculateWWPercentageScore(student.id)?.toString()"
+            [value]="calculateWWPercentageScore(student.id)"
             readonly
             (click)="showStudentId(student.id)"
             style="font-weight: bold;"
@@ -157,7 +157,7 @@
         <td>
           <input
             type="text"
-            [value]="student.totalWrittenWorkWS?.toString() || ''"
+            [value]="student.totalWrittenWorkWS || ''"
             readonly
             (click)="showStudentId(student.id)"
             style="font-weight: bold;"
@@ -182,7 +182,7 @@
           <input
             *ngIf="calculatePTPercentageScore(student.id) !== 0"
             type="text"
-            [value]="calculatePTPercentageScore(student.id)?.toString()"
+            [value]="calculatePTPercentageScore(student.id)"
             readonly
             (click)="showStudentId(student.id)"
             style="font-weight: bold;"
@@ -193,7 +193,7 @@
         <td>
           <input
             type="text"
-            [value]="student.totalPerfTaskWS?.toString() || ''"
+            [value]="student.totalPerfTaskWS || ''"
             readonly
             (click)="showStudentId(student.id)"
             style="font-weight: bold;"
@@ -207,7 +207,7 @@
           <input
             *ngIf="calculateQAPercentageScore(student.id) !== 0"
             type="text"
-            [value]="calculateQAPercentageScore(student.id)?.toString() || ''"
+            [value]="calculateQAPercentageScore(student.id) || ''"
             readonly
             (click)="showStudentId(student.id)"
             style="font-weight: bold;"
@@ -219,7 +219,7 @@
           <input
             type="text"
             *ngIf="student.totalQuarterlyAssessmentWS !== undefined"
-            [value]="student.totalQuarterlyAssessmentWS !== undefined ? student.totalQuarterlyAssessmentWS.toString() : ''"
+            [value]="student.totalQuarterlyAssessmentWS !== undefined ? student.totalQuarterlyAssessmentWS : ''"
             readonly
             (click)="showStudentId(student.id)"
             style="font-weight: bold;"
@@ -227,9 +227,9 @@
           />
         </td>
 
-        <td><input class="inigrade" type="text" *ngIf="calculateInitialGrade(student) !== 0" [value]="calculateInitialGrade(student)?.toString() || ''" readonly (click)="showStudentId(student.id)" /></td>
+        <td><input class="inigrade" type="text" *ngIf="calculateInitialGrade(student) !== 0" [value]="calculateInitialGrade(student)|| ''" readonly (click)="showStudentId(student.id)" /></td>
         <td [ngStyle]="{ 'background-color': getRank(student.quarterlyGrade) }">
-          <input class="quarterly grade" type="text" *ngIf="student.totalQuarterlyAssessmentWS !== undefined && student.totalQuarterlyAssessmentWS !== null && student.totalWrittenWorkWS !== undefined && student.totalPerfTaskWS !== undefined" [value]="student.quarterlyGrade !== undefined ? student.quarterlyGrade.toString() : ''" readonly />
+          <input class="quarterly grade" type="text" *ngIf="student.totalQuarterlyAssessmentWS !== undefined && student.totalQuarterlyAssessmentWS !== null && student.totalWrittenWorkWS !== undefined && student.totalPerfTaskWS !== undefined" [value]="student.quarterlyGrade !== undefined ? student.quarterlyGrade : ''" readonly name="quarterlyGrade"/>
         </td>
 
       </tr>
