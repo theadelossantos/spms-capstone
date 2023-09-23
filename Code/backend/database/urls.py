@@ -57,6 +57,7 @@ urlpatterns = [
     path('student-profile/', views.student_profile, name='student-profile'),
     path('student-grade/', views.StudentGradeListCreateView.as_view(), name='studentgrade-list-create'),
     path('quarters/', QuarterListCreateView.as_view(), name='quarter-list'),
+    path('hps/', HPSListCreateView.as_view(), name='hps-list'),
 
 
 

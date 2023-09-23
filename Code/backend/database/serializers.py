@@ -232,3 +232,8 @@ class QuarterSerializer(serializers.ModelSerializer):
         model = Quarter
         fields = '__all__'
 
+class HpsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = HpsScores
+        fields = '__all__'
+

@@ -867,3 +867,10 @@ class QuarterListCreateView(generics.ListCreateAPIView):
     queryset = Quarter.objects.all()
     serializer_class = QuarterSerializer
     permission_classes = [permissions.AllowAny]
+
+class HPSListCreateView(generics.ListCreateAPIView):
+    queryset = HpsScores.objects.all()
+    serializer_class = HpsSerializer
+    permission_classes = [permissions.AllowAny]
+
+    

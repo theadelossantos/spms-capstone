@@ -120,14 +120,12 @@ class Quarter(models.Model):
 
     def __str__(self):
         return f"{self.quarter_id} - {self.quarter_name}"
-
-class StudentGrade(models.Model):
-    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    
+class HpsScores(models.Model):
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
     quarter = models.ForeignKey(Quarter, on_delete=models.CASCADE)
     gradelevel = models.ForeignKey(GradeLevel, on_delete=models.CASCADE)
     section = models.ForeignKey(Section, on_delete=models.CASCADE)
-
 
     hps_ww_1 = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
     hps_ww_2 = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
@@ -157,6 +155,15 @@ class StudentGrade(models.Model):
 
     hps_qa_10 = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
     hps_qa_total_score = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+
+
+
+class StudentGrade(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
+    quarter = models.ForeignKey(Quarter, on_delete=models.CASCADE)
+    gradelevel = models.ForeignKey(GradeLevel, on_delete=models.CASCADE)
+    section = models.ForeignKey(Section, on_delete=models.CASCADE)
 
 
     ww_score_1 = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)

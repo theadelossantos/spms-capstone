@@ -1,244 +1,245 @@
 <div class="links d-flex">
-    <a [routerLink]="['/teacher/grades']">Classes </a>
-    <p class="next">></p>
-    <a class="active">{{gradeLevelName}} - {{ sectionName }}</a>
+  <a [routerLink]="['/teacher/grades']">Classes </a>
+  <p class="next">></p>
+  <a class="active">{{gradeLevelName}} - {{ sectionName }}</a>
 
 </div>
 
 <ng-container *ngIf="selectedSubject; else noSubjectSelected">
-  <div class="subject-info">
-    <p>Subject: {{ selectedSubject.subjectName }}</p>
-  </div>
+<div class="subject-info">
+  <p>Subject: {{ selectedSubject.subjectName }}</p>
+</div>
 </ng-container>
 
-<select class="form-select shadow-none select-opt" formControlName="grlevel">
-  <option disabled>Select Grade</option>
-  <option disabled>First Quarter</option>
-
-  <!-- <option *ngFor="let level of gradelvl" [ngValue]="level.gradelvl_id">{{ level.name }}</option> -->
-</select>
 
 <ng-template #noSubjectSelected>
-  <p>No Subject Selected</p>
+<p>No Subject Selected</p>
 </ng-template>
 
-  <table>
-      <thead>
-        <tr>
-          <th>No.</th>
-          <th>LEARNER'S NAMES</th>
-          <th colspan="13">WRITTEN WORKS ({{ selectedSubject.wwPercentage }}%)</th>
-          <th colspan="13">PERFORMANCE TASKS ({{ selectedSubject.ptPercentage }}%)</th>
-          <th colspan="3">QUARTERLY ASSESSMENT({{ selectedSubject.qaPercentage }}%)</th>
-          <th rowspan="3">Initial Grade</th>
-          <th rowspan="3">Quarterly Grade</th>
-          <!-- <th rowspan="3">REMARKS</th> -->
-        </tr>
-        <tr>
-          <td></td>
-              <td></td>
-              <td><b>1</b></td>
-              <td><b>2</b></td>
-              <td><b>3</b></td>
-              <td><b>4</b></td>
-              <td><b>5</b></td>
-              <td><b>6</b></td>
-              <td><b>7</b></td>
-              <td><b>8</b></td>
-              <td><b>9</b></td>
-              <td><b>10</b></td>
-              <td><b>Total</b></td>
-              <td><b>PS</b></td>
-              <td><b>WS</b></td>
+<form (submit)="submitForm()">
+  <select class="form-select shadow-none select-opt" [(ngModel)]="selectedQuarter" name="quarter" (ngModelChange)="onQuarterChange()">
+    <option *ngFor="let quarter of quarters" [value]="quarter.quarter_id">{{quarter.quarter_name}}</option>
+  </select>
+<table>
+    <thead>
+      <tr>
+        <th>No.</th>
+        <th>LEARNER'S NAMES</th>
+        <th colspan="13">WRITTEN WORKS ({{ calculationWWPercentage  }}%)</th>
+        <th colspan="13">PERFORMANCE TASKS ({{ calculationPTPercentage }}%)</th>
+        <th colspan="3">QUARTERLY ASSESSMENT({{ calculationQAPercentage }}%)</th>
+        <th rowspan="3">Initial Grade</th>
+        <th rowspan="3">Quarterly Grade</th>
+        <!-- <th rowspan="3">REMARKS</th> -->
+      </tr>
+      <tr>
+        <td></td>
+            <td></td>
+            <td><b>1</b></td>
+            <td><b>2</b></td>
+            <td><b>3</b></td>
+            <td><b>4</b></td>
+            <td><b>5</b></td>
+            <td><b>6</b></td>
+            <td><b>7</b></td>
+            <td><b>8</b></td>
+            <td><b>9</b></td>
+            <td><b>10</b></td>
+            <td><b>Total</b></td>
+            <td><b>PS</b></td>
+            <td><b>WS</b></td>
 
-              <td><b>1</b></td>
-              <td><b>2</b></td>
-              <td><b>3</b></td>
-              <td><b>4</b></td>
-              <td><b>5</b></td>
-              <td><b>6</b></td>
-              <td><b>7</b></td>
-              <td><b>8</b></td>
-              <td><b>9</b></td>
-              <td><b>10</b></td>
-              <td><b>Total</b></td>
-              <td><b>PS</b></td>
-              <td><b>WS</b></td>
+            <td><b>1</b></td>
+            <td><b>2</b></td>
+            <td><b>3</b></td>
+            <td><b>4</b></td>
+            <td><b>5</b></td>
+            <td><b>6</b></td>
+            <td><b>7</b></td>
+            <td><b>8</b></td>
+            <td><b>9</b></td>
+            <td><b>10</b></td>
+            <td><b>Total</b></td>
+            <td><b>PS</b></td>
+            <td><b>WS</b></td>
 
-              <td><b>1</b></td>
-              <td><b>PS</b></td>
-              <td><b>WS</b></td>
-        </tr>
-        <tr>
-              <td></td>
-              <td class="hps"><b>HIGHEST POSSIBLE SCORE</b></td>
+            <td><b>1</b></td>
+            <td><b>PS</b></td>
+            <td><b>WS</b></td>
+      </tr>
+      <tr>
+            <td></td>
+            <td class="hps"><b>HIGHEST POSSIBLE SCORE</b></td>
+            <td *ngFor="let hps of formData.writtenWorkHPS; let i = index; trackBy: trackByIndex">
+              <input
+                type="text"
+                [(ngModel)]="formData.writtenWorkHPS[i]"
+                (input)="updateTotalWrittenWorkHPS(i)"
+                (input)="calculateWeightedScores()"
+                [name]="'wwhps' + (i + 1)"
+              />
+            </td>
+            <td class="WWtotalHPS"><b>{{ formData.totalWrittenWorkHPS || '' }}</b></td>
+            <td><b>100</b></td>
+            <td>
+              <input
+                type="text"
+                [value]="selectedSubject.wwPercentage + '%'"
+                (input)="calculateWeightedScores()"
+                style="font-weight: bold;"
+                name="wwhpsWSpercentage"
+                readonly
+              />
+            </td>
+            <td *ngFor="let hps of formData.performanceTaskHPS; let i = index; trackBy: trackByIndex">
+              <input
+                type="text"
+                [(ngModel)]="formData.performanceTaskHPS[i]"
+                (input)="updateTotalPerformanceTaskHPS(i)"
+                [name]="'pthps' + (i + 1)"
+              />
+            </td>
+            <td><b>{{formData.totalPerformanceTaskHPS || ''}}</b></td>
+            <td><b>100</b></td>
+            <td>
+              <input
+                type="text"
+                name="pthpsWSpercentage"
+                [value]="selectedSubject.ptPercentage + '%'"
+                (input)="calculatePTWeightedScores()"
+                style="font-weight: bold;"
+                readonly
+              />
+            </td>
 
-              <td><input type="text" [(ngModel)]="writtenWorkHPS[0]" (input)="updateTotalWrittenWorkHPS()" (input)="calculateWeightedScores()"/></td>
-              <td><input type="text" [(ngModel)]="writtenWorkHPS[1]" (input)="updateTotalWrittenWorkHPS()" (input)="calculateWeightedScores()"/></td>
-              <td><input type="text" [(ngModel)]="writtenWorkHPS[2]" (input)="updateTotalWrittenWorkHPS()" (input)="calculateWeightedScores()"/></td>
-              <td><input type="text" [(ngModel)]="writtenWorkHPS[3]" (input)="updateTotalWrittenWorkHPS()" (input)="calculateWeightedScores()"/></td>
-              <td><input type="text" [(ngModel)]="writtenWorkHPS[4]" (input)="updateTotalWrittenWorkHPS()" (input)="calculateWeightedScores()"/></td>
-              <td><input type="text" [(ngModel)]="writtenWorkHPS[5]" (input)="updateTotalWrittenWorkHPS()" (input)="calculateWeightedScores()"/></td>
-              <td><input type="text" [(ngModel)]="writtenWorkHPS[6]" (input)="updateTotalWrittenWorkHPS()" (input)="calculateWeightedScores()"/></td>
-              <td><input type="text" [(ngModel)]="writtenWorkHPS[7]" (input)="updateTotalWrittenWorkHPS()" (input)="calculateWeightedScores()"/></td>
-              <td><input type="text" [(ngModel)]="writtenWorkHPS[8]" (input)="updateTotalWrittenWorkHPS()" (input)="calculateWeightedScores()"/></td>
-              <td><input type="text" [(ngModel)]="writtenWorkHPS[9]" (input)="updateTotalWrittenWorkHPS()" (input)="calculateWeightedScores()"/></td>
+            <td><input type="text"  [(ngModel)]="formData.quarterlyAssessmentHPS" (input)="calculateQAWeightedScores()" name="qahps1"/></td>
+            <td><b>100</b></td>
+            <td>
+              <input
+                type="text"
+                name="qahpsWSpercentage"
+                [value]="selectedSubject.qaPercentage + '%'"
+                (input)="calculateQAWeightedScores()"
+                style="font-weight: bold;"
+                readonly
+              />
+            </td>
+      </tr>
+      
+    </thead>
+    <tbody>
+      <tr *ngFor="let student of students; let i = index">
+        <td>{{ i + 1}}</td>
+        <td class="student-name" >{{student.lname}}, {{student.fname}}</td>
+        <td><input type="text" [(ngModel)]="formData.ww_scores[0][student.id]" (input)="updateWrittenWorkRS(student.id, 0)" (input)="calculateWeightedScores()" name="wwrs0"/></td>
+        <td><input type="text" [(ngModel)]="formData.ww_scores[1][student.id]" (input)="updateWrittenWorkRS(student.id, 1)" (input)="calculateWeightedScores()" name="wwrs1"/></td>
+        <td><input type="text" [(ngModel)]="formData.ww_scores[2][student.id]" (input)="updateWrittenWorkRS(student.id, 2)" (input)="calculateWeightedScores()" name="wwrs2"/></td>
+        <td><input type="text" [(ngModel)]="formData.ww_scores[3][student.id]" (input)="updateWrittenWorkRS(student.id, 3)" (input)="calculateWeightedScores()" name="wwrs3"/></td>
+        <td><input type="text" [(ngModel)]="formData.ww_scores[4][student.id]" (input)="updateWrittenWorkRS(student.id, 4)" (input)="calculateWeightedScores()" name="wwrs4"/></td>
+        <td><input type="text" [(ngModel)]="formData.ww_scores[5][student.id]" (input)="updateWrittenWorkRS(student.id, 5)" (input)="calculateWeightedScores()" name="wwrs5"/></td>
+        <td><input type="text" [(ngModel)]="formData.ww_scores[6][student.id]" (input)="updateWrittenWorkRS(student.id, 6)" (input)="calculateWeightedScores()" name="wwrs6"/></td>
+        <td><input type="text" [(ngModel)]="formData.ww_scores[7][student.id]" (input)="updateWrittenWorkRS(student.id, 7)" (input)="calculateWeightedScores()" name="wwrs7"/></td>
+        <td><input type="text" [(ngModel)]="formData.ww_scores[8][student.id]" (input)="updateWrittenWorkRS(student.id, 8)" (input)="calculateWeightedScores()" name="wwrs8"/></td>
+        <td><input type="text" [(ngModel)]="formData.ww_scores[9][student.id]" (input)="updateWrittenWorkRS(student.id, 9)" (input)="calculateWeightedScores()" name="wwrs9"/></td>
+        <td><input type="text" [value]="formData.totalWrittenWorkRS[student.id] || ''" readonly /></td>
+        <td>
+          <input
+            *ngIf="calculateWWPercentageScore(student.id) !== 0"
+            type="text"
+            [value]="calculateWWPercentageScore(student.id)?.toString()"
+            readonly
+            (click)="showStudentId(student.id)"
+            style="font-weight: bold;"
+            name="wwPS"
+          />
+          <span *ngIf="calculateWWPercentageScore(student.id) === 0"></span>
+        </td>        
+        <td>
+          <input
+            type="text"
+            [value]="student.totalWrittenWorkWS?.toString() || ''"
+            readonly
+            (click)="showStudentId(student.id)"
+            style="font-weight: bold;"
+            name="wwWS"
+          />
+        </td>
 
-              <td class="WWtotalHPS"><b>{{ totalWrittenWorkHPS || '' }}</b></td>
-              <td><b>100</b></td>
-              <td>
-                <input
-                  type="text"
-                  [(ngModel)]="selectedSubject.wwPercentage"
-                  (input)="calculateWeightedScores()"
-                  style="font-weight: bold;"
-                  readonly
-                />
-              </td>
-              <td><input type="text" [(ngModel)]="performanceTaskHPS[0]" (input)="updateTotalPerformanceTaskHPS()" name="performanceTaskHPS_0"/></td>
-              <td><input type="text" [(ngModel)]="performanceTaskHPS[1]" (input)="updateTotalPerformanceTaskHPS()" name="performanceTaskHPS_1"/></td>
-              <td><input type="text" [(ngModel)]="performanceTaskHPS[2]" (input)="updateTotalPerformanceTaskHPS()" name="performanceTaskHPS_2"/></td>
-              <td><input type="text" [(ngModel)]="performanceTaskHPS[3]" (input)="updateTotalPerformanceTaskHPS()" name="performanceTaskHPS_3"/></td>
-              <td><input type="text" [(ngModel)]="performanceTaskHPS[4]" (input)="updateTotalPerformanceTaskHPS()" name="performanceTaskHPS_4"/></td>
-              <td><input type="text" [(ngModel)]="performanceTaskHPS[5]" (input)="updateTotalPerformanceTaskHPS()" name="performanceTaskHPS_5"/></td>
-              <td><input type="text" [(ngModel)]="performanceTaskHPS[6]" (input)="updateTotalPerformanceTaskHPS()" name="performanceTaskHPS_6"/></td>
-              <td><input type="text" [(ngModel)]="performanceTaskHPS[7]" (input)="updateTotalPerformanceTaskHPS()" name="performanceTaskHPS_7"/></td>
-              <td><input type="text" [(ngModel)]="performanceTaskHPS[8]" (input)="updateTotalPerformanceTaskHPS()" name="performanceTaskHPS_8"/></td>
-              <td><input type="text" [(ngModel)]="performanceTaskHPS[9]" (input)="updateTotalPerformanceTaskHPS()" name="performanceTaskHPS_9"/></td>
-              <td><b>{{totalPerformanceTaskHPS || ''}}</b></td>
-              <td><b>100</b></td>
-              <td>
-                <input
-                  type="text"
-                  [(ngModel)]="selectedSubject.ptPercentage"
-                  (input)="calculatePTWeightedScores()"
-                  style="font-weight: bold;"
-                  readonly
-                />
-              </td>
+        <!-- PERFORMANCE TASK -->
+        <td><input type="text" [(ngModel)]="formData.pt_scores[0][student.id]" (input)="updatePerfTaskRS(student.id, 0)" (input)="calculatePTWeightedScores()" name="ptrs1"/></td>
+        <td><input type="text" [(ngModel)]="formData.pt_scores[1][student.id]" (input)="updatePerfTaskRS(student.id, 1)" (input)="calculatePTWeightedScores()" name="ptrs2"/></td>
+        <td><input type="text" [(ngModel)]="formData.pt_scores[2][student.id]" (input)="updatePerfTaskRS(student.id, 2)" (input)="calculatePTWeightedScores()" name="ptrs3"/></td>
+        <td><input type="text" [(ngModel)]="formData.pt_scores[3][student.id]" (input)="updatePerfTaskRS(student.id, 3)" (input)="calculatePTWeightedScores()" name="ptrs4"/></td>
+        <td><input type="text" [(ngModel)]="formData.pt_scores[4][student.id]" (input)="updatePerfTaskRS(student.id, 4)" (input)="calculatePTWeightedScores()" name="ptrs5"/></td>
+        <td><input type="text" [(ngModel)]="formData.pt_scores[5][student.id]" (input)="updatePerfTaskRS(student.id, 5)" (input)="calculatePTWeightedScores()" name="ptrs6"/></td>
+        <td><input type="text" [(ngModel)]="formData.pt_scores[6][student.id]" (input)="updatePerfTaskRS(student.id, 6)" (input)="calculatePTWeightedScores()" name="ptrs7"/></td>
+        <td><input type="text" [(ngModel)]="formData.pt_scores[7][student.id]" (input)="updatePerfTaskRS(student.id, 7)" (input)="calculatePTWeightedScores()" name="ptrs8"/></td>
+        <td><input type="text" [(ngModel)]="formData.pt_scores[8][student.id]" (input)="updatePerfTaskRS(student.id, 8)" (input)="calculatePTWeightedScores()" name="ptrs9"/></td>
+        <td><input type="text" [(ngModel)]="formData.pt_scores[9][student.id]" (input)="updatePerfTaskRS(student.id, 9)" (input)="calculatePTWeightedScores()" name="ptrs10"/></td>
 
-              <td><input type="text" [(ngModel)]="quarterlyAssessmentHPS" (input)="calculateQAWeightedScores()" /></td>
-              <td><b>100</b></td>
-              <td>
-                <input
-                  type="text"
-                  [(ngModel)]="selectedSubject.qaPercentage"
-                  (input)="calculateQAWeightedScores()"
-                  style="font-weight: bold;"
-                  readonly
-                />
-              </td>
-        </tr>
+        <td><input type="text" [value]="formData.totalPerfTaskRS[student.id] || ''" readonly (click)="showStudentId(student.id)" /></td>
+        <td>
+          <input
+            *ngIf="calculatePTPercentageScore(student.id) !== 0"
+            type="text"
+            [value]="calculatePTPercentageScore(student.id)?.toString()"
+            readonly
+            (click)="showStudentId(student.id)"
+            style="font-weight: bold;"
+            name="ptPTS"
+          />
+          <span *ngIf="calculatePTPercentageScore(student.id) === 0"></span>
+        </td>        
+        <td>
+          <input
+            type="text"
+            [value]="student.totalPerfTaskWS?.toString() || ''"
+            readonly
+            (click)="showStudentId(student.id)"
+            style="font-weight: bold;"
+            name="ptWS"
+          />
+        </td>
         
-      </thead>
-      <tbody>
-        <tr *ngFor="let student of students; let i = index">
-          <td>{{ i + 1}}</td>
-          <td class="student-name" >{{student.lname}}, {{student.fname}}</td>
-          <!-- WRITTEN WORK -->
-          <td><input type="text" [(ngModel)]="ww_scores[0][student.id]" (input)="updateWrittenWorkRS(student.id, 0)" (input)="calculateWeightedScores()" name="ww_scores_0_student_{{ student.id }}"/></td>
-          <td><input type="text" [(ngModel)]="ww_scores[1][student.id]" (input)="updateWrittenWorkRS(student.id, 1)" (input)="calculateWeightedScores()" name="ww_scores_1_student_{{ student.id }}"/></td>
-          <td><input type="text" [(ngModel)]="ww_scores[2][student.id]" (input)="updateWrittenWorkRS(student.id, 2)" (input)="calculateWeightedScores()" name="ww_scores_2_student_{{ student.id }}"/></td>
-          <td><input type="text" [(ngModel)]="ww_scores[3][student.id]" (input)="updateWrittenWorkRS(student.id, 3)" (input)="calculateWeightedScores()" name="ww_scores_3_student_{{ student.id }}"/></td>
-          <td><input type="text" [(ngModel)]="ww_scores[4][student.id]" (input)="updateWrittenWorkRS(student.id, 4)" (input)="calculateWeightedScores()" name="ww_scores_4_student_{{ student.id }}"/></td>
-          <td><input type="text" [(ngModel)]="ww_scores[5][student.id]" (input)="updateWrittenWorkRS(student.id, 5)" (input)="calculateWeightedScores()" name="ww_scores_5_student_{{ student.id }}"/></td>
-          <td><input type="text" [(ngModel)]="ww_scores[6][student.id]" (input)="updateWrittenWorkRS(student.id, 6)" (input)="calculateWeightedScores()" name="ww_scores_6_student_{{ student.id }}"/></td>
-          <td><input type="text" [(ngModel)]="ww_scores[7][student.id]" (input)="updateWrittenWorkRS(student.id, 7)" (input)="calculateWeightedScores()" name="ww_scores_7_student_{{ student.id }}"/></td>
-          <td><input type="text" [(ngModel)]="ww_scores[8][student.id]" (input)="updateWrittenWorkRS(student.id, 8)" (input)="calculateWeightedScores()" name="ww_scores_8_student_{{ student.id }}"/></td>
-          <td><input type="text" [(ngModel)]="ww_scores[9][student.id]" (input)="updateWrittenWorkRS(student.id, 9)" (input)="calculateWeightedScores()" name="ww_scores_9_student_{{ student.id }}"/></td>
-          <td><input type="text" [value]="student.totalWrittenWorkRS || ''" readonly (click)="showStudentId(student.id)" /></td>
-          <td>
-            <input
-              *ngIf="calculateWWPercentageScore(student.id) !== 0"
-              type="text"
-              [value]="calculateWWPercentageScore(student.id)?.toString()"
-              readonly
-              (click)="showStudentId(student.id)"
-              style="font-weight: bold;"
+        <!-- QUARTERLY ASSESSMENT -->
+        <td><input type="text" [(ngModel)]="formData.qa_score[student.id]" (input)="updateQARawScore(student.id)" (input)="calculateQAWeightedScores()" name="qars1"/></td>
+        <td>
+          <input
+            *ngIf="calculateQAPercentageScore(student.id) !== 0"
+            type="text"
+            [value]="calculateQAPercentageScore(student.id)?.toString() || ''"
+            readonly
+            (click)="showStudentId(student.id)"
+            style="font-weight: bold;"
+            name="qaPS"
+          />
+          <span *ngIf="calculateWWPercentageScore(student.id) === 0"></span>
+        </td> 
+        <td>
+          <input
+            type="text"
+            *ngIf="student.totalQuarterlyAssessmentWS !== undefined"
+            [value]="student.totalQuarterlyAssessmentWS !== undefined ? student.totalQuarterlyAssessmentWS.toString() : ''"
+            readonly
+            (click)="showStudentId(student.id)"
+            style="font-weight: bold;"
+            name="qaWS"
+          />
+        </td>
 
-            />
-            <span *ngIf="calculateWWPercentageScore(student.id) === 0"></span>
-          </td>        
-          <td>
-            <input
-              type="text"
-              [value]="student.totalWrittenWorkWS?.toString() || ''"
-              readonly
-              (click)="showStudentId(student.id)"
-              style="font-weight: bold;"
-            />
-          </td>
+        <td><input class="inigrade" type="text" *ngIf="calculateInitialGrade(student) !== 0" [value]="calculateInitialGrade(student)?.toString() || ''" readonly (click)="showStudentId(student.id)" /></td>
+        <td [ngStyle]="{ 'background-color': getRank(student.quarterlyGrade) }">
+          <input class="quarterly grade" type="text" *ngIf="student.totalQuarterlyAssessmentWS !== undefined && student.totalQuarterlyAssessmentWS !== null && student.totalWrittenWorkWS !== undefined && student.totalPerfTaskWS !== undefined" [value]="student.quarterlyGrade !== undefined ? student.quarterlyGrade.toString() : ''" readonly />
+        </td>
 
-          <!-- PERFORMANCE TASK -->
-          <td><input type="text" [(ngModel)]="pt_scores[0][student.id]" (input)="updatePerfTaskRS(student.id, 0)" (input)="calculatePTWeightedScores()"/></td>
-          <td><input type="text" [(ngModel)]="pt_scores[1][student.id]" (input)="updatePerfTaskRS(student.id, 1)" (input)="calculatePTWeightedScores()"/></td>
-          <td><input type="text" [(ngModel)]="pt_scores[2][student.id]" (input)="updatePerfTaskRS(student.id, 2)" (input)="calculatePTWeightedScores()"/></td>
-          <td><input type="text" [(ngModel)]="pt_scores[3][student.id]" (input)="updatePerfTaskRS(student.id, 3)" (input)="calculatePTWeightedScores()"/></td>
-          <td><input type="text" [(ngModel)]="pt_scores[4][student.id]" (input)="updatePerfTaskRS(student.id, 4)" (input)="calculatePTWeightedScores()"/></td>
-          <td><input type="text" [(ngModel)]="pt_scores[5][student.id]" (input)="updatePerfTaskRS(student.id, 5)" (input)="calculatePTWeightedScores()"/></td>
-          <td><input type="text" [(ngModel)]="pt_scores[6][student.id]" (input)="updatePerfTaskRS(student.id, 6)" (input)="calculatePTWeightedScores()"/></td>
-          <td><input type="text" [(ngModel)]="pt_scores[7][student.id]" (input)="updatePerfTaskRS(student.id, 7)" (input)="calculatePTWeightedScores()"/></td>
-          <td><input type="text" [(ngModel)]="pt_scores[8][student.id]" (input)="updatePerfTaskRS(student.id, 8)" (input)="calculatePTWeightedScores()"/></td>
-          <td><input type="text" [(ngModel)]="pt_scores[9][student.id]" (input)="updatePerfTaskRS(student.id, 9)" (input)="calculatePTWeightedScores()"/></td>
+      </tr>
+    </tbody>
+  </table>
+  <button type="submit" class="btn btn-primary mt-2">Save</button>
+</form>
 
-          <td><input type="text" [value]="student.totalPerfTaskRS || ''" readonly (click)="showStudentId(student.id)" /></td>
-          <td>
-            <input
-              *ngIf="calculatePTPercentageScore(student.id) !== 0"
-              type="text"
-              [value]="calculatePTPercentageScore(student.id)?.toString()"
-              readonly
-              (click)="showStudentId(student.id)"
-              style="font-weight: bold;"
-
-            />
-            <span *ngIf="calculateWWPercentageScore(student.id) === 0"></span>
-          </td>        
-          <td>
-            <input
-              type="text"
-              [value]="student.totalPerfTaskWS?.toString() || ''"
-              readonly
-              (click)="showStudentId(student.id)"
-              style="font-weight: bold;"
-            />
-          </td>
-          
-          <!-- QUARTERLY ASSESSMENT -->
-          <td><input type="text" [(ngModel)]="qa_scores[student.id]" (input)="updateQARawScore(student.id)" (input)="calculateQAWeightedScores()" /></td>
-          <td>
-            <input
-              *ngIf="calculateQAPercentageScore(student.id) !== 0"
-              type="text"
-              [value]="calculateQAPercentageScore(student.id)?.toString() || ''"
-              readonly
-              (click)="showStudentId(student.id)"
-              style="font-weight: bold;"
-
-            />
-            <span *ngIf="calculateWWPercentageScore(student.id) === 0"></span>
-          </td> 
-          <td>
-            <input
-              type="text"
-              *ngIf="student.totalQuarterlyAssessmentWS !== undefined"
-              [value]="student.totalQuarterlyAssessmentWS !== undefined ? student.totalQuarterlyAssessmentWS.toString() : ''"
-              readonly
-              (click)="showStudentId(student.id)"
-              style="font-weight: bold;"
-            />
-          </td>
-
-          <td><input class="inigrade" type="text" *ngIf="calculateInitialGrade(student) !== 0" [value]="calculateInitialGrade(student)?.toString() || ''" readonly (click)="showStudentId(student.id)" /></td>
-          <td [ngStyle]="{ 'background-color': getRank(student.quarterlyGrade) }">
-            <input class="quarterly grade" type="text" *ngIf="student.totalQuarterlyAssessmentWS !== undefined && student.totalQuarterlyAssessmentWS !== null && student.totalWrittenWorkWS !== undefined && student.totalPerfTaskWS !== undefined" [value]="student.quarterlyGrade !== undefined ? student.quarterlyGrade.toString() : ''" readonly />
-          </td>
-
-        </tr>
-      </tbody>
-    </table>
-  <div class="position-fixed top-0 end-0 p-3">
-    <div class="alert alert-danger alert-dismissible fade show" role="alert" *ngIf="showRawScoreAlert">
-      Raw Score should be equal or less than HPS!
-    </div>
+<div class="position-fixed top-0 end-0 p-3">
+  <div class="alert alert-danger alert-dismissible fade show" role="alert" *ngIf="showRawScoreAlert">
+    Raw Score should be equal or less than HPS!
   </div>
+</div>

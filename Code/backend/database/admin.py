@@ -43,7 +43,8 @@ admin.site.register(Subject, SubjectAdmin)
 class QuarterAdmin(admin.ModelAdmin):
     list_display = ('quarter_id','quarter_name')
 admin.site.register(Quarter, QuarterAdmin)
-    
+
+admin.site.register(HpsScores)    
 admin.site.register(CustomUser)
 admin.site.register(StudentGrade)
 
