@@ -15,6 +15,10 @@ interface Student {
   totalQuarterlyAssessmentWS: number;
   initialGrade?: number;
   quarterlyGrade?: number;
+  totalPTPercentage?:number;
+  totalWWPercentage?:number;
+  qa_score?: number[];
+  totalQAPercentage?:number;
 }
 
 
@@ -303,12 +307,10 @@ updatePerfTaskRS(studentId: number, column: number) {
     totalPerfTaskRSForAllStudents[student.id] = this.formData.pt_scores.reduce((acc, scores) => {
       const rawScore = scores[student.id];
 
-      // Check if rawScore is not null and is defined
       if (rawScore !== null && rawScore !== undefined) {
         const parsedScore = typeof rawScore === 'string' && rawScore !== '' ? parseInt(rawScore, 10) : 0;
         return acc + parsedScore;
       } else {
-        // Handle the case where rawScore is null or undefined, e.g., set it to 0 or handle it according to your logic.
         return acc;
       }
     }, 0);
@@ -327,7 +329,6 @@ updatePerfTaskRS(studentId: number, column: number) {
   this.students.forEach(student => {
     const rawScore = this.formData.pt_scores[column][student.id];
 
-    // Check if rawScore is not null and is defined
     if (rawScore !== null && rawScore !== undefined) {
       const parsedScore = typeof rawScore === 'string' && rawScore !== '' ? parseInt(rawScore, 10) : 0;
       const hpsValue = parseInt(perfTaskHPSValue, 10);
@@ -355,6 +356,12 @@ calculateWWPercentageScore(studentId: number) {
   }
 
   const wwPercentageScore = (totalWW / totalHPS) * 100;
+  const student = this.students.find((s) => s.id === studentId);
+
+  if (student) {
+    student.totalWWPercentage = Math.round(wwPercentageScore * 100) / 100;
+
+  }
 
   this.formData.totalWWPercentage = wwPercentageScore;
   return wwPercentageScore;
@@ -376,8 +383,8 @@ calculateWeightedScores() {
             
         if (this.formData.totalWrittenWorkHPS !== 0) {
 
-          student.totalWrittenWorkWS = (totalWW / this.formData.totalWrittenWorkHPS) * (parsedPercentage / 100) * 100;
-          
+          student.totalWrittenWorkWS = parseFloat(((totalWW / this.formData.totalWrittenWorkHPS) * (parsedPercentage / 100) * 100).toFixed(2));
+
         } else {
           student.totalWrittenWorkWS = 0;
         }
@@ -407,6 +414,12 @@ calculatePTPercentageScore(studentId: number) {
 
 
   const ptPercentageScore = (totalPT / totalHPS) * 100;
+  const student = this.students.find((s) => s.id === studentId);
+
+  if (student) {
+    student.totalPTPercentage = Math.round(ptPercentageScore * 100) / 100;
+  }
+
   this.formData.totalPTPercentage = ptPercentageScore;
 
   return ptPercentageScore;
@@ -430,7 +443,7 @@ calculatePTWeightedScores() {
             return isNaN(score) ? 0 : score;
           }).reduce((studentAcc, score) => studentAcc + score, 0);
 
-          student.totalPerfTaskWS = (totalPTForStudent / totalPerformanceTaskHPSNumber) * (parsedPercentage / 100) * 100;
+          student.totalPerfTaskWS = parseFloat(((totalPTForStudent / totalPerformanceTaskHPSNumber) * (parsedPercentage / 100) * 100).toFixed(2));
 
           return acc + totalPTForStudent;
         }, 0);
@@ -463,7 +476,6 @@ updateQARawScore(studentId: number) {
       this.showRawScoreAlert = false;
     }
   } else {
-    // Handle the case where rawScore is null or undefined, e.g., set showRawScoreAlert to false or handle it according to your logic.
     this.showRawScoreAlert = false;
   }
 }
@@ -496,7 +508,15 @@ calculateQAPercentageScore(studentId: number) {
   }
 
   const qaPercentageScore = (totalQA / totalHPS) * 100;
+
+  const student = this.students.find((s) => s.id === studentId);
+
+  if (student) {
+    student.totalQAPercentage = qaPercentageScore;
+  }
+
   this.formData.totalQAPercentage = qaPercentageScore;
+
   return qaPercentageScore
 }
 
@@ -507,6 +527,7 @@ updateQuarterlyGrade(student: Student): void {
   const quarterlyGrade = this.calculateQuarterlyGrade(initialGrade);
   student.quarterlyGrade = quarterlyGrade;
   console.log('Quarterly grade', quarterlyGrade);
+  
 }
 
 
@@ -516,10 +537,9 @@ calculateInitialGrade(student: Student): number {
   const totalQuarterlyAssessmentWS = student.totalQuarterlyAssessmentWS || 0;
 
   const initialGrade = totalWrittenWorkWS + totalPerfTaskWS + totalQuarterlyAssessmentWS;
-  this.formData.initialGrade = initialGrade
+  student.initialGrade = Math.round(initialGrade * 100) / 100;
 
   student.quarterlyGrade = totalQuarterlyAssessmentWS > 0 ? this.calculateQuarterlyGrade(initialGrade) : null;
-  this.formData.quarterlyGrade = student.quarterlyGrade;
   return initialGrade;
 }
 
@@ -612,9 +632,9 @@ submitForm() {
       ww_score_8:this.formData.ww_scores[7][student.id],
       ww_score_9:this.formData.ww_scores[8][student.id],
       ww_score_10:this.formData.ww_scores[9][student.id],
-      ww_total_score: this.formData.totalWrittenWorkRS,
-      ww_percentage_score: this.formData.totalWWPercentage,
-      ww_weighted_score: this.formData.totalWrittenWorkWS,
+      ww_total_score: this.formData.totalWrittenWorkRS[student.id],
+      ww_percentage_score: student.totalWWPercentage,
+      ww_weighted_score: student.totalWrittenWorkWS,
       pt_score_1: this.formData.pt_scores[0][student.id],
       pt_score_2: this.formData.pt_scores[1][student.id],
       pt_score_3: this.formData.pt_scores[2][student.id],
@@ -625,14 +645,14 @@ submitForm() {
       pt_score_8: this.formData.pt_scores[7][student.id],
       pt_score_9: this.formData.pt_scores[8][student.id],
       pt_score_10: this.formData.pt_scores[9][student.id],
-      pt_total_score: this.formData.totalPerfTaskRS,
-      pt_percentage_score: this.formData.totalPTPercentage,
-      pt_weighted_score: this.formData.totalPerfTaskWS,
-      qa_score: this.formData.qa_score,
-      qa_percentage_score: this.formData.totalQAPercentage,
-      qa_weighted_score: this.formData.totalQuarterlyAssessmentWS,
-      initial_grade: this.formData.initialGrade,
-      quarterly_grade: this.formData.quarterlyGrade
+      pt_total_score: this.formData.totalPerfTaskRS[student.id],
+      pt_percentage_score: student.totalPTPercentage,
+      pt_weighted_score: student.totalPerfTaskWS,
+      qa_score: this.formData.qa_score[student.id],
+      qa_percentage_score: student.totalQAPercentage,
+      qa_weighted_score: student.totalQuarterlyAssessmentWS,
+      initial_grade: student.initialGrade,
+      quarterly_grade: student.quarterlyGrade
 
     };
 

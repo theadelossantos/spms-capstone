@@ -56,6 +56,7 @@ urlpatterns = [
     path('calculate_weighted_scores/<int:student_id>/', views.calculate_weighted_scores_view, name='calculate_weighted_scores'),
     path('student-profile/', views.student_profile, name='student-profile'),
     path('student-grade/', views.StudentGradeListCreateView.as_view(), name='studentgrade-list-create'),
+    # path('student-grade-filter/', views.StudentGradeListByFilters.as_view(), name='studentgrade-list-filter'),
     path('quarters/', QuarterListCreateView.as_view(), name='quarter-list'),
     path('hps/', HPSListCreateView.as_view(), name='hps-list'),
 

@@ -435,6 +435,7 @@ export class AuthService {
   addStudentGrades(studentGrades:any): Observable<any> {
     return this.http.post(`${this.api_url}student-grade/`, studentGrades, this.httpOptions);
   }
+
   addHPS(HPSData:any): Observable<any> {
     return this.http.post(`${this.api_url}hps/`, HPSData, this.httpOptions);
   }
@@ -444,5 +445,11 @@ export class AuthService {
       catchError(this.handleError)
     );
   }
+
+  filterStudentGrades(filterData: any): Observable<any> {
+    const url = `${this.api_url}student-grade-filter/`; 
+    return this.http.post(url, filterData, this.httpOptions);
+  }
+
   
 }

@@ -153,7 +153,6 @@ class HpsScores(models.Model):
 
     hps_pt_total_score = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
 
-    hps_qa_10 = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
     hps_qa_total_score = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
 
 
@@ -166,45 +165,45 @@ class StudentGrade(models.Model):
     section = models.ForeignKey(Section, on_delete=models.CASCADE)
 
 
-    ww_score_1 = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
-    ww_score_2 = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
-    ww_score_3 = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
-    ww_score_4 = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
-    ww_score_5 = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
-    ww_score_6 = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
-    ww_score_7 = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
-    ww_score_8 = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
-    ww_score_9 = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
-    ww_score_10 = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    ww_score_1 = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
+    ww_score_2 = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
+    ww_score_3 = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
+    ww_score_4 = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
+    ww_score_5 = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
+    ww_score_6 = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
+    ww_score_7 = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
+    ww_score_8 = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
+    ww_score_9 = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
+    ww_score_10 = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
     
-    ww_total_score = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
-    ww_percentage_score = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
-    ww_weighted_score = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    ww_total_score = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
+    ww_percentage_score = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
+    ww_weighted_score = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
     
-    pt_score_1 = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
-    pt_score_2 = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
-    pt_score_3 = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
-    pt_score_4 = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
-    pt_score_5 = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
-    pt_score_6 = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
-    pt_score_7 = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
-    pt_score_8 = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
-    pt_score_9 = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
-    pt_score_10 = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    pt_score_1 = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
+    pt_score_2 = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
+    pt_score_3 = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
+    pt_score_4 = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
+    pt_score_5 = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
+    pt_score_6 = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
+    pt_score_7 = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
+    pt_score_8 = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
+    pt_score_9 = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
+    pt_score_10 = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
 
-    pt_total_score = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
-    pt_percentage_score = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
-    pt_weighted_score = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    pt_total_score = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
+    pt_percentage_score = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
+    pt_weighted_score = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
     
-    qa_score = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
-    qa_percentage_score = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
-    qa_weighted_score = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    qa_score = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
+    qa_percentage_score = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
+    qa_weighted_score = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
     
-    initial_grade = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    initial_grade = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
     
-    quarterly_grade = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    quarterly_grade = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
 
    
 
     def __str__(self):
-        return f"Grade for {self.student} in {self.subject} - {self.assignment_name}"
+        return f" {self.student} in {self.subject}"
