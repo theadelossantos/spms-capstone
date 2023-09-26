@@ -2,24 +2,27 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import * as XLSX from 'xlsx';
 import { AuthService } from 'src/app/services/auth.service';
+import { filter } from 'rxjs';
 interface Student {
   id: number;
   fname: string;
   lname: string;
   pt_scores: number[];
+  ww_scores: number[];
   totalWrittenWorkRS: number;
   totalWrittenWorkWS: number;
-  totalPerfTaskRS:number;
+  totalPerfTaskRS: number;
   totalPerfTaskWS: number;
   totalQaWS: number;
   totalQuarterlyAssessmentWS: number;
   initialGrade?: number;
   quarterlyGrade?: number;
-  totalPTPercentage?:number;
-  totalWWPercentage?:number;
+  totalPTPercentage?: number;
+  totalWWPercentage?: number;
   qa_score?: number[];
-  totalQAPercentage?:number;
+  totalQAPercentage?: number;
 }
+
 
 
 @Component({
@@ -96,11 +99,13 @@ export class SectionGradesComponent {
     initialGrade:null,
     
   };
-
-  trackByIndex(index: number, item: any): number {
+  studentRawScores: any[] = []; 
+  trackByIndex(index: number, column: number): number {
     return index;
   }
-  constructor(private route: ActivatedRoute, private authService: AuthService) {}
+  constructor(private route: ActivatedRoute, private authService: AuthService) {
+    
+  }
 
   ngOnInit(): void {
     
@@ -186,55 +191,178 @@ export class SectionGradesComponent {
           totalQuarterlyAssessmentWS: 0,
           initialGrade: 0,
           quarterlyGrade: 0,
-          ww_scores: Array(10).fill(0),
+          ww_scores: Array(10).fill(0), 
           pt_scores: Array(10).fill(0),
           qa_scores: 0,
         }));
   
         console.log(this.students);
         
-        this.students = studentsData.students;
-        console.log(this.students)
 
         this.students.forEach((student:any) => {
           const lastName = student.lname;
           const firstName = student.fname;
 
           console.log(`Last Name: ${lastName}, First Name: ${firstName}`);
-
         })
+        this.authService.getQuarters().subscribe((quartersData) => {
+          this.quarters = quartersData;
+          console.log('quarters', this.quarters);
+    
+          if (this.quarters && this.quarters.length > 0) {
+            this.selectedQuarter = this.quarters[0].quarter_id;
+            console.log('Selected Quarter ID:', this.selectedQuarter);
+          }
+          this.fetchStudentRawScores();
+
+
+          
+          
+        });
+        
       },
       (error) => {
         console.error('Error fetching students:', error);
       }
     )
 
-    this.authService.getQuarters().subscribe((quartersData)=>{
-      this.quarters = quartersData
-      console.log('quarters',this.quarters)
+    const numStudents = this.students.length;
+    const numColumns = 10;
 
-      if (this.quarters && this.quarters.length > 0) {
-        this.selectedQuarter = this.quarters[0].quarter_id;
-        console.log('Selected Quarter ID:', this.selectedQuarter);
+    this.formData.ww_scores = Array.from({ length: numColumns }, () => Array(numStudents).fill('0'));
+    this.formData.pt_scores = Array.from({ length: numColumns }, () => Array(numStudents).fill(null));
+    this.formData.qa_score = new Array(numStudents).fill(0);
 
-      }
-
-    })
-
-
-    const numStudents = this.students.length; 
-    const numColumns = 10; 
-    this.formData.ww_scores = new Array(numColumns).fill([]).map(() => new Array(numStudents).fill(null));
-    this.formData.pt_scores = []
-    this.formData.qa_score = new Array(numStudents).fill(0);   
     for (let i = 0; i < numColumns; i++) {
-      const column = [];
       for (let j = 0; j < numStudents; j++) {
-        column.push(null);
+        if (this.students[j].ww_scores && this.students[j].ww_scores[i] !== undefined) {
+          this.formData.ww_scores[i][j] = this.students[j].ww_scores[i];
+        }
+        if (this.students[j].pt_scores && this.students[j].pt_scores[i] !== undefined) {
+          this.formData.pt_scores[i][j] = this.students[j].pt_scores[i];
+        }
       }
-      this.formData.pt_scores.push(column);
+    }
+
+
+    
+  }
+
+  fetchStudentRawScores() {
+    const filters = {
+      gradelevel: this.gradeLevelId,
+      section: this.sectionId,
+      subject: this.subjectId,
+      quarter: this.selectedQuarter
+    };
+    console.log('Students before updating scores:', this.students);
+  
+    this.authService.fetchStudentGrades(filters).subscribe(
+      (data) => {
+        console.log('Raw Scores Data:', data);
+  
+        for (const scoreData of data) {
+          const studentId = scoreData.student;
+          console.log('Processing scores for Student ID:', studentId);
+  
+          const studentToUpdate = this.students.find((student) => student.id === studentId);
+          console.log('Student to Update:', studentToUpdate);
+  
+          if (studentToUpdate) {
+            for (let i = 1; i <= 10; i++) {
+              const wwScoreKey = `ww_score_${i}`;
+              const ptScoreKey = `pt_score_${i}`;
+              if (scoreData.hasOwnProperty(wwScoreKey)) {
+                studentToUpdate.ww_scores[i - 1] = parseFloat(scoreData[wwScoreKey]);
+              }
+              if (scoreData.hasOwnProperty(ptScoreKey)) {
+                studentToUpdate.pt_scores[i - 1] = parseFloat(scoreData[ptScoreKey]);
+              }
+            }
+            studentToUpdate.totalWrittenWorkRS = parseFloat(scoreData.ww_total_score);
+            studentToUpdate.totalPerfTaskRS = parseFloat(scoreData.pt_total_score);
+          } else {
+            console.error(`Student with ID ${studentId} not found in students array.`);
+          }
+        }
+  
+        console.log('Updated Students:', this.students);
+      },
+      (error) => {
+        console.error('Error fetching student raw scores:', error);
+      }
+    );
+  }
+  
+  
+  
+  
+  populateStudentsArray() {
+    console.log('Student Raw Scores:', this.studentRawScores);
+    
+    for (const studentData of this.studentRawScores) {
+      const student: Student = {
+        id: studentData.student,
+        fname: '', 
+        lname: '', 
+        pt_scores: [], 
+        ww_scores: [], 
+        totalWrittenWorkRS: 0, 
+        totalWrittenWorkWS: 0,
+        totalPerfTaskRS: 0,
+        totalPerfTaskWS: 0,
+        totalQaWS: 0,
+        totalQuarterlyAssessmentWS: 0
+      };
+      if (studentData.fname) {
+        student.fname = studentData.fname;
+      }
+      if (studentData.lname) {
+        student.lname = studentData.lname;
+      }
+  
+      for (let i = 0; i < 10; i++) {
+        student.pt_scores.push(parseFloat(studentData[`pt_score_${i + 1}`]));
+        student.ww_scores.push(parseFloat(studentData[`ww_score_${i + 1}`]));
+
+
+      }
+      
+
+      this.students.push(student);
+      console.log(student)
+    }
+    this.initializeFormData();
+
+    this.calculateWeightedScores();
+    // this.calculatePTWeightedScores();
+    // this.calculateQAWeightedScores();
+  }
+  
+
+
+  initializeFormData() {
+    const numStudents = this.students.length;
+    const numColumns = 10;
+  
+    this.formData.ww_scores = Array.from({ length: numColumns }, () => Array(numStudents).fill(0));
+    this.formData.pt_scores = Array.from({ length: numColumns }, () => Array(numStudents).fill(0));
+    this.formData.qa_score = new Array(numStudents).fill(0);
+  
+    for (let i = 0; i < numColumns; i++) {
+      for (let j = 0; j < numStudents; j++) {
+        if (this.students[j].ww_scores && this.students[j].ww_scores[i] !== undefined) {
+          this.formData.ww_scores[i][j] = this.students[j].ww_scores[i];
+        }
+        if (this.students[j].pt_scores && this.students[j].pt_scores[i] !== undefined) {
+          this.formData.pt_scores[i][j] = this.students[j].pt_scores[i];
+        }
+      }
     }
   }
+  
+  
+
 
   onQuarterChange(){
     console.log('Selected Quarter ID:', this.selectedQuarter);
@@ -264,17 +392,6 @@ updateWrittenWorkRS(studentId: number, column: number) {
   const ww_rsValue = this.formData.ww_scores[column][studentId] || 0;
   this.students.find(student => student.id === studentId).totalWrittenWorkRS = ww_rsValue;
 
-  const totalWrittenWorkRSForAllStudents = {};
-  this.students.forEach(student => {
-    totalWrittenWorkRSForAllStudents[student.id] = this.formData.ww_scores.reduce((acc, scores) => {
-      const rawScore = scores[student.id];
-      const parsedScore = typeof rawScore === 'string' && rawScore !== '' ? parseInt(rawScore, 10) : 0;
-      return acc + parsedScore;
-    }, 0);
-  });
-
-  this.formData.totalWrittenWorkRS = totalWrittenWorkRSForAllStudents;
-
   const writtenWorkHPSValue = this.formData.writtenWorkHPS[column];
   const anyScoreHigher = this.students.some(student => {
     const otherScore = this.formData.ww_scores[column][student.id] || 0;
@@ -293,7 +410,22 @@ updateWrittenWorkRS(studentId: number, column: number) {
     }
   });
 
+  // Calculate the totalWrittenWorkRS for all students again
+  const totalWrittenWorkRSForAllStudents = {};
+  this.students.forEach(student => {
+    totalWrittenWorkRSForAllStudents[student.id] = this.formData.ww_scores.reduce((acc, scores) => {
+      const rawScore = scores[student.id];
+      const parsedScore = typeof rawScore === 'string' && rawScore !== '' ? parseInt(rawScore, 10) : 0;
+      return acc + parsedScore;
+    }, 0);
+  });
+
+  this.formData.totalWrittenWorkRS = totalWrittenWorkRSForAllStudents;
+
   console.log('total ww rs', this.formData.totalWrittenWorkRS);
+
+  // Call the function to calculate weighted scores
+  this.calculateWeightedScores();
 }
 
 
@@ -661,6 +793,7 @@ submitForm() {
     this.authService.addStudentGrades(studentGrades).subscribe(
       (response) => {
         console.log('Student grades added:', response);
+
       },
       (error) => {
         console.error('Error adding student grades:', error);

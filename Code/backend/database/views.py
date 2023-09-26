@@ -862,7 +862,102 @@ class StudentGradeListCreateView(generics.ListCreateAPIView):
     serializer_class = StudentGradesSerializer
     permission_classes = [permissions.AllowAny]
 
+    def create(self, request, *args, **kwargs):
+        student_id = request.data.get('student')
+        subject_id = request.data.get('subject')
+        gradelevel_id = request.data.get('gradelevel')
+        section_id = request.data.get('section')
+        quarter_id = request.data.get('quarter')
 
+        existing_record = StudentGrade.objects.filter(
+            student=student_id,
+            subject=subject_id,
+            gradelevel=gradelevel_id,
+            section=section_id,
+            quarter=quarter_id
+        ).first()
+
+        if existing_record:
+            return Response({'detail': 'This record already exists.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        return super().create(request, *args, **kwargs)
+
+class StudentGradeUpdateView(generics.UpdateAPIView):
+    queryset = StudentGrade.objects.all()
+    serializer_class = StudentGradesSerializer
+    permission_classes = [permissions.AllowAny]
+
+    def get_object(self):
+        student_id = self.kwargs['student_id']
+        subject_id = self.kwargs['subject_id']
+        gradelevel_id = self.kwargs['gradelevel_id']
+        section_id = self.kwargs['section_id']
+        quarter_id = self.kwargs['quarter_id']
+
+        obj, created = StudentGrade.objects.get_or_create(
+            student_id=student_id,
+            subject_id=subject_id,
+            gradelevel_id=gradelevel_id,
+            section_id=section_id,
+            quarter_id=quarter_id
+        )
+        return obj
+
+class StudentGradeBatchUpdateView(generics.UpdateAPIView):
+    serializer_class = StudentGradesSerializer
+    permission_classes = [permissions.AllowAny]
+
+    def update(self, request, *args, **kwargs):
+        data = request.data
+
+        for record_data in data:
+            student_id = record_data.get('student')
+            subject_id = record_data.get('subject')
+            gradelevel_id = record_data.get('gradelevel')
+            section_id = record_data.get('section')
+            quarter_id = record_data.get('quarter')
+
+            try:
+                student_grade = StudentGrade.objects.get(
+                    student=student_id,
+                    subject=subject_id,
+                    gradelevel=gradelevel_id,
+                    section=section_id,
+                    quarter=quarter_id
+                )
+
+                serializer = StudentGradesSerializer(student_grade, data=record_data, partial=True)
+
+                if serializer.is_valid():
+                    serializer.save()
+                else:
+                    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+            except StudentGrade.DoesNotExist:
+                return Response({'detail': 'Record not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+        return Response({'detail': 'Batch update successful.'}, status=status.HTTP_200_OK)
+
+class StudentGradesFilterView(APIView):
+    def post(self, request):
+        serializer = StudentGradesFilterSerializer(data=request.data)
+        if serializer.is_valid():
+            gradelevel = serializer.validated_data['gradelevel']
+            section = serializer.validated_data['section']
+            subject = serializer.validated_data['subject']
+            quarter = serializer.validated_data['quarter']
+
+            student_grades = StudentGrade.objects.filter(
+                gradelevel=gradelevel,
+                section=section,
+                subject=subject,
+                quarter=quarter
+            )
+
+            serializer = StudentGradesSerializer(student_grades, many=True)
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
 class QuarterListCreateView(generics.ListCreateAPIView):
     queryset = Quarter.objects.all()
     serializer_class = QuarterSerializer
@@ -873,4 +968,20 @@ class HPSListCreateView(generics.ListCreateAPIView):
     serializer_class = HpsSerializer
     permission_classes = [permissions.AllowAny]
 
-    
+    def create(self, request, *args, **kwargs):
+        subject_id = request.data.get('subject')
+        gradelevel_id = request.data.get('gradelevel')
+        section_id = request.data.get('section')
+        quarter_id = request.data.get('quarter')
+
+        existing_record = HpsScores.objects.filter(
+            subject=subject_id,
+            gradelevel=gradelevel_id,
+            section=section_id,
+            quarter=quarter_id
+        ).first()
+
+        if existing_record:
+            return Response({'detail': 'This record already exists.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        return super().create(request, *args, **kwargs)

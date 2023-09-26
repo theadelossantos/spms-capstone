@@ -2,7 +2,7 @@ import { Router } from '@angular/router';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse} from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, filter } from 'rxjs/operators';
 import { CookieService } from 'ngx-cookie-service';
 import { tap, map } from 'rxjs/operators';
 import jwt_decode from 'jwt-decode';
@@ -446,9 +446,9 @@ export class AuthService {
     );
   }
 
-  filterStudentGrades(filterData: any): Observable<any> {
-    const url = `${this.api_url}student-grade-filter/`; 
-    return this.http.post(url, filterData, this.httpOptions);
+
+  fetchStudentGrades(filters:any):Observable<any>{
+    return this.http.post(`${this.api_url}student-grade/filter/`, filters, this.httpOptions);
   }
 
   
