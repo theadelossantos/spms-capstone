@@ -958,6 +958,26 @@ class StudentGradesFilterView(APIView):
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
+class HPSFilterView(APIView):
+    def post(self, request):
+        serializer = HPSFilterSerializer(data=request.data)
+        if serializer.is_valid():
+            gradelevel = serializer.validated_data['gradelevel']
+            section = serializer.validated_data['section']
+            subject = serializer.validated_data['subject']
+            quarter = serializer.validated_data['quarter']
+
+            hps = HpsScores.objects.filter(
+                gradelevel=gradelevel,
+                section=section,
+                subject=subject,
+                quarter=quarter
+            )
+
+            serializer = HpsSerializer(hps, many=True)
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
 class QuarterListCreateView(generics.ListCreateAPIView):
     queryset = Quarter.objects.all()
     serializer_class = QuarterSerializer

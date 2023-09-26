@@ -79,7 +79,7 @@
                 [name]="'wwhps' + (i + 1)"
               />
             </td>
-            <td class="WWtotalHPS"><b>{{ formData.totalWrittenWorkHPS || '' }}</b></td>
+            <td class="WWtotalHPS"><b>{{ formData.totalWrittenWorkHPS || ''}}</b></td>
             <td><b>100</b></td>
             <td>
               <input
@@ -139,16 +139,8 @@
               (input)="calculateWeightedScores()"
               name="wwrs{{ i }}_{{ j }}"
             />
-        </td>        <!-- <td><input type="text" [(ngModel)]="formData.ww_scores[1][student.id]" (input)="updateWrittenWorkRS(student.id, 1)" (input)="calculateWeightedScores()" name="wwrs1"/></td>
-        <td><input type="text" [(ngModel)]="formData.ww_scores[2][student.id]" (input)="updateWrittenWorkRS(student.id, 2)" (input)="calculateWeightedScores()" name="wwrs2"/></td>
-        <td><input type="text" [(ngModel)]="formData.ww_scores[3][student.id]" (input)="updateWrittenWorkRS(student.id, 3)" (input)="calculateWeightedScores()" name="wwrs3"/></td>
-        <td><input type="text" [(ngModel)]="formData.ww_scores[4][student.id]" (input)="updateWrittenWorkRS(student.id, 4)" (input)="calculateWeightedScores()" name="wwrs4"/></td>
-        <td><input type="text" [(ngModel)]="formData.ww_scores[5][student.id]" (input)="updateWrittenWorkRS(student.id, 5)" (input)="calculateWeightedScores()" name="wwrs5"/></td>
-        <td><input type="text" [(ngModel)]="formData.ww_scores[6][student.id]" (input)="updateWrittenWorkRS(student.id, 6)" (input)="calculateWeightedScores()" name="wwrs6"/></td>
-        <td><input type="text" [(ngModel)]="formData.ww_scores[7][student.id]" (input)="updateWrittenWorkRS(student.id, 7)" (input)="calculateWeightedScores()" name="wwrs7"/></td>
-        <td><input type="text" [(ngModel)]="formData.ww_scores[8][student.id]" (input)="updateWrittenWorkRS(student.id, 8)" (input)="calculateWeightedScores()" name="wwrs8"/></td>
-        <td><input type="text" [(ngModel)]="formData.ww_scores[9][student.id]" (input)="updateWrittenWorkRS(student.id, 9)" (input)="calculateWeightedScores()" name="wwrs9"/></td> -->
-        <td><input type="text" [value]="student.totalWrittenWorkRS || ''" readonly /></td>
+        </td>        
+        <td ><span>{{ student.totalWrittenWorkRS }}</span></td>
         <td>
           <input
             *ngIf="calculateWWPercentageScore(student.id) !== 0"

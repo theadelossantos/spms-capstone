@@ -61,6 +61,8 @@ urlpatterns = [
     path('student-grade/filter/', views.StudentGradesFilterView.as_view(), name='studentgrade-filter'),
     path('quarters/', QuarterListCreateView.as_view(), name='quarter-list'),
     path('hps/', HPSListCreateView.as_view(), name='hps-list'),
+    path('hps/filter/', views.HPSFilterView.as_view(), name='HPS-filter'),
+
 
 
 

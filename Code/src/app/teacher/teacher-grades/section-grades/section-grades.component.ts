@@ -21,6 +21,8 @@ interface Student {
   totalWWPercentage?: number;
   qa_score?: number[];
   totalQAPercentage?: number;
+  initialTotalWrittenWorkRS?: number;
+  ww_weighted_score: number
 }
 
 
@@ -44,8 +46,8 @@ export class SectionGradesComponent {
   students: Student[] = [];
   quarters: any[]=[]
   i: number;
-  writtenWorkHPS: string[] = Array(10).fill(""); 
-  performanceTaskHPS: string[] = Array(10).fill(""); 
+  writtenWorkHPS: number[] = new Array(10).fill(0);
+  performanceTaskHPS: string[] = Array(10).fill(0); 
   pt_scores: number[][] = Array(10).fill([]).map(() => Array(this.students.length).fill(0));
   selectedQuarter: number;
   // ww_ws_percentage: number = 0;
@@ -88,6 +90,7 @@ export class SectionGradesComponent {
     totalWrittenWorkRS:0,
     totalWrittenWorkWS: 0,
     totalWWPercentage: 0,
+    
     pt_scores:[],
     totalPerfTaskRS: 0,
     totalPTPercentage:0,
@@ -99,6 +102,7 @@ export class SectionGradesComponent {
     initialGrade:null,
     
   };
+  hpsValues: number[] = [];
   studentRawScores: any[] = []; 
   trackByIndex(index: number, column: number): number {
     return index;
@@ -191,8 +195,8 @@ export class SectionGradesComponent {
           totalQuarterlyAssessmentWS: 0,
           initialGrade: 0,
           quarterlyGrade: 0,
-          ww_scores: Array(10).fill(0), 
-          pt_scores: Array(10).fill(0),
+          ww_scores: Array.from({ length: 10 }, () =>null), // Initialize ww_scores with 10 zeros
+          pt_scores: Array.from({ length: 10 }, () => 0),
           qa_scores: 0,
         }));
   
@@ -214,12 +218,12 @@ export class SectionGradesComponent {
             console.log('Selected Quarter ID:', this.selectedQuarter);
           }
           this.fetchStudentRawScores();
-
+          this.fetchHPS();
 
           
           
         });
-        
+
       },
       (error) => {
         console.error('Error fetching students:', error);
@@ -246,6 +250,45 @@ export class SectionGradesComponent {
 
 
     
+  }
+
+  fetchHPS(){
+    const filters = {
+      gradelevel: this.gradeLevelId,
+      section: this.sectionId,
+      subject: this.subjectId,
+      quarter: this.selectedQuarter
+    };
+    this.authService.fetchHPSscores(filters).subscribe(
+      (data) => {
+        console.log('HPS:', data);
+        if (data && Array.isArray(data) && data.length > 0) {
+          const hpsData = data[0];
+          if (hpsData) {
+            this.formData.writtenWorkHPS = [];
+            this.formData.performanceTaskHPS = [];
+            for (let i = 1; i <= 10; i++) {
+              const wwkey = `hps_ww_${i}`;
+              const ptkey = `hps_pt_${i}`;
+              if (hpsData.hasOwnProperty(wwkey)) {
+                this.formData.writtenWorkHPS.push(parseFloat(hpsData[wwkey]) || 0);
+              }
+              if (hpsData.hasOwnProperty(ptkey)) {
+                this.formData.performanceTaskHPS.push(parseFloat(hpsData[ptkey]) || 0); 
+              }
+              
+            }
+            this.formData.totalWrittenWorkHPS = parseFloat(hpsData.hps_ww_total_score) || 0;
+            this.formData.totalPerformanceTaskHPS = parseFloat(hpsData.hps_pt_total_score) || 0; 
+            this.formData.quarterlyAssessmentHPS = parseFloat(hpsData.hps_qa_total_score)
+
+          }
+
+        } else {
+          console.error('Invalid API response:', data);
+        }
+    }
+    )
   }
 
   fetchStudentRawScores() {
@@ -280,7 +323,12 @@ export class SectionGradesComponent {
               }
             }
             studentToUpdate.totalWrittenWorkRS = parseFloat(scoreData.ww_total_score);
+            studentToUpdate.totalWWPercentage = parseFloat(scoreData.ww_percentage_score);
             studentToUpdate.totalPerfTaskRS = parseFloat(scoreData.pt_total_score);
+            studentToUpdate.initialTotalWrittenWorkRS = studentToUpdate.totalWrittenWorkRS;
+            studentToUpdate.totalWrittenWorkWS = parseFloat(scoreData.ww_weighted_score)
+
+
           } else {
             console.error(`Student with ID ${studentId} not found in students array.`);
           }
@@ -297,49 +345,7 @@ export class SectionGradesComponent {
   
   
   
-  populateStudentsArray() {
-    console.log('Student Raw Scores:', this.studentRawScores);
-    
-    for (const studentData of this.studentRawScores) {
-      const student: Student = {
-        id: studentData.student,
-        fname: '', 
-        lname: '', 
-        pt_scores: [], 
-        ww_scores: [], 
-        totalWrittenWorkRS: 0, 
-        totalWrittenWorkWS: 0,
-        totalPerfTaskRS: 0,
-        totalPerfTaskWS: 0,
-        totalQaWS: 0,
-        totalQuarterlyAssessmentWS: 0
-      };
-      if (studentData.fname) {
-        student.fname = studentData.fname;
-      }
-      if (studentData.lname) {
-        student.lname = studentData.lname;
-      }
   
-      for (let i = 0; i < 10; i++) {
-        student.pt_scores.push(parseFloat(studentData[`pt_score_${i + 1}`]));
-        student.ww_scores.push(parseFloat(studentData[`ww_score_${i + 1}`]));
-
-
-      }
-      
-
-      this.students.push(student);
-      console.log(student)
-    }
-    this.initializeFormData();
-
-    this.calculateWeightedScores();
-    // this.calculatePTWeightedScores();
-    // this.calculateQAWeightedScores();
-  }
-  
-
 
   initializeFormData() {
     const numStudents = this.students.length;
@@ -389,44 +395,38 @@ updateTotalPerformanceTaskHPS(index:number) {
 }
 
 updateWrittenWorkRS(studentId: number, column: number) {
-  const ww_rsValue = this.formData.ww_scores[column][studentId] || 0;
-  this.students.find(student => student.id === studentId).totalWrittenWorkRS = ww_rsValue;
+  const studentToUpdate = this.students.find(student => student.id === studentId);
 
-  const writtenWorkHPSValue = this.formData.writtenWorkHPS[column];
-  const anyScoreHigher = this.students.some(student => {
-    const otherScore = this.formData.ww_scores[column][student.id] || 0;
-    return Number(otherScore) > Number(writtenWorkHPSValue);
-  });
+  if (studentToUpdate) {
+    // Update the individual student's ww_scores based on edited values
+    const newWwScore = Number(studentToUpdate.ww_scores[column] || 0);
+    studentToUpdate.ww_scores[column] = newWwScore;
 
-  this.showRawScoreAlert = anyScoreHigher;
-
-  this.students.forEach(student => {
-    const rawScore = this.formData.ww_scores[column][student.id];
-    const parsedScore = typeof rawScore === 'string' && rawScore !== '' ? parseInt(rawScore, 10) : 0;
-    const hpsValue = parseInt(writtenWorkHPSValue, 10);
-
-    if (!isNaN(parsedScore) && !isNaN(hpsValue) && parsedScore > hpsValue) {
-      this.formData.ww_scores[column][student.id] = 0;
-    }
-  });
-
-  // Calculate the totalWrittenWorkRS for all students again
-  const totalWrittenWorkRSForAllStudents = {};
-  this.students.forEach(student => {
-    totalWrittenWorkRSForAllStudents[student.id] = this.formData.ww_scores.reduce((acc, scores) => {
-      const rawScore = scores[student.id];
-      const parsedScore = typeof rawScore === 'string' && rawScore !== '' ? parseInt(rawScore, 10) : 0;
-      return acc + parsedScore;
+    // Calculate the totalWrittenWorkRS for the student being edited
+    studentToUpdate.totalWrittenWorkRS = studentToUpdate.ww_scores.reduce((acc, score) => {
+      const parsedScore = typeof score === 'number' ? score : 0; // Ensure it's a number
+      return acc + parseFloat(parsedScore.toString()); // Ensure the score is parsed to float
     }, 0);
-  });
 
-  this.formData.totalWrittenWorkRS = totalWrittenWorkRSForAllStudents;
+    // Calculate the totalWrittenWorkRS for all students again
+    this.calculateTotalWrittenWorkRS();
 
-  console.log('total ww rs', this.formData.totalWrittenWorkRS);
-
-  // Call the function to calculate weighted scores
-  this.calculateWeightedScores();
+    // Call the function to calculate weighted scores
+    this.calculateWeightedScores();
+  } else {
+    console.error(`Student with ID ${studentId} not found in students array.`);
+  }
 }
+
+calculateTotalWrittenWorkRS() {
+  this.totalWrittenWorkRS = this.students.reduce((total, student) => {
+    const parsedScore = typeof student.totalWrittenWorkRS === 'number' ? student.totalWrittenWorkRS : 0; // Ensure it's a number
+    return total + parseFloat(parsedScore.toString()); // Ensure the score is parsed to float
+  }, 0);
+}
+
+
+
 
 
 
@@ -476,10 +476,16 @@ updatePerfTaskRS(studentId: number, column: number) {
 
 
 calculateWWPercentageScore(studentId: number) {
-  const totalWW = this.formData.ww_scores.map((ww_scoresRow) => {
-    const score = ww_scoresRow[studentId] ? Number(ww_scoresRow[studentId]) : 0;
-    return isNaN(score) ? 0 : score;
-  }).reduce((acc, score) => acc + score, 0);
+  const student = this.students.find((s) => s.id === studentId);
+
+  if (!student) {
+    return 0;
+  }
+
+  const totalWW = student.ww_scores.reduce((acc, score) => {
+    const parsedScore = parseFloat(String(score)) || 0;
+    return acc + parsedScore;
+  }, 0);
 
   const totalHPS = this.formData.totalWrittenWorkHPS;
 
@@ -488,17 +494,17 @@ calculateWWPercentageScore(studentId: number) {
   }
 
   const wwPercentageScore = (totalWW / totalHPS) * 100;
-  const student = this.students.find((s) => s.id === studentId);
 
-  if (student) {
-    student.totalWWPercentage = Math.round(wwPercentageScore * 100) / 100;
+  // Update the student's totalWWPercentage
+  student.totalWWPercentage = Math.round(wwPercentageScore * 100) / 100;
 
-  }
+  // Optionally, you can update formData's totalWWPercentage here as well
+  this.formData.totalWWPercentage = student.totalWWPercentage;
 
-  this.formData.totalWWPercentage = wwPercentageScore;
-  return wwPercentageScore;
-
+  return student.totalWWPercentage;
 }
+
+
 
 // weighted score of written work
 calculateWeightedScores() {
@@ -508,15 +514,18 @@ calculateWeightedScores() {
 
     if (!isNaN(parsedPercentage)) {
       this.students.forEach((student) => {
-        const totalWW = this.formData.ww_scores.map((ww_scoresRow) => {
-          const score = ww_scoresRow[student.id] ? Number(ww_scoresRow[student.id]) : 0;
-          return isNaN(score) ? 0 : score;
-        }).reduce((acc, score) => acc + score, 0);
-            
-        if (this.formData.totalWrittenWorkHPS !== 0) {
+        const totalWW = student.ww_scores.reduce((acc, score) => {
+          const parsedScore = parseFloat(String(score)) || 0;
+          return acc + parsedScore;
+        }, 0);
+        console.log(totalWW)
 
-          student.totalWrittenWorkWS = parseFloat(((totalWW / this.formData.totalWrittenWorkHPS) * (parsedPercentage / 100) * 100).toFixed(2));
-
+        const totalHPS = this.formData.totalWrittenWorkHPS || 0;
+        
+        if (totalHPS !== 0) {
+          // Calculate the weighted score similarly to the percentage score
+          student.totalWrittenWorkWS = parseFloat(((totalWW / totalHPS) * (parsedPercentage / 100) * 100).toFixed(2));
+          console.log('student total ww ws', student.totalWrittenWorkWS)
         } else {
           student.totalWrittenWorkWS = 0;
         }
@@ -529,6 +538,9 @@ calculateWeightedScores() {
     }
   }
 }
+
+
+
 
 // percentage score of performance task
 
@@ -748,6 +760,7 @@ submitForm() {
   console.log('quarter id', this.selectedQuarter)
 
   this.students.forEach((student) => {
+    
     const studentGrades = {
       student: student.id, 
       gradelevel: this.gradeLevelId,

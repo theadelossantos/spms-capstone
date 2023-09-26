@@ -451,5 +451,8 @@ export class AuthService {
     return this.http.post(`${this.api_url}student-grade/filter/`, filters, this.httpOptions);
   }
 
+  fetchHPSscores(filters:any):Observable<any>{
+    return this.http.post(`${this.api_url}hps/filter/`, filters, this.httpOptions);
+  }
   
 }

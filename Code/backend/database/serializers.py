@@ -242,3 +242,9 @@ class StudentGradesFilterSerializer(serializers.Serializer):
     section = serializers.IntegerField()
     subject = serializers.IntegerField()
     quarter = serializers.IntegerField()
+
+class HPSFilterSerializer(serializers.Serializer):
+    gradelevel = serializers.IntegerField()
+    section = serializers.IntegerField()
+    subject = serializers.IntegerField()
+    quarter = serializers.IntegerField()
