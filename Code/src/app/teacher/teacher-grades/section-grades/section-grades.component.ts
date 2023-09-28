@@ -19,7 +19,7 @@ interface Student {
   quarterlyGrade?: number;
   totalPTPercentage?: number;
   totalWWPercentage?: number;
-  qa_score?: number[];
+  qa_score?: number;
   totalQAPercentage?: number;
   initialTotalWrittenWorkRS?: number;
   ww_weighted_score: number
@@ -315,19 +315,35 @@ export class SectionGradesComponent {
             for (let i = 1; i <= 10; i++) {
               const wwScoreKey = `ww_score_${i}`;
               const ptScoreKey = `pt_score_${i}`;
+              const qaScore = parseFloat(scoreData.qa_score)
+              const wwTotalScore = parseFloat(scoreData.ww_total_score);
+
+              let wwScore;
+              let ptScore;
+
               if (scoreData.hasOwnProperty(wwScoreKey)) {
                 studentToUpdate.ww_scores[i - 1] = parseFloat(scoreData[wwScoreKey]);
               }
+
               if (scoreData.hasOwnProperty(ptScoreKey)) {
                 studentToUpdate.pt_scores[i - 1] = parseFloat(scoreData[ptScoreKey]);
               }
+              if(!isNaN(qaScore)){
+                studentToUpdate.qa_score = qaScore;
+              }else{
+                studentToUpdate.qa_score = 0;
+                studentToUpdate.ww_scores[i - 1] = 0;
+                studentToUpdate.pt_scores[i - 1] = 0;
+              }
             }
-            studentToUpdate.totalWrittenWorkRS = parseFloat(scoreData.ww_total_score);
+            studentToUpdate.totalWrittenWorkRS = parseFloat(scoreData.ww_total_score) || 0;
             studentToUpdate.totalWWPercentage = parseFloat(scoreData.ww_percentage_score);
             studentToUpdate.totalPerfTaskRS = parseFloat(scoreData.pt_total_score);
+            studentToUpdate.totalPerfTaskWS = parseFloat(scoreData.pt_weighted_score);
             studentToUpdate.initialTotalWrittenWorkRS = studentToUpdate.totalWrittenWorkRS;
             studentToUpdate.totalWrittenWorkWS = parseFloat(scoreData.ww_weighted_score)
-
+            studentToUpdate.totalQAPercentage = parseFloat(scoreData.qa_percentage_score)
+            studentToUpdate.totalQuarterlyAssessmentWS = parseFloat(scoreData.qa_weighted_score)
 
           } else {
             console.error(`Student with ID ${studentId} not found in students array.`);
@@ -398,20 +414,24 @@ updateWrittenWorkRS(studentId: number, column: number) {
   const studentToUpdate = this.students.find(student => student.id === studentId);
 
   if (studentToUpdate) {
-    // Update the individual student's ww_scores based on edited values
     const newWwScore = Number(studentToUpdate.ww_scores[column] || 0);
     studentToUpdate.ww_scores[column] = newWwScore;
 
-    // Calculate the totalWrittenWorkRS for the student being edited
     studentToUpdate.totalWrittenWorkRS = studentToUpdate.ww_scores.reduce((acc, score) => {
-      const parsedScore = typeof score === 'number' ? score : 0; // Ensure it's a number
-      return acc + parseFloat(parsedScore.toString()); // Ensure the score is parsed to float
+      const parsedScore = typeof score === 'number' ? score : 0; 
+      return acc + parseFloat(parsedScore.toString()); 
     }, 0);
 
-    // Calculate the totalWrittenWorkRS for all students again
+    const writtenWorkHPSValue = this.formData.writtenWorkHPS[column];
+    const anyScoreHigher = this.students.some(student => {
+      const otherScore = student.ww_scores[column] || 0;
+      return Number(otherScore) > Number(writtenWorkHPSValue);
+    });
+
+    this.showRawScoreAlert = anyScoreHigher;
+
     this.calculateTotalWrittenWorkRS();
 
-    // Call the function to calculate weighted scores
     this.calculateWeightedScores();
   } else {
     console.error(`Student with ID ${studentId} not found in students array.`);
@@ -421,59 +441,47 @@ updateWrittenWorkRS(studentId: number, column: number) {
 calculateTotalWrittenWorkRS() {
   this.totalWrittenWorkRS = this.students.reduce((total, student) => {
     const parsedScore = typeof student.totalWrittenWorkRS === 'number' ? student.totalWrittenWorkRS : 0; // Ensure it's a number
-    return total + parseFloat(parsedScore.toString()); // Ensure the score is parsed to float
+    return total + parseFloat(parsedScore.toString()); 
   }, 0);
 }
 
 
 
-
-
-
 updatePerfTaskRS(studentId: number, column: number) {
-  const pt_rsValue = this.formData.pt_scores[column][studentId] || 0;
-  this.students.find(student => student.id === studentId).totalPerfTaskRS = pt_rsValue;
+  const studentToUpdate = this.students.find((student) => student.id === studentId);
 
-  const totalPerfTaskRSForAllStudents = {};
-  this.students.forEach(student => {
-    totalPerfTaskRSForAllStudents[student.id] = this.formData.pt_scores.reduce((acc, scores) => {
-      const rawScore = scores[student.id];
+  if (studentToUpdate) {
+    const newPtScore = Number(studentToUpdate.pt_scores[column] || 0);
+    studentToUpdate.pt_scores[column] = newPtScore;
 
-      if (rawScore !== null && rawScore !== undefined) {
-        const parsedScore = typeof rawScore === 'string' && rawScore !== '' ? parseInt(rawScore, 10) : 0;
-        return acc + parsedScore;
-      } else {
-        return acc;
-      }
+    studentToUpdate.totalPerfTaskRS = studentToUpdate.pt_scores.reduce((acc, score) => {
+      const parsedScore = typeof score === 'number' ? score : 0; 
+      return acc + parseFloat(parsedScore.toString()); 
     }, 0);
-  });
 
-  this.formData.totalPerfTaskRS = totalPerfTaskRSForAllStudents;
+    const perfTaskHPSValue = this.formData.performanceTaskHPS[column];
+    const anyScoreHigher = this.students.some(student => {
+      const otherScore = student.pt_scores[column] || 0;
+      return Number(otherScore) > Number(perfTaskHPSValue);
+    });
 
-  const perfTaskHPSValue = this.formData.performanceTaskHPS[column];
-  const anyScoreHigher = this.students.some(student => {
-    const otherScore = this.formData.pt_scores[column][student.id] || 0;
-    return Number(otherScore) > Number(perfTaskHPSValue);
-  });
+    this.showRawScoreAlert = anyScoreHigher;
+    this.calculateTotalPerfTaskRS();
 
-  this.showRawScoreAlert = anyScoreHigher;
+    this.calculatePTWeightedScores();
 
-  this.students.forEach(student => {
-    const rawScore = this.formData.pt_scores[column][student.id];
 
-    if (rawScore !== null && rawScore !== undefined) {
-      const parsedScore = typeof rawScore === 'string' && rawScore !== '' ? parseInt(rawScore, 10) : 0;
-      const hpsValue = parseInt(perfTaskHPSValue, 10);
-
-      if (!isNaN(parsedScore) && !isNaN(hpsValue) && parsedScore > hpsValue) {
-        this.formData.pt_scores[column][student.id] = 0;
-      }
-    }
-  });
-
-  console.log('total ww rs', this.formData.totalPerfTaskRS);
+  } else {
+    console.error(`Student with ID ${studentId} not found in students array.`);
+  }
 }
 
+calculateTotalPerfTaskRS() {
+  this.totalPerfTaskRS = this.students.reduce((total, student) => {
+    const parsedScore = typeof student.totalPerfTaskRS === 'number' ? student.totalPerfTaskRS : 0; // Ensure it's a number
+    return total + parseFloat(parsedScore.toString()); // Ensure the score is parsed to float
+  }, 0);
+}
 
 calculateWWPercentageScore(studentId: number) {
   const student = this.students.find((s) => s.id === studentId);
@@ -495,10 +503,7 @@ calculateWWPercentageScore(studentId: number) {
 
   const wwPercentageScore = (totalWW / totalHPS) * 100;
 
-  // Update the student's totalWWPercentage
   student.totalWWPercentage = Math.round(wwPercentageScore * 100) / 100;
-
-  // Optionally, you can update formData's totalWWPercentage here as well
   this.formData.totalWWPercentage = student.totalWWPercentage;
 
   return student.totalWWPercentage;
@@ -521,9 +526,7 @@ calculateWeightedScores() {
         console.log(totalWW)
 
         const totalHPS = this.formData.totalWrittenWorkHPS || 0;
-        
         if (totalHPS !== 0) {
-          // Calculate the weighted score similarly to the percentage score
           student.totalWrittenWorkWS = parseFloat(((totalWW / totalHPS) * (parsedPercentage / 100) * 100).toFixed(2));
           console.log('student total ww ws', student.totalWrittenWorkWS)
         } else {
@@ -545,10 +548,17 @@ calculateWeightedScores() {
 // percentage score of performance task
 
 calculatePTPercentageScore(studentId: number) {
-  const totalPT= this.formData.pt_scores.map((pt_scoresRow) => {
-    const score = pt_scoresRow[studentId] ? Number(pt_scoresRow[studentId]) : 0;
+  const student = this.students.find((s) => s.id === studentId);
+
+  if (!student) {
+    return 0;
+  }
+
+  const totalPT= student.pt_scores.reduce((acc, score) => {
+    const parsedScore = parseFloat(String(score)) || 0;
+    return acc + parsedScore;
     return isNaN(score) ? 0 : score;
-  }).reduce((acc, score) => acc + score, 0);
+  }, 0)
 
   const totalHPS = this.formData.totalPerformanceTaskHPS
 
@@ -558,76 +568,65 @@ calculatePTPercentageScore(studentId: number) {
 
 
   const ptPercentageScore = (totalPT / totalHPS) * 100;
-  const student = this.students.find((s) => s.id === studentId);
+  student.totalPTPercentage = Math.round(ptPercentageScore * 100)/100;
+  this.formData.totalPTPercentage = student.totalPTPercentage;
 
-  if (student) {
-    student.totalPTPercentage = Math.round(ptPercentageScore * 100) / 100;
-  }
-
-  this.formData.totalPTPercentage = ptPercentageScore;
-
-  return ptPercentageScore;
+  return student.totalPTPercentage;
 }
 
 
 // weighted score of performance task
 calculatePTWeightedScores() {
+  console.log('calculatePTWeightedScores called');
   if (this.selectedSubject) {
     const parsedPercentage = parseFloat(String(this.selectedSubject.ptPercentage));
 
     if (!isNaN(parsedPercentage)) {
-      const totalPerformanceTaskHPSNumber = typeof this.formData.totalPerformanceTaskHPS === 'string'
-        ? parseInt(this.formData.totalPerformanceTaskHPS, 10)
-        : this.formData.totalPerformanceTaskHPS;
-
-      if (!isNaN(totalPerformanceTaskHPSNumber) && totalPerformanceTaskHPSNumber !== 0) {
-        const totalPT = this.students.reduce((acc, student) => {
-          const totalPTForStudent = this.formData.pt_scores.map((pt_scoresRow) => {
-            const score = pt_scoresRow[student.id] ? Number(pt_scoresRow[student.id]) : 0;
-            return isNaN(score) ? 0 : score;
-          }).reduce((studentAcc, score) => studentAcc + score, 0);
-
-          student.totalPerfTaskWS = parseFloat(((totalPTForStudent / totalPerformanceTaskHPSNumber) * (parsedPercentage / 100) * 100).toFixed(2));
-
-          return acc + totalPTForStudent;
-        }, 0);
-
-        this.formData.totalPerfTaskWS = totalPT;
-        this.formData.totalPTPercentage = (totalPT / totalPerformanceTaskHPSNumber) * 100;
-      } else {
-        this.formData.totalPerfTaskWS = 0;
-        this.formData.totalPTPercentage = 0;
-      }
+      this.students.forEach((student) => {
+        const totalPT = student.pt_scores.reduce((acc, score) => {
+          const parsedScore = parseFloat(String(score)) || 0;
+          return acc + parsedScore;
+        },0);
+        console.log(totalPT)
+        const totalHPS = this.formData.totalPerformanceTaskHPS || 0;
+        console.log('total hps pt',totalHPS)
+        
+        if (totalHPS !== 0) {
+          student.totalPerfTaskWS = parseFloat(((totalPT / totalHPS) * (parsedPercentage / 100) * 100).toFixed(2));
+          console.log('student total PT ws', student.totalPerfTaskWS);
+        } else {
+          student.totalPerfTaskWS = 0;
+        }
+      });
     } else {
-      console.log('Invalid selectedSubject.ptPercentage', this.selectedSubject.ptPercentage);
+      console.log('Invalid selectedSubject.ptPercentage:', this.selectedSubject.ptPercentage);
+      this.students.forEach((student) => {
+        student.totalPerfTaskWS = 0;
+      });
     }
   }
 }
 
 
 updateQARawScore(studentId: number) {
-  const rawScore = this.formData.qa_score[studentId];
+  const student = this.students.find((s) => s.id === studentId);
 
-  // Check if rawScore is not null and is defined
-  if (rawScore !== null && rawScore !== undefined) {
-    const quarterlyAssessmentHPSNumber = typeof this.formData.quarterlyAssessmentHPS === 'string'
-      ? parseInt(this.formData.quarterlyAssessmentHPS, 10)
-      : this.formData.quarterlyAssessmentHPS;
+  if (student) {
+    const rawScore = student.qa_score;
+    const quarterlyAssessmentHPSNumber = +this.formData.quarterlyAssessmentHPS;
 
-    if (rawScore > quarterlyAssessmentHPSNumber) {
-      this.showRawScoreAlert = true;
-    } else {
-      this.showRawScoreAlert = false;
-    }
-  } else {
-    this.showRawScoreAlert = false;
+    this.showRawScoreAlert = !isNaN(rawScore) && rawScore > quarterlyAssessmentHPSNumber
+
+   
+  } else {    
+    console.error(`Student with ID ${studentId} not found in students array.`);
   }
 }
 
 
 calculateQAWeightedScores() {
   this.students.forEach((student) => {
-    const rawScore = this.formData.qa_score[student.id] || 0;
+    const rawScore = student.qa_score || 0;
 
     const quarterlyAssessmentHPSNumber = typeof this.formData.quarterlyAssessmentHPS === 'string'
       ? parseInt(this.formData.quarterlyAssessmentHPS, 10)
@@ -644,24 +643,24 @@ calculateQAWeightedScores() {
 
 
 calculateQAPercentageScore(studentId: number) {
-  const totalQA = this.formData.qa_score[studentId] ? Number(this.formData.qa_score[studentId]) : 0;
-  
-  const totalHPS = this.formData.quarterlyAssessmentHPS
-  if (totalHPS === 0 || isNaN(totalQA)) {
-    return 0;
-  }
-
-  const qaPercentageScore = (totalQA / totalHPS) * 100;
-
   const student = this.students.find((s) => s.id === studentId);
 
   if (student) {
-    student.totalQAPercentage = qaPercentageScore;
+    const qaScore = student.qa_score;
+    const quarterlyAssessmentHPS = +this.formData.quarterlyAssessmentHPS;
+
+    if(!isNaN(qaScore) && quarterlyAssessmentHPS !== 0){
+      const qaPercentageScore = (qaScore / quarterlyAssessmentHPS) * 100;
+
+      student.totalQAPercentage = Math.round(qaPercentageScore * 100) / 100;
+
+      this.formData.totalQAPercentage = student.totalQAPercentage;
+      return student.totalQAPercentage;
+    }
   }
 
-  this.formData.totalQAPercentage = qaPercentageScore;
+  return 0;
 
-  return qaPercentageScore
 }
 
 updateQuarterlyGrade(student: Student): void {

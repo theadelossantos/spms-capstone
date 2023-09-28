@@ -165,18 +165,18 @@
         </td>
 
         <!-- PERFORMANCE TASK -->
-        <td><input type="text" [(ngModel)]="formData.pt_scores[0][student.id]" (input)="updatePerfTaskRS(student.id, 0)" (input)="calculatePTWeightedScores()" name="ptrs1"/></td>
-        <td><input type="text" [(ngModel)]="formData.pt_scores[1][student.id]" (input)="updatePerfTaskRS(student.id, 1)" (input)="calculatePTWeightedScores()" name="ptrs2"/></td>
-        <td><input type="text" [(ngModel)]="formData.pt_scores[2][student.id]" (input)="updatePerfTaskRS(student.id, 2)" (input)="calculatePTWeightedScores()" name="ptrs3"/></td>
-        <td><input type="text" [(ngModel)]="formData.pt_scores[3][student.id]" (input)="updatePerfTaskRS(student.id, 3)" (input)="calculatePTWeightedScores()" name="ptrs4"/></td>
-        <td><input type="text" [(ngModel)]="formData.pt_scores[4][student.id]" (input)="updatePerfTaskRS(student.id, 4)" (input)="calculatePTWeightedScores()" name="ptrs5"/></td>
-        <td><input type="text" [(ngModel)]="formData.pt_scores[5][student.id]" (input)="updatePerfTaskRS(student.id, 5)" (input)="calculatePTWeightedScores()" name="ptrs6"/></td>
-        <td><input type="text" [(ngModel)]="formData.pt_scores[6][student.id]" (input)="updatePerfTaskRS(student.id, 6)" (input)="calculatePTWeightedScores()" name="ptrs7"/></td>
-        <td><input type="text" [(ngModel)]="formData.pt_scores[7][student.id]" (input)="updatePerfTaskRS(student.id, 7)" (input)="calculatePTWeightedScores()" name="ptrs8"/></td>
-        <td><input type="text" [(ngModel)]="formData.pt_scores[8][student.id]" (input)="updatePerfTaskRS(student.id, 8)" (input)="calculatePTWeightedScores()" name="ptrs9"/></td>
-        <td><input type="text" [(ngModel)]="formData.pt_scores[9][student.id]" (input)="updatePerfTaskRS(student.id, 9)" (input)="calculatePTWeightedScores()" name="ptrs10"/></td>
+        <td *ngFor="let ptScore of student.pt_scores; let j = index; trackBy: trackByIndex">
+          <input
+            type="text"
+            [(ngModel)]="student.pt_scores[j]"
+            (input)="updatePerfTaskRS(student.id, j)"
+            (input)="calculatePTWeightedScores()"
+            name="ptrs{{ i }}_{{ j }}" 
+          />
+        </td>
+        
 
-        <td><input type="text" [value]="formData.totalPerfTaskRS[student.id] || ''" readonly (click)="showStudentId(student.id)" /></td>
+        <td><input type="text" [value]="student.totalPerfTaskRS || ''" readonly (click)="showStudentId(student.id)" /></td>
         <td>
           <input
             *ngIf="calculatePTPercentageScore(student.id) !== 0"
@@ -201,7 +201,7 @@
         </td>
         
         <!-- QUARTERLY ASSESSMENT -->
-        <td><input type="text" [(ngModel)]="formData.qa_score[student.id]" (input)="updateQARawScore(student.id)" (input)="calculateQAWeightedScores()" name="qars1"/></td>
+        <td><input type="text" [(ngModel)]="student.qa_score" (input)="updateQARawScore(student.id)" (input)="calculateQAWeightedScores()" name="qa_score_{{student.id}}"/></td>
         <td>
           <input
             *ngIf="calculateQAPercentageScore(student.id) !== 0"
