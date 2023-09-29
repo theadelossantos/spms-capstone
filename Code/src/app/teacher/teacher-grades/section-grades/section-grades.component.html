@@ -132,15 +132,15 @@
         <td>{{ i + 1}}</td>
         <td class="student-name" >{{student.lname}}, {{student.fname}}</td>
         <td *ngFor="let wwScore of student.ww_scores; let j = index; trackBy: trackByIndex">
-            <input
-              type="text"
-              [(ngModel)]="student.ww_scores[j]"
-              (input)="updateWrittenWorkRS(student.id, j)"
-              (input)="calculateWeightedScores()"
-              name="wwrs{{ i }}_{{ j }}"
-            />
-        </td>        
-        <td ><span>{{ student.totalWrittenWorkRS }}</span></td>
+          <input
+            type="text"
+            [(ngModel)]="student.ww_scores[j]"
+            (input)="updateWrittenWorkRS(student.id, j)"
+            (input)="calculateWeightedScores()"
+            name="wwrs{{ i }}_{{ j }}" 
+          />
+        </td>       
+        <td>{{student.totalWrittenWorkRS || ''}}</td>
         <td>
           <input
             *ngIf="calculateWWPercentageScore(student.id) !== 0"
@@ -240,5 +240,12 @@
 <div class="position-fixed top-0 end-0 p-3">
   <div class="alert alert-danger alert-dismissible fade show" role="alert" *ngIf="showRawScoreAlert">
     Raw Score should be equal or less than HPS!
+  </div>
+</div>
+
+<div class="position-fixed top-0 end-0 p-3">
+  <div class="alert alert-success alert-dismissible fade show" role="alert" *ngIf="saveAlert">
+    <strong> Successfully Saved! </strong>
+    <button type="button" class="btn-close" (click)="hideAlert()" aria-label="Close"></button>
   </div>
 </div>

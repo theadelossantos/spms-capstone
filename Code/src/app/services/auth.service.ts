@@ -454,5 +454,8 @@ export class AuthService {
   fetchHPSscores(filters:any):Observable<any>{
     return this.http.post(`${this.api_url}hps/filter/`, filters, this.httpOptions);
   }
+  batchUpdateStudentGrades(studentGrades: any[]): Observable<any> {
+    return this.http.put(`${this.api_url}student-grade/batch-update/`, studentGrades, this.httpOptions);
+  }
   
 }
