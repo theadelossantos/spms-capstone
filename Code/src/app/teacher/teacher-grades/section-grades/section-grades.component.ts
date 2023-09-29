@@ -258,6 +258,7 @@ export class SectionGradesComponent {
       subject: this.subjectId,
       quarter: this.selectedQuarter
     };
+    
     this.authService.fetchHPSscores(filters).subscribe(
       (data) => {
         console.log('HPS:', data);
@@ -386,8 +387,9 @@ export class SectionGradesComponent {
   
             console.log(`Last Name: ${lastName}, First Name: ${firstName}`);
           })
-
           this.fetchStudentRawScores()
+          this.fetchHPS()
+
       })
     }
   }
