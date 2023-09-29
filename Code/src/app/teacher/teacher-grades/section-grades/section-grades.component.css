@@ -54,3 +54,10 @@ th[ rowspan="3" ] {
 tr:hover{
     background-color: rgb(225, 225, 235);
 }
+.tbl-headers{
+    justify-content: space-between;
+}
+
+.select-opt{
+    max-width: 200px;
+}

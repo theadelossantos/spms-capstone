@@ -22,6 +22,7 @@ from django.views import View
 from django.db import transaction
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.generics import ListAPIView
 
 
 class AddStudentView(APIView):
@@ -1005,3 +1006,19 @@ class HPSListCreateView(generics.ListCreateAPIView):
             return Response({'detail': 'This record already exists.'}, status=status.HTTP_400_BAD_REQUEST)
 
         return super().create(request, *args, **kwargs)
+
+class StudentGradeByQuarterListView(ListAPIView):
+    serializer_class = StudentGradesSerializer
+
+    def get_queryset(self):
+        quarter_id = self.kwargs['quarter_id'] 
+        queryset = StudentGrade.objects.filter(quarter=quarter_id)
+        return queryset
+    
+class HPSByQuarterListView(ListAPIView):
+    serializer_class = HpsSerializer
+
+    def get_queryset(self):
+        quarter_id = self.kwargs['quarter_id'] 
+        queryset = HpsScores.objects.filter(quarter=quarter_id)
+        return queryset

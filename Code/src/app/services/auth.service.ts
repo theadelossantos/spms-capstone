@@ -457,5 +457,15 @@ export class AuthService {
   batchUpdateStudentGrades(studentGrades: any[]): Observable<any> {
     return this.http.put(`${this.api_url}student-grade/batch-update/`, studentGrades, this.httpOptions);
   }
-  
+
+  getStudentGradesByQuarter(quarterId: number): Observable<any> {
+    return this.http.get(`${this.api_url}student-grades/by-quarter/${quarterId}/`, this.httpOptions).pipe(
+      catchError(this.handleError)
+    );
+  }
+  getHPSByQuarter(): Observable<any> {
+    return this.http.get(`${this.api_url}hps/by-quarter/<int:quarter_id>/`, this.httpOptions).pipe(
+      catchError(this.handleError)
+    );
+  }
 }

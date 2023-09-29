@@ -23,6 +23,7 @@ interface Student {
   totalQAPercentage?: number;
   ww_weighted_score: number;
   initialTotalWrittenWorkRS?:number;
+  quarter: number;
 }
 
 
@@ -63,6 +64,7 @@ export class SectionGradesComponent {
   totalPerfTaskWS: number = 0;
 
   qa_scores: { [studentId: number]: number } = {};
+  isSortingAZ: boolean = true; 
 
   selectedSubject: {
     subjectName: string;
@@ -184,52 +186,49 @@ export class SectionGradesComponent {
         console.error('Error fetching section name:', error);
       }
     );
-    this.authService.filterStudents(this.deptId, this.gradeLevelId, this.sectionId).subscribe(
-      (studentsData: any) => {
-        this.students = studentsData.students.map((student: Student) => ({
-          ...student,
-          totalWrittenWorkRS: 0,
-          totalWrittenWorkWS: 0,
-          totalPerfTaskRS: 0,
-          totalPerfTaskWS: 0,
-          totalQuarterlyAssessmentWS: 0,
-          initialGrade: 0,
-          quarterlyGrade: 0,
-          ww_scores: Array.from({ length: 10 }, () => null),
-          pt_scores: Array.from({ length: 10 }, () => null),
-          qa_scores: 0,
-        }));
+      this.authService.filterStudents(this.deptId, this.gradeLevelId, this.sectionId).subscribe(
+        (studentsData: any) => {
+          this.students = studentsData.students.map((student: Student) => ({
+            ...student,
+            totalWrittenWorkRS: 0,
+            totalWrittenWorkWS: 0,
+            totalPerfTaskRS: 0,
+            totalPerfTaskWS: 0,
+            totalQuarterlyAssessmentWS: 0,
+            initialGrade: 0,
+            quarterlyGrade: 0,
+            ww_scores: Array.from({ length: 10 }, () => null),
+            pt_scores: Array.from({ length: 10 }, () => null),
+            qa_scores: 0,
+          }));
+    
+          console.log(this.students);
+          
   
-        console.log(this.students);
-        
-
-        this.students.forEach((student:any) => {
-          const lastName = student.lname;
-          const firstName = student.fname;
-
-          console.log(`Last Name: ${lastName}, First Name: ${firstName}`);
+          this.students.forEach((student:any) => {
+            const lastName = student.lname;
+            const firstName = student.fname;
+  
+            console.log(`Last Name: ${lastName}, First Name: ${firstName}`);
         })
         this.authService.getQuarters().subscribe((quartersData) => {
           this.quarters = quartersData;
           console.log('quarters', this.quarters);
-    
-          if (this.quarters && this.quarters.length > 0) {
+  
+            if (this.quarters && this.quarters.length > 0) {
             this.selectedQuarter = this.quarters[0].quarter_id;
             console.log('Selected Quarter ID:', this.selectedQuarter);
+            }
+            this.fetchStudentRawScores();
+            this.fetchHPS();
+            });
+            
+          },
+          (error) => {
+            console.error('Error fetching students:', error);
           }
-          this.fetchStudentRawScores();
-          this.fetchHPS();
-
-          
-          
-        });
-
-      },
-      (error) => {
-        console.error('Error fetching students:', error);
-      }
-    )
-
+        )
+      
     const numStudents = this.students.length;
     const numColumns = 10;
 
@@ -303,7 +302,7 @@ export class SectionGradesComponent {
     this.authService.fetchStudentGrades(filters).subscribe(
       (data) => {
         console.log('Raw Scores Data:', data);
-  
+
         for (const scoreData of data) {
           const studentId = scoreData.student;
           console.log('Processing scores for Student ID:', studentId);
@@ -334,7 +333,7 @@ export class SectionGradesComponent {
             studentToUpdate.totalWrittenWorkRS = parseFloat(scoreData.ww_total_score);
             studentToUpdate.totalPerfTaskRS = parseFloat(scoreData.pt_total_score);
             studentToUpdate.initialTotalWrittenWorkRS = studentToUpdate.totalWrittenWorkRS;
-
+            studentToUpdate.quarter = parseFloat(scoreData.quarter);
             studentToUpdate.totalPerfTaskWS = parseFloat(scoreData.pt_weighted_score);
             studentToUpdate.totalWrittenWorkWS = parseFloat(scoreData.ww_weighted_score)
             studentToUpdate.totalQAPercentage = parseFloat(scoreData.qa_percentage_score)
@@ -354,12 +353,43 @@ export class SectionGradesComponent {
   }
   
   
-  
-  
-  
+
+
+
 
   onQuarterChange(){
     console.log('Selected Quarter ID:', this.selectedQuarter);
+
+    if(this.selectedQuarter){
+      this.authService.filterStudents(this.deptId, this.gradeLevelId, this.sectionId).subscribe(
+        (studentsData: any) => {
+          this.students = studentsData.students.map((student: Student) => ({
+            ...student,
+            totalWrittenWorkRS: 0,
+            totalWrittenWorkWS: 0,
+            totalPerfTaskRS: 0,
+            totalPerfTaskWS: 0,
+            totalQuarterlyAssessmentWS: 0,
+            initialGrade: 0,
+            quarterlyGrade: 0,
+            ww_scores: Array.from({ length: 10 }, () => null),
+            pt_scores: Array.from({ length: 10 }, () => null),
+            qa_scores: 0,
+          }));
+    
+          console.log(this.students);
+          
+  
+          this.students.forEach((student:any) => {
+            const lastName = student.lname;
+            const firstName = student.fname;
+  
+            console.log(`Last Name: ${lastName}, First Name: ${firstName}`);
+          })
+
+          this.fetchStudentRawScores()
+      })
+    }
   }
 
 updateTotalWrittenWorkHPS(index:number) {
@@ -472,15 +502,11 @@ calculateWWPercentageScore(studentId: number) {
   if (totalHPS === 0) {
     return 0; 
   }
-  console.log(`ww_scores for ${studentId}`, student.ww_scores)
-
-  console.log('total ww', totalWW)
 
 
   const wwPercentageScore = (totalWW / totalHPS) * 100;
   student.totalWWPercentage = Math.round(wwPercentageScore * 100)/100;
   this.formData.totalWWPercentage = student.totalWWPercentage;
-  console.log('(',totalWW, '/' , totalHPS,') * 100 =', (totalWW / totalHPS) * 100)
 
   return student.totalWWPercentage;
 }
@@ -489,7 +515,6 @@ calculateWWPercentageScore(studentId: number) {
 
 // weighted score of written work
 calculateWeightedScores() {
-  console.log('calculateWeightedScores called');
   if (this.selectedSubject) {
     const parsedPercentage = parseFloat(String(this.selectedSubject.wwPercentage));
 
@@ -499,12 +524,10 @@ calculateWeightedScores() {
           const parsedScore = parseFloat(String(score)) || 0;
           return acc + parsedScore;
         }, 0);
-        console.log(totalWW)
 
         const totalHPS = this.formData.totalWrittenWorkHPS || 0;
         if (totalHPS !== 0) {
           student.totalWrittenWorkWS = parseFloat(((totalWW / totalHPS) * (parsedPercentage / 100) * 100).toFixed(2));
-          console.log('student total ww ws', student.totalWrittenWorkWS)
         } else {
           student.totalWrittenWorkWS = 0;
         }
@@ -535,9 +558,7 @@ calculatePTPercentageScore(studentId: number) {
     return acc + parsedScore;
     return isNaN(score) ? 0 : score;
   }, 0)
-  console.log(`pt_scores for ${studentId}`, student.pt_scores)
 
-  console.log('total pt', totalPT)
 
   const totalHPS = this.formData.totalPerformanceTaskHPS
 
@@ -556,7 +577,6 @@ calculatePTPercentageScore(studentId: number) {
 
 // weighted score of performance task
 calculatePTWeightedScores() {
-  console.log('calculatePTWeightedScores called');
   if (this.selectedSubject) {
     const parsedPercentage = parseFloat(String(this.selectedSubject.ptPercentage));
 
@@ -566,13 +586,10 @@ calculatePTWeightedScores() {
           const parsedScore = parseFloat(String(score)) || 0;
           return acc + parsedScore;
         },0);
-        console.log(totalPT)
         const totalHPS = this.formData.totalPerformanceTaskHPS || 0;
-        console.log('total hps pt',totalHPS)
         
         if (totalHPS !== 0) {
           student.totalPerfTaskWS = parseFloat(((totalPT / totalHPS) * (parsedPercentage / 100) * 100).toFixed(2));
-          console.log('student total PT ws', student.totalPerfTaskWS);
         } else {
           student.totalPerfTaskWS = 0;
         }
@@ -645,10 +662,8 @@ calculateQAPercentageScore(studentId: number) {
 updateQuarterlyGrade(student: Student): void {
   const initialGrade = this.calculateInitialGrade(student);
   student.initialGrade = initialGrade;
-  console.log('Initial grade', initialGrade);
   const quarterlyGrade = this.calculateQuarterlyGrade(initialGrade);
   student.quarterlyGrade = quarterlyGrade;
-  console.log('Quarterly grade', quarterlyGrade);
   
 }
 
@@ -667,7 +682,6 @@ calculateInitialGrade(student: Student): number {
 
 
 calculateQuarterlyGrade(initialGrade: number): number {
-  console.log('Initial Grade:', initialGrade);
 
   if (initialGrade >= 100) return 100;
   if (initialGrade >= 98.4) return 99;
@@ -895,6 +909,20 @@ submitForm() {
 }
 hideAlert() {
   this.saveAlert = false;
+}
+
+toggleSortOrder() {
+  this.isSortingAZ = !this.isSortingAZ; 
+
+  if (this.isSortingAZ) {
+    this.students.sort((a, b) => {
+      return a.lname.localeCompare(b.lname); 
+    });
+  } else {
+    this.students.sort((a, b) => {
+      return b.lname.localeCompare(a.lname); 
+    });
+  }
 }
   
 }
