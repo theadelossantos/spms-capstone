@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from rest_framework.response import Response
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
@@ -22,7 +22,7 @@ from django.views import View
 from django.db import transaction
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.generics import ListAPIView
+from rest_framework.generics import ListAPIView, RetrieveUpdateAPIView
 
 
 class AddStudentView(APIView):
@@ -306,7 +306,14 @@ class AdminRegistrationView(APIView):
                 "admin_errors": admin_errors
             }, status=status.HTTP_400_BAD_REQUEST)
 
+class AdminProfileView(RetrieveUpdateAPIView):
+    queryset = Admin.objects.all()
+    serializer_class = AdminSerializer
+    permission_classes = [IsAuthenticated]
 
+    def get_object(self):
+        return get_object_or_404(Admin, user=self.request.user)
+    
 class AdminLoginView(APIView):
     def post(self,request):
         serializer = AdminLoginSerializer(data=request.data)

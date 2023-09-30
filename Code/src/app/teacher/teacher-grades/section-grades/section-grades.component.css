@@ -61,3 +61,28 @@ tr:hover{
 .select-opt{
     max-width: 200px;
 }
+.quarterly-grade{
+    font-weight: bold;
+}
+
+@media print {
+    @page {
+        size: landscape; 
+        margin:0.5cm;
+        size: tabloid;
+    }
+    body * {
+      display: none;
+      margin: 0;
+      background-color: white;
+    }
+    .printable-table {
+        margin: 0;
+    }
+    button, .select-opt, .links, .subject-info {
+        display: none !important;
+    }
+    .links, .next, .active, .summary, .classes{
+        display: none !important;
+    }
+}

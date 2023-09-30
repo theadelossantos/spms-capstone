@@ -1,0 +1,19 @@
+*{
+    font-family: 'Poppins', sans-serif;
+}
+
+a{
+    color: #000;
+    margin-right: 3px;
+    text-decoration: none;
+}
+a:hover{
+    text-decoration: underline;
+}
+.next{
+    margin-right: 3px;
+}
+
+.links .active{
+    text-decoration: underline;
+}

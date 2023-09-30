@@ -427,6 +427,10 @@ export class AuthService {
     const authHeader = this.setAuthHeader();
     return this.http.get(`${this.api_url}admin-profile/`, { headers: authHeader });
   }
+  updateAdminProfile(profileData: any): Observable<any> {
+    const authHeader = this.setAuthHeader();
+    return this.http.put(`${this.api_url}admin/profile/`, profileData, { headers: authHeader });
+}
 
   logout(): Observable<any> {
     return this.http.post(`${this.api_url}logout/`, null);

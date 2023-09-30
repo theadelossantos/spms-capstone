@@ -42,6 +42,7 @@ class UserSerializer(serializers.ModelSerializer):
     def generate_unique_username(self,email):
         return slugify(email)
 
+
 class StudentSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
 
@@ -91,7 +92,7 @@ class AdminSerializer(serializers.ModelSerializer):
     user = UserSerializer()
     is_staff = serializers.ReadOnlyField()
     is_superuser = serializers.ReadOnlyField()
-
+    profile_picture = serializers.ImageField(required=False)
     class Meta:
         model = Admin
         fields = '__all__'
@@ -101,6 +102,22 @@ class AdminSerializer(serializers.ModelSerializer):
         user = User.objects.create_user(**user_data, role='admin', is_staff=True, is_superuser=True)
         admin = Admin.objects.create(user=user, **validated_data)
         return admin
+    
+    def update(self, instance, validated_data):
+        instance.fname = validated_data.get('fname', instance.fname)
+        instance.mname = validated_data.get('mname', instance.mname)
+        instance.lname = validated_data.get('lname', instance.lname)
+        instance.phone = validated_data.get('phone', instance.phone)
+        instance.gender = validated_data.get('gender', instance.gender)
+        instance.address = validated_data.get('address', instance.address)
+
+        profile_picture = validated_data.get('profile_picture')
+        if profile_picture is not None:
+            instance.profile_picture = profile_picture
+
+        instance.save()
+        return instance
+
 
 
 

@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { TeacherGradesComponent } from './teacher-grades.component';
 import { SectionGradesComponent } from './section-grades/section-grades.component';
+import { SummaryGradesComponent } from './summary-grades/summary-grades.component';
 
 const routes: Routes = [
   {
@@ -12,6 +13,11 @@ const routes: Routes = [
     path: 'section-grades/:deptId/:gradelvlId/:sectionId/:subjectId/:assignmentId',
     component: SectionGradesComponent, 
   },
+  {
+    path: 'summary/:deptId/:gradelvlId/:sectionId/:subjectId/:assignmentId',
+    component: SummaryGradesComponent  
+  }
+
 ];
 
 @NgModule({

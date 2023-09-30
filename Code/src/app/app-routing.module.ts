@@ -12,7 +12,6 @@ import { AddTeacherComponent } from './admin/teacher/add-teacher/add-teacher.com
 import { AddStudentComponent } from './admin/students/add-student/add-student.component';
 import { ClassesComponent } from './admin/classes/classes.component';
 import { CoursesComponent } from './admin/courses/courses.component';
-import { SettingsComponent } from './admin/settings/settings.component';
 import { TeacherModule } from './admin/teacher/teacher.module';
 import { StudentDashboardComponent } from './student/student-dashboard/student-dashboard.component';
 import { StudentWeeklyprogComponent } from './student/student-weeklyprog/student-weeklyprog.component';
@@ -121,7 +120,7 @@ const routes: Routes = [
     },
     {
       path: 'settings',
-      loadChildren:() => import('./admin/settings/settings.module').then(m => m.SettingsModule)
+      loadChildren:() => import('./admin/admin-settings/admin-settings.module').then(m => m.AdminSettingsModule)
     },
     
   ],

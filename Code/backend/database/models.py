@@ -79,6 +79,8 @@ class Admin(models.Model):
     phone = models.CharField(max_length=25, default='')
     gender = models.CharField(max_length=10, default='')
     address = models.CharField(max_length=255, default='')
+    profile_picture = models.ImageField(upload_to='admin_profiles/', null=True, blank=True)
+
 
 
 class Department(models.Model):

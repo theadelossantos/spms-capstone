@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import * as XLSX from 'xlsx';
 import { AuthService } from 'src/app/services/auth.service';
-import { filter } from 'rxjs';
+import { saveAs } from 'file-saver'
+
 interface Student {
   id: number;
   fname: string;
@@ -41,6 +42,7 @@ export class SectionGradesComponent {
   gradeLevelId: number;
   sectionId: number;
   subjectId: number;
+  assignmentId: number;
   subjectName: string;
   gradeLevelName: string;
   sectionName: string;
@@ -120,13 +122,13 @@ export class SectionGradesComponent {
       this.gradeLevelId = Number(params.get('gradelvlId'));
       this.sectionId = Number(params.get('sectionId'));
       this.subjectId = Number(params.get('subjectId'));
-      const assignmentId = params.get('assignmentId');
+      this.assignmentId = Number(params.get('assignmentId'));
       
       console.log('Department:', this.deptId);
       console.log('Grade Level:', this.gradeLevelId);
       console.log('Section:', this.sectionId);
       console.log('Subject ID:', this.subjectId);
-      console.log('Assignment ID:', assignmentId);
+      console.log('Assignment ID:', this.assignmentId);
 
     });
     const subjectPercentageMapping = {
@@ -926,5 +928,78 @@ toggleSortOrder() {
     });
   }
 }
-  
+
+
+printTable() {
+  window.print();
+}
+
+// getTableDataWithRawScores() {
+//   // Create an array to hold your table data, including raw scores
+//   const tableData = [];
+
+//   // Create header rows for Written Works (WW) and Performance Tasks (PT)
+//   const wwHeaders = ['No.', "LEARNER'S NAMES"];
+//   const ptHeaders = ['', '', ''];
+//   const qaHeaders = ['', '', '', ''];
+
+//   // Loop to create WW and PT headers
+//   for (let i = 1; i <= 10; i++) {
+//     wwHeaders.push(`WW ${i}`);
+//     ptHeaders.push(`PT ${i}`);
+//   }
+
+//   // Add WW and PT Total headers
+//   wwHeaders.push('Total WW', 'PS', 'WS');
+//   ptHeaders.push('Total PT', 'PS', 'WS');
+
+//   // Add QA headers
+//   qaHeaders.push('QA Score', 'PS', 'WS', 'Initial Grade', 'Quarterly Grade');
+
+//   // Push the header rows to the table data
+//   tableData.push(wwHeaders, ptHeaders, qaHeaders);
+
+//   // Loop through your students and add their data, including raw scores, to the array
+//   this.students.forEach((student, i) => {
+//     const rowData = [
+//       i + 1,
+//       `${student.lname}, ${student.fname}`,
+//     ];
+
+//     // Add raw scores for written works (WW)
+//     student.ww_scores.forEach((wwScore) => {
+//       rowData.push(wwScore.toString());
+//     });
+
+//     // Add total written work raw scores
+//     rowData.push(student.totalWrittenWorkRS || '');
+
+//     // Add PS and WS for WW
+//     rowData.push(student.totalWrittenWorkWS || '', this.calculateWWPercentageScore(student.id));
+
+//     // Add raw scores for performance tasks (PT)
+//     student.pt_scores.forEach((ptScore) => {
+//       rowData.push(ptScore.toString());
+//     });
+
+//     // Add total performance task raw scores
+//     rowData.push(student.totalPerfTaskRS || '');
+
+//     // Add PS and WS for PT
+//     rowData.push(student.totalPerfTaskWS || '', this.calculatePTPercentageScore(student.id));
+
+//     // Add raw score for Quarterly Assessment (QA)
+//     rowData.push(student.qa_score || '');
+
+//     // Add PS, WS, initial grade, and quarterly grade
+//     rowData.push(this.calculateQAPercentageScore(student.id) || '', student.totalQuarterlyAssessmentWS || '', this.calculateInitialGrade(student) || '', student.quarterlyGrade || '');
+
+//     // Push the row data to the table data array
+//     tableData.push(rowData.map(String));
+//   });
+
+//   return tableData;
+// }
+
+
 }

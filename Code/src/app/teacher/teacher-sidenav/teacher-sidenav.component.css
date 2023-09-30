@@ -181,3 +181,24 @@ color: white;
     scrollbar-color: #f0eded transparent;
 }
 
+@media print {
+    body * {
+      display: none;
+      background-color: white;
+      margin: 0;
+
+    }
+    .printable {
+      display: block !important; 
+    }
+    button, .select-opt, .links, .subject-info {
+      display: none !important;
+    }
+    .sidenav {
+      display: none !important; 
+    }
+    .links, .next, .active, .summary, .classes {
+      display: none !important;
+    }
+  }
+  

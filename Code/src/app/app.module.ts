@@ -29,6 +29,8 @@ import { AttendanceComponent } from './teacher/attendance/attendance.component';
 import { TeacherClassesComponent } from './teacher/teacher-classes/teacher-classes.component';
 import { TeacherWeeklyprogressComponent } from './teacher/teacher-weeklyprogress/teacher-weeklyprogress.component';
 import { TeacherSettingsComponent } from './teacher/teacher-settings/teacher-settings.component';
+import { AdminSettingsComponent } from './admin/admin-settings/admin-settings.component';
+import { PrivacyComponent } from './admin/admin-settings/privacy/privacy.component';
 
 
 @NgModule({
@@ -56,6 +58,8 @@ import { TeacherSettingsComponent } from './teacher/teacher-settings/teacher-set
     TeacherClassesComponent,
     TeacherWeeklyprogressComponent,
     TeacherSettingsComponent,
+    AdminSettingsComponent,
+    PrivacyComponent,
   ],
   imports: [
     BrowserModule,

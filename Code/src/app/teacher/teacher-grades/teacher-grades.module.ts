@@ -6,13 +6,15 @@ import { SectionGradesComponent } from './section-grades/section-grades.componen
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
+import { SummaryGradesComponent } from './summary-grades/summary-grades.component';
 
 
 
 @NgModule({
   declarations: [
     TeacherGradesComponent,
-    SectionGradesComponent
+    SectionGradesComponent,
+    SummaryGradesComponent
   ],
   imports: [
     CommonModule,

@@ -1,0 +1,15 @@
+*{
+    font-family: 'Poppins', sans-serif;
+}
+label{
+    margin: 0;
+}
+.card{
+    border-radius: 20px;
+}
+.input-container {
+    width: 100%;
+}
+.input-container:first-child {
+    margin-right: 10px;
+  }
