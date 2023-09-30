@@ -1,18 +1,13 @@
 <div class="links d-flex">
   <a class="classes" [routerLink]="['/teacher/grades']">Classes </a>
   <p class="next">></p>
-  <a class="active">{{ gradeLevelName}} - {{ sectionName }}</a>
+  <a class="active">{{ gradeLevelName}} - {{ sectionName }} - {{subjectName}}</a>
   <p class="next">></p>
   <a class="summary" [routerLink]="['/teacher/grades/summary', deptId, gradeLevelId, sectionId, subjectId, assignmentId]">Summary of Quarterly Grades</a>
 
 </div>
 
 
-<ng-container *ngIf="selectedSubject; else noSubjectSelected">
-<div class="subject-info printable-content">
-  <p>Subject: {{ selectedSubject.subjectName }}</p>
-</div>
-</ng-container>
 
 
 <ng-template #noSubjectSelected>
@@ -41,6 +36,14 @@
   
 <table #printableContent id="grades-table"  class="printable-table">
     <thead>
+      <tr>
+        <td colspan="33"><h2 class="class-record">CLASS RECORD</h2></td>
+      </tr>
+      <tr>
+        <td class="header" colspan="11"><b>QUARTER:</b> {{ selectedQuarter }} - {{ getQuarterNameById(selectedQuarter) }}</td>
+        <td class="header" colspan="11"><b>GRADE & SECTION:</b> {{ gradeLevelName}} - {{ sectionName }} </td>
+        <td class="header" colspan="11"><b>SUBJECT: </b>{{ selectedSubject.subjectName }}</td>
+      </tr>
       <tr>
         <th>No.</th>
         <th>LEARNER'S NAMES</th>

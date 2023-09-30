@@ -55,6 +55,7 @@ export class SectionGradesComponent {
   ww_scores: number[][] = Array(10).fill([]).map(() => Array(this.students.length).fill(0));
 
   selectedQuarter: number;
+  selectedQuarterName: string =''; 
   weightedScores: number[] = [];
   
   totalWrittenWorkHPS: number = 0;
@@ -225,6 +226,7 @@ export class SectionGradesComponent {
             this.fetchHPS();
             });
             
+            
           },
           (error) => {
             console.error('Error fetching students:', error);
@@ -249,10 +251,13 @@ export class SectionGradesComponent {
       }
     }
 
-
-    
   }
-
+  getQuarterNameById(quarterId: number): string {
+    const quarter = this.quarters.find(q => q.quarter_id === quarterId);
+    return quarter ? quarter.quarter_name : 'Unknown';
+  }
+  
+  
   fetchHPS(){
     const filters = {
       gradelevel: this.gradeLevelId,
@@ -362,6 +367,7 @@ export class SectionGradesComponent {
 
   onQuarterChange(){
     console.log('Selected Quarter ID:', this.selectedQuarter);
+    this.selectedQuarterName = this.getQuarterNameById(this.selectedQuarter);
 
     if(this.selectedQuarter){
       this.authService.filterStudents(this.deptId, this.gradeLevelId, this.sectionId).subscribe(
@@ -632,13 +638,18 @@ calculateQAWeightedScores() {
       ? parseInt(this.formData.quarterlyAssessmentHPS, 10)
       : this.formData.quarterlyAssessmentHPS;
 
-    const totalQA = !isNaN(quarterlyAssessmentHPSNumber)
+    let totalQA = !isNaN(quarterlyAssessmentHPSNumber)
       ? ((rawScore / quarterlyAssessmentHPSNumber) * (this.selectedSubject.qaPercentage / 100) * 100)
       : undefined;
+
+    if (!isNaN(totalQA)) {
+      totalQA = parseFloat(totalQA.toFixed(2));
+    }
 
     student.totalQuarterlyAssessmentWS = totalQA;
   });
 }
+
 
 
 

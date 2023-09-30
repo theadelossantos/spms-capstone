@@ -1029,3 +1029,33 @@ class HPSByQuarterListView(ListAPIView):
         quarter_id = self.kwargs['quarter_id'] 
         queryset = HpsScores.objects.filter(quarter=quarter_id)
         return queryset
+    
+class GradesByParams(ListAPIView):
+    serializer_class = StudentGradesSerializer
+
+    def get_queryset(self):
+        grade_level_id = self.kwargs['grade_level_id'] 
+        section_id = self.kwargs['section_id']
+        subject_id = self.kwargs['subject_id']
+        quarter_id = self.kwargs['quarter_id']
+
+        queryset = StudentGrade.objects.filter(
+            gradelevel=grade_level_id,
+            section=section_id,
+            subject=subject_id,
+            quarter=quarter_id
+        )
+
+        return queryset
+
+class StudentCountView(View):
+    def get(self, request):
+        student_count = Student.objects.count()
+        data = {'student_count': student_count}
+        return JsonResponse(data)
+
+class TeacherCountView(View):
+    def get(self, request):
+        teacher_count = Teacher.objects.count()
+        data = {'teacher_count': teacher_count}
+        return JsonResponse(data)

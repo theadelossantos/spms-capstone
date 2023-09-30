@@ -31,6 +31,7 @@ import { TeacherWeeklyprogressComponent } from './teacher/teacher-weeklyprogress
 import { TeacherSettingsComponent } from './teacher/teacher-settings/teacher-settings.component';
 import { AdminSettingsComponent } from './admin/admin-settings/admin-settings.component';
 import { PrivacyComponent } from './admin/admin-settings/privacy/privacy.component';
+import { TeacherAnalyticsComponent } from './teacher/teacher-analytics/teacher-analytics.component';
 
 
 @NgModule({
@@ -60,6 +61,7 @@ import { PrivacyComponent } from './admin/admin-settings/privacy/privacy.compone
     TeacherSettingsComponent,
     AdminSettingsComponent,
     PrivacyComponent,
+    TeacherAnalyticsComponent,
   ],
   imports: [
     BrowserModule,

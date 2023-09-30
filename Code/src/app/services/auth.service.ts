@@ -472,4 +472,15 @@ export class AuthService {
       catchError(this.handleError)
     );
   }
+
+  getStudentGradesByParams(gradeLevelId: number,sectionId: number,subjectId: number,quarterId: number): Observable<any> {
+    return this.http.get<any>(`${this.api_url}get-subjgrades/${gradeLevelId}/${sectionId}/${subjectId}/${quarterId}/`,this.httpOptions);
+  }
+
+  getStudentCount(): Observable<number> {
+    return this.http.get<number>(`${this.api_url}student-count/`, this.httpOptions);
+  }
+  getTeacherCount(): Observable<number> {
+    return this.http.get<number>(`${this.api_url}teacher-count/`, this.httpOptions);
+  }
 }

@@ -20,6 +20,7 @@ import { TeacherDashboardComponent } from './teacher/teacher-dashboard/teacher-d
 import { AttendanceComponent } from './teacher/attendance/attendance.component';
 import { TeacherWeeklyprogressComponent } from './teacher/teacher-weeklyprogress/teacher-weeklyprogress.component';
 import { TeacherGradesComponent } from './teacher/teacher-grades/teacher-grades.component';
+import { TeacherAnalyticsComponent } from './teacher/teacher-analytics/teacher-analytics.component';
 
 const routes: Routes = [
  {
@@ -55,7 +56,12 @@ const routes: Routes = [
     {
       path: 'settings',
       loadChildren:() => import('./teacher/teacher-settings/teacher-settings.module').then(m => m.TeacherSettingsModule)
-    }
+    },
+    {
+      path: 'analytics',
+      component: TeacherAnalyticsComponent,
+    },
+
   ]
  },
  {

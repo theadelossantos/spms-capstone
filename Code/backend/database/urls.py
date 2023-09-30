@@ -65,6 +65,9 @@ urlpatterns = [
     path('student-grades/by-quarter/<int:quarter_id>/', StudentGradeByQuarterListView.as_view(), name='studentgrade-by-quarter'),
     path('hps/by-quarter/<int:quarter_id>/', HPSByQuarterListView.as_view(), name='hps-by-quarter'),
     path('admin/profile/', AdminProfileView.as_view(), name='admin-profile'),
+    path('get-subjgrades/<int:grade_level_id>/<int:section_id>/<int:subject_id>/<int:quarter_id>/',views.GradesByParams.as_view(),name='grades-by-params'),
+    path('student-count/', StudentCountView.as_view(), name='student_count'),
+    path('teacher-count/', TeacherCountView.as_view(), name='student_count'),
 
 
 ]

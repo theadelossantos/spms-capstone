@@ -17,3 +17,34 @@ a:hover{
 .links .active{
     text-decoration: underline;
 }
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+table, th, td {
+    border: 2px solid #000; 
+    text-align: center; 
+    font-size: 13px;
+}
+
+th {
+    background-color: #f2f2f2; 
+    font-size: 17px;
+}
+.student-names{
+    text-align: left;
+}
+.class-record{
+    font-weight: 700;
+}
+
+tr:hover{
+    background-color: rgb(225, 225, 235);
+}
+.tbl-headers{
+    justify-content: space-between;
+}
+.select-opt{
+    max-width: 200px;
+}

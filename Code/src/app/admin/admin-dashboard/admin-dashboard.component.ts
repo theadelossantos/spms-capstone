@@ -1,11 +1,13 @@
-import { Component, AfterViewInit } from '@angular/core';
+import { Component, AfterViewInit, OnInit } from '@angular/core';
+import { AuthService } from 'src/app/services/auth.service';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-admin-dashboard',
   templateUrl: './admin-dashboard.component.html',
   styleUrls: ['./admin-dashboard.component.css']
 })
-export class AdminDashboardComponent implements AfterViewInit {
+export class AdminDashboardComponent implements AfterViewInit, OnInit {
   currentDate: HTMLElement;
   prevNextIcon: NodeListOf<HTMLElement>;
   date: Date;
@@ -13,8 +15,22 @@ export class AdminDashboardComponent implements AfterViewInit {
   currMonth: number;
   months: string[];
   daysArray: { value: number; isActive: boolean }[] = [];
+  studentCount: any = {};
+  teacherCount: any = {};
+  constructor(private authService: AuthService, private cdr: ChangeDetectorRef) {}
 
-  constructor() {}
+  ngOnInit(): void {
+    this.authService.getStudentCount().subscribe(
+      count => {
+        this.studentCount = count;
+      }
+    )
+    this.authService.getTeacherCount().subscribe(
+      count => {
+        this.teacherCount = count;
+      }
+    )
+  }
 
   ngAfterViewInit() {
     this.currentDate = document.querySelector(".current-date") as HTMLElement;
@@ -44,6 +60,8 @@ export class AdminDashboardComponent implements AfterViewInit {
         this.renderCalendar();
       });
     });
+    this.cdr.detectChanges();
+
   }
 
   renderCalendar() {
@@ -67,5 +85,8 @@ export class AdminDashboardComponent implements AfterViewInit {
     }
 
     this.currentDate.innerText = `${this.months[this.currMonth]} ${this.currYear}`;
+    this.cdr.detectChanges();
+
   }
+  
 }
