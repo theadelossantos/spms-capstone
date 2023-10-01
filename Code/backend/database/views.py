@@ -1059,3 +1059,27 @@ class TeacherCountView(View):
         teacher_count = Teacher.objects.count()
         data = {'teacher_count': teacher_count}
         return JsonResponse(data)
+    
+class WeeklyProgressListCreateView(generics.ListCreateAPIView):
+    queryset = WeeklyProgress.objects.all()
+    serializer_class = WeeklyProgressSerializer
+
+class getWeeklyProgress(ListAPIView):
+    serializer_class = WeeklyProgressSerializer
+
+    def get_queryset(self):
+        student_id = self.kwargs['student_id']
+        grade_level_id = self.kwargs['grade_level_id'] 
+        section_id = self.kwargs['section_id']
+        subject_id = self.kwargs['subject_id']
+        quarter_id = self.kwargs['quarter_id']
+
+        queryset = WeeklyProgress.objects.filter(
+            student_id = student_id,
+            gradelvl_id=grade_level_id,
+            section_id=section_id,
+            subject_id=subject_id,
+            quarter_id=quarter_id
+        )
+
+        return queryset

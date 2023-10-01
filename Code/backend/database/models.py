@@ -209,3 +209,15 @@ class StudentGrade(models.Model):
 
     def __str__(self):
         return f" {self.student} in {self.subject}"
+
+class WeeklyProgress(models.Model):
+    student_id = models.ForeignKey(Student, on_delete=models.CASCADE)
+    dept_id = models.ForeignKey(Department, on_delete=models.CASCADE)
+    gradelvl_id = models.ForeignKey(GradeLevel, on_delete=models.CASCADE)
+    section_id = models.ForeignKey(Section, on_delete=models.CASCADE)
+    subject_id = models.ForeignKey(Subject, on_delete=models.CASCADE)
+    quarter_id = models.ForeignKey(Quarter, on_delete=models.CASCADE)
+    task_name = models.CharField(max_length=50)
+    task_score = models.CharField(max_length=50)
+    task_status = models.CharField(max_length=50)
+

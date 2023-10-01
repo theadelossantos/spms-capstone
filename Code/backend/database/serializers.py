@@ -254,6 +254,11 @@ class HpsSerializer(serializers.ModelSerializer):
         model = HpsScores
         fields = '__all__'
 
+class WeeklyProgressSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = WeeklyProgress
+        fields = '__all__'
+
 class StudentGradesFilterSerializer(serializers.Serializer):
     gradelevel = serializers.IntegerField()
     section = serializers.IntegerField()

@@ -483,4 +483,10 @@ export class AuthService {
   getTeacherCount(): Observable<number> {
     return this.http.get<number>(`${this.api_url}teacher-count/`, this.httpOptions);
   }
+  addWeeklyProgress(studentWeeklyProg:any): Observable<any> {
+    return this.http.post(`${this.api_url}add-weeklyprogress/`, studentWeeklyProg, this.httpOptions);
+  }
+  getStudentWeeklyProgress(studentId, gradeLevelId: number,sectionId: number,subjectId: number,quarterId: number): Observable<any> {
+    return this.http.get<any>(`${this.api_url}get-weeklyprog/${studentId}/${gradeLevelId}/${sectionId}/${subjectId}/${quarterId}/`,this.httpOptions);
+  }
 }

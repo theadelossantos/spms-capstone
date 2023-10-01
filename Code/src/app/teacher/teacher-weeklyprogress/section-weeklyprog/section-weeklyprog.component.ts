@@ -1,0 +1,232 @@
+import { Component } from '@angular/core';
+import { ActivatedRoute, ParamMap } from '@angular/router';
+import { AuthService } from 'src/app/services/auth.service';
+interface Student {
+  id: number;
+  fname: string;
+  lname: string;
+}
+interface Task {
+  activityName: string;
+  activityScore: string;
+  activityStatus: string;
+}
+@Component({
+  selector: 'app-section-weeklyprog',
+  templateUrl: './section-weeklyprog.component.html',
+  styleUrls: ['./section-weeklyprog.component.css']
+})
+export class SectionWeeklyprogComponent {
+
+  deptId: number;
+  gradeLevelId: number;
+  sectionId: number;
+  subjectId: number;
+  assignmentId: number;
+  subjectName: string;
+  gradeLevelName: string;
+  sectionName: string;
+  students: Student[] = [];
+  isSortingAZ: boolean = true;
+  studentExpansionMap: { [studentId: number]: boolean } = {};
+  studentTasks: { [studentId: number]: Task[] } = {};
+  selectedActivityStatus: string;
+  quarters: any[]=[]
+  selectedQuarter: number;
+
+  constructor(private route: ActivatedRoute, private authService: AuthService) {
+    this.students.forEach((student) => {
+      this.studentExpansionMap[student.id] = false;
+    });
+    this.students.forEach((student) => {
+      this.studentTasks[student.id] = [];
+    });
+  }
+
+  ngOnInit(): void {
+    this.route.paramMap.subscribe((params: ParamMap) => {
+      this.deptId = Number(params.get('deptId'));
+      this.gradeLevelId = Number(params.get('gradelvlId'));
+      this.sectionId = Number(params.get('sectionId'));
+      this.subjectId = Number(params.get('subjectId'));
+      this.assignmentId = Number(params.get('assignmentId'));
+      
+      console.log('Department:', this.deptId);
+      console.log('Grade Level:', this.gradeLevelId);
+      console.log('Section:', this.sectionId);
+      console.log('Subject ID:', this.subjectId);
+      console.log('Assignment ID:', this.assignmentId);
+
+    });
+    this.authService.getSubjectById(this.subjectId).subscribe(
+      (subjectData: any) => {
+        this.subjectName = subjectData.subjects[0].subject_name;
+      },
+      (error) => {
+        console.error('Error fetching subject name:', error);
+      }
+    );
+    this.authService.getGradeLevelById(this.gradeLevelId).subscribe(
+      (gradeLevelData: any) => {
+       this.gradeLevelName = gradeLevelData.gradelevelss[0].gradelvl;
+      },
+      (error) => {
+        console.error('Error fetching grade level name:', error);
+      }
+    );
+    this.authService.getSectionById(this.sectionId).subscribe(
+      (sectionData: any) => {
+        this.sectionName = sectionData.sections[0].section_name;
+      },
+      (error) => {
+        console.error('Error fetching section name:', error);
+      }
+    );
+    this.authService.filterStudents(this.deptId, this.gradeLevelId, this.sectionId).subscribe(
+      (studentsData: any) => {
+        this.students = studentsData.students.map((student: Student) => ({
+          ...student,
+          
+        }));
+        this.students.forEach((student) => {
+          this.studentExpansionMap[student.id] = false;
+          this.studentTasks[student.id] = [];
+
+        });
+        console.log(this.students);
+
+        this.authService.getQuarters().subscribe((quartersData) => {
+          this.quarters = quartersData;
+          console.log('quarters', this.quarters);
+  
+            if (this.quarters && this.quarters.length > 0) {
+            this.selectedQuarter = this.quarters[0].quarter_id;
+            console.log('Selected Quarter ID:', this.selectedQuarter);
+
+            this.students.forEach((student) => {
+              this.studentExpansionMap[student.id] = false;
+              this.studentTasks[student.id] = [];
+    
+              this.getWeeklyProgress(student.id);
+    
+            });
+            }
+            
+          },
+          (error) => {
+            console.error('Error fetching students:', error);
+          }
+        )
+    })
+  }
+  onQuarterChange(){
+    console.log('Selected Quarter ID:', this.selectedQuarter);
+
+    this.students.forEach((student) => {
+      this.studentExpansionMap[student.id] = false;
+      this.studentTasks[student.id] = [];
+
+      this.getWeeklyProgress(student.id);
+
+    });
+
+    if(this.selectedQuarter){
+      this.authService.filterStudents(this.deptId, this.gradeLevelId, this.sectionId).subscribe(
+        (studentsData: any) => {
+          this.students = studentsData.students.map((student: Student) => ({
+            ...student,
+            
+          }));
+          this.students.forEach((student) => {
+            this.studentExpansionMap[student.id] = false;
+            this.studentTasks[student.id] = [];
+          });
+          console.log(this.students);
+      })
+    }
+  }
+
+  toggleSortOrder() {
+    this.isSortingAZ = !this.isSortingAZ; 
+  
+    if (this.isSortingAZ) {
+      this.students.sort((a, b) => {
+        return a.lname.localeCompare(b.lname); 
+      });
+    } else {
+      this.students.sort((a, b) => {
+        return b.lname.localeCompare(a.lname); 
+      });
+    }
+  }
+  toggleStudentExpansion(studentId: number) {
+    this.studentExpansionMap[studentId] = !this.studentExpansionMap[studentId];
+  }
+  addTask(studentId: number) {
+    this.studentTasks[studentId].push({ activityName: '', activityScore: '', activityStatus: '' });
+    this.studentExpansionMap[studentId] = true;
+
+  }
+  removeTask(studentId: number, taskIndex: number) {
+    this.studentTasks[studentId].splice(taskIndex, 1);
+    this.studentExpansionMap[studentId] = true;
+  }
+  
+  saveTask(studentId: number) {
+    const tasks = this.studentTasks[studentId];
+  
+    for (const task of tasks) {
+      const taskData = {
+        student_id: studentId,
+        dept_id: this.deptId,
+        gradelvl_id: this.gradeLevelId,
+        section_id: this.sectionId,
+        subject_id: this.subjectId,
+        quarter_id: this.selectedQuarter,
+        task_name: task.activityName,
+        task_score: task.activityScore,
+        task_status: task.activityStatus,
+      };
+  
+      this.authService.addWeeklyProgress(taskData).subscribe(
+        (response: any) => {
+          console.log('Task saved successfully:', response);
+
+          this.students.forEach((student) => {
+              this.studentExpansionMap[student.id] = false;
+              this.studentTasks[student.id] = [];
+    
+              this.getWeeklyProgress(student.id);
+    
+            });
+            
+        },
+        (error) => {
+          console.error('Error Saving Task', error);
+        }
+      );
+    }
+  }
+  
+  getWeeklyProgress(studentId: number) {
+    this.authService.getStudentWeeklyProgress(studentId, this.gradeLevelId, this.sectionId, this.subjectId, this.selectedQuarter).subscribe(
+      (response: any) => {
+        const tasks: Task[] = response.map((item: any) => ({
+          activityName: item.task_name,
+          activityScore: item.task_score,
+          activityStatus: item.task_status,
+        }));
+  
+        this.studentTasks[studentId] = tasks;
+      },
+      (error) => {
+        console.error('Error fetching Weekly Progress:', error);
+      }
+    );
+  }
+  
+  
+  
+  
+
+}

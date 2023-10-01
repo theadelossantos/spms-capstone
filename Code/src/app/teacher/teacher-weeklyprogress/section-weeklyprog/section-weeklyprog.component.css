@@ -1,8 +1,21 @@
 *{
     font-family: 'Poppins', sans-serif;
 }
-.header-text{
-    font-weight: 700;
+
+a{
+    color: #000;
+    margin-right: 3px;
+    text-decoration: none;
+}
+a:hover{
+    text-decoration: underline;
+}
+.next{
+    margin-right: 3px;
+}
+
+.links .active{
+    text-decoration: underline;
 }
 .classes-container{
     margin-top: 20px;
@@ -13,10 +26,6 @@
     cursor: pointer;
 
 }
-.next{
-    margin-right: 3px;
-}
-
 .data-container{
     display: flex;
     align-items: center;

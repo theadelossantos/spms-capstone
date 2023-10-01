@@ -47,7 +47,7 @@ const routes: Routes = [
     },
     {
       path: 'weeklyprog',
-      component: TeacherWeeklyprogressComponent,
+      loadChildren:() => import ('./teacher/teacher-weeklyprogress/teacher-weeklyprog.module').then(m => m.TeacherWeeklyprogModule)
     },
     {
       path: 'grades',
