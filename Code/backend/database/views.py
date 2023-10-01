@@ -22,7 +22,7 @@ from django.views import View
 from django.db import transaction
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.generics import ListAPIView, RetrieveUpdateAPIView
+from rest_framework.generics import ListAPIView, RetrieveUpdateAPIView,UpdateAPIView
 
 
 class AddStudentView(APIView):
@@ -1083,3 +1083,50 @@ class getWeeklyProgress(ListAPIView):
         )
 
         return queryset
+
+class WeeklyProgressBatchUpdateView(generics.UpdateAPIView):
+    serializer_class = WeeklyProgressSerializer
+    permission_classes = [permissions.AllowAny]
+
+    def update(self, request, *args, **kwargs):
+        data = request.data
+
+        for record_data in data:
+            if isinstance(record_data, dict):
+                weeklyprog_id = record_data.get('id')
+                subject_id = record_data.get('subject_id')
+                gradelevel_id = record_data.get('gradelvl_id')
+                section_id = record_data.get('section_id')
+                quarter_id = record_data.get('quarter_id')
+
+                try:
+                    student_weeklyprog = WeeklyProgress.objects.get(
+                        id=weeklyprog_id,
+                        subject_id=subject_id,
+                        gradelvl_id=gradelevel_id,
+                        section_id=section_id,
+                        quarter_id=quarter_id
+                    )
+
+                    serializer = WeeklyProgressSerializer(student_weeklyprog, data=record_data, partial=True)
+
+                    if serializer.is_valid():
+                        serializer.save()
+                    else:
+                        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+                except StudentGrade.DoesNotExist:
+                    return Response({'detail': 'Record not found.'}, status=status.HTTP_404_NOT_FOUND)
+            else:
+                return Response({'detail': 'Invalid data format.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response({'detail': 'Batch update successful.'}, status=status.HTTP_200_OK)
+
+class RemoveTaskView(generics.DestroyAPIView):
+    queryset = WeeklyProgress.objects.all()
+    serializer_class = WeeklyProgressSerializer
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        instance.delete()
+        return Response({'message': 'Task removed successfully'}, status=status.HTTP_204_NO_CONTENT)

@@ -37,9 +37,9 @@
       </div>
       <div class="student-details" *ngIf="studentExpansionMap[student.id]">
         <div class="task-row d-flex mb-2" *ngFor="let task of studentTasks[student.id]; let i = index">
-          <input class="form-control mr-2" type="text" [(ngModel)]="task.activityName" placeholder="Task Name">
-          <input class="form-control mr-2" type="text" [(ngModel)]="task.activityScore" placeholder="Task Score" >
-          <select class="form-select mr-2" [(ngModel)]="task.activityStatus">
+          <input class="form-control mr-2" type="text" [(ngModel)]="task.task_name" placeholder="Task Name">
+          <input class="form-control mr-2" type="text" [(ngModel)]="task.task_score" placeholder="Task Score" >
+          <select class="form-select mr-2" [(ngModel)]="task.task_status">
             <option value ="" selected disabled>Status</option>
             <option value="Completed">Completed</option>
             <option value="Missing">Missing</option>

@@ -489,4 +489,12 @@ export class AuthService {
   getStudentWeeklyProgress(studentId, gradeLevelId: number,sectionId: number,subjectId: number,quarterId: number): Observable<any> {
     return this.http.get<any>(`${this.api_url}get-weeklyprog/${studentId}/${gradeLevelId}/${sectionId}/${subjectId}/${quarterId}/`,this.httpOptions);
   }
+  updateWeeklyProgress(updatedTasks:any): Observable<any> {
+    return this.http.put<any>(`${this.api_url}weekly-prog/batch-update/`, updatedTasks, this.httpOptions);
+  }
+  
+  removeTask(taskId: number): Observable<any> {
+    return this.http.delete(`${this.api_url}remove-task/${taskId}/`, this.httpOptions);
+
+  }
 }

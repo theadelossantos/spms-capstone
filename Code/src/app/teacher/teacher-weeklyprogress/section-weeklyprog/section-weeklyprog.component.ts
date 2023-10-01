@@ -7,9 +7,16 @@ interface Student {
   lname: string;
 }
 interface Task {
-  activityName: string;
-  activityScore: string;
-  activityStatus: string;
+  id: number;
+  student_id: number;
+  dept_id: number;
+  gradelvl_id: number;
+  section_id: number;
+  subject_id: number;
+  quarter_id: number;
+  task_name: string;
+  task_score: string;
+  task_status: string;
 }
 @Component({
   selector: 'app-section-weeklyprog',
@@ -163,58 +170,90 @@ export class SectionWeeklyprogComponent {
     this.studentExpansionMap[studentId] = !this.studentExpansionMap[studentId];
   }
   addTask(studentId: number) {
-    this.studentTasks[studentId].push({ activityName: '', activityScore: '', activityStatus: '' });
+    this.studentTasks[studentId].push({id: null, student_id: studentId, dept_id: this.deptId, gradelvl_id: this.gradeLevelId, section_id: this.sectionId, subject_id: this.subjectId, quarter_id: this.selectedQuarter, task_name: '', task_score: '', task_status: '' });
     this.studentExpansionMap[studentId] = true;
-
   }
   removeTask(studentId: number, taskIndex: number) {
+    const taskToRemove = this.studentTasks[studentId][taskIndex];
     this.studentTasks[studentId].splice(taskIndex, 1);
     this.studentExpansionMap[studentId] = true;
+
+    this.authService.removeTask(taskToRemove.id).subscribe(
+      (response: any) => {
+        this.getWeeklyProgress(studentId);
+      },
+      (error) => {
+        console.error('Error removing task from the database', error);
+
+      }
+    )
   }
   
   saveTask(studentId: number) {
     const tasks = this.studentTasks[studentId];
+    const updatedTasks: Task[] = [];
   
     for (const task of tasks) {
-      const taskData = {
+      const taskData: Task = {
+        id: task.id,
         student_id: studentId,
         dept_id: this.deptId,
         gradelvl_id: this.gradeLevelId,
         section_id: this.sectionId,
         subject_id: this.subjectId,
         quarter_id: this.selectedQuarter,
-        task_name: task.activityName,
-        task_score: task.activityScore,
-        task_status: task.activityStatus,
+        task_name: task.task_name,
+        task_score: task.task_score,
+        task_status: task.task_status,
       };
   
-      this.authService.addWeeklyProgress(taskData).subscribe(
+      if (task.id) {
+        updatedTasks.push(taskData);
+      } else {
+        // Add new task individually
+        this.authService.addWeeklyProgress(taskData).subscribe(
+          (response: any) => {
+            console.log('Task added successfully:', response);
+            // Optionally refresh the data here
+            this.getWeeklyProgress(studentId);
+          },
+          (error) => {
+            console.error('Error adding task', error);
+          }
+        );
+      }
+    }
+  
+    if (updatedTasks.length > 0) {
+      // Update existing tasks
+      this.authService.updateWeeklyProgress(updatedTasks).subscribe(
         (response: any) => {
-          console.log('Task saved successfully:', response);
-
+          console.log('Tasks updated successfully:', response);
+  
           this.students.forEach((student) => {
-              this.studentExpansionMap[student.id] = false;
-              this.studentTasks[student.id] = [];
-    
-              this.getWeeklyProgress(student.id);
-    
-            });
-            
+            this.studentExpansionMap[student.id] = false;
+            this.studentTasks[student.id] = [];
+  
+            this.getWeeklyProgress(student.id);
+          });
         },
         (error) => {
-          console.error('Error Saving Task', error);
+          console.error('Error updating tasks', error);
         }
       );
     }
   }
   
+  
+  
   getWeeklyProgress(studentId: number) {
     this.authService.getStudentWeeklyProgress(studentId, this.gradeLevelId, this.sectionId, this.subjectId, this.selectedQuarter).subscribe(
       (response: any) => {
         const tasks: Task[] = response.map((item: any) => ({
-          activityName: item.task_name,
-          activityScore: item.task_score,
-          activityStatus: item.task_status,
+          id: item.id,
+          task_name: item.task_name,
+          task_score: item.task_score,
+          task_status: item.task_status,
         }));
   
         this.studentTasks[studentId] = tasks;
