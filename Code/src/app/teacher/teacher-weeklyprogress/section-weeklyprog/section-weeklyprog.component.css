@@ -18,7 +18,7 @@ a:hover{
     text-decoration: underline;
 }
 .classes-container{
-    margin-top: 20px;
+    margin-top: 10px;
     background-color: #f0f3f5;
     padding: 15px;
     border-radius: 10px;
@@ -30,4 +30,10 @@ a:hover{
     display: flex;
     align-items: center;
     justify-content: space-between;
+}
+.sort-button:hover{
+    text-decoration: underline;
+}
+.learners-names{
+    font-weight: 700;
 }

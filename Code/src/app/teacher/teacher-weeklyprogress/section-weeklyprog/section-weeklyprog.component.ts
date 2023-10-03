@@ -105,6 +105,7 @@ export class SectionWeeklyprogComponent {
 
         });
         console.log(this.students);
+        this.sortStudents();
 
         this.authService.getQuarters().subscribe((quartersData) => {
           this.quarters = quartersData;
@@ -167,6 +168,17 @@ export class SectionWeeklyprogComponent {
     } else {
       this.students.sort((a, b) => {
         return b.lname.localeCompare(a.lname); 
+      });
+    }
+  }
+  private sortStudents() {
+    if (this.isSortingAZ) {
+      this.students.sort((a, b) => {
+        return a.lname.localeCompare(b.lname);
+      });
+    } else {
+      this.students.sort((a, b) => {
+        return b.lname.localeCompare(a.lname);
       });
     }
   }

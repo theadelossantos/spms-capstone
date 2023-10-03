@@ -3,7 +3,7 @@
     <p class="next">></p>
     <a [routerLink]="['/teacher/grades/section-grades', deptId, gradeLevelId, sectionId, subjectId, assignmentId]">{{gradeLevelName}} - {{ sectionName }} - {{subjectName}}</a> 
     <p class="next">></p>
-    <a class="active">Summary of Quarterly Grades</a>
+    <a class="active" [routerLink]="['/teacher/grades/summary', deptId, gradeLevelId, sectionId, subjectId, assignmentId]"><b>Summary of Quarterly Grades</b></a>
 </div>
 <div class="tbl-headers d-flex">
     <div class="buttons">
@@ -29,7 +29,7 @@
     </tr>
     <tr>
         <th>No.</th>
-        <th>LEARNER'S NAMES</th>
+        <th>LEARNERS' NAMES</th>
         <th *ngFor="let subject of subjects">{{subject.subject_name}}</th>
         <th>MAPEH</th>
         <th>AVERAGE</th>

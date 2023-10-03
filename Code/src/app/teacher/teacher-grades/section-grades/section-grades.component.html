@@ -1,7 +1,7 @@
 <div class="links d-flex">
   <a class="classes" [routerLink]="['/teacher/grades']">Classes </a>
   <p class="next">></p>
-  <a class="active">{{ gradeLevelName}} - {{ sectionName }} - {{subjectName}}</a>
+  <a class="active" [routerLink]="['/teacher/grades/section-grades', deptId, gradeLevelId, sectionId, subjectId, assignmentId]"><b>{{ gradeLevelName}} - {{ sectionName }} - {{subjectName}}</b></a>
   <p class="next">></p>
   <a class="summary" [routerLink]="['/teacher/grades/summary', deptId, gradeLevelId, sectionId, subjectId, assignmentId]">Summary of Quarterly Grades</a>
 
@@ -46,7 +46,7 @@
       </tr>
       <tr>
         <th>No.</th>
-        <th>LEARNER'S NAMES</th>
+        <th>LEARNERS' NAMES</th>
         <th colspan="13">WRITTEN WORKS ({{ calculationWWPercentage  }}%)</th>
         <th colspan="13">PERFORMANCE TASKS ({{ calculationPTPercentage }}%)</th>
         <th colspan="3">QUARTERLY ASSESSMENT({{ calculationQAPercentage }}%)</th>
