@@ -72,6 +72,7 @@ urlpatterns = [
     path('get-weeklyprog/<int:student_id>/<int:grade_level_id>/<int:section_id>/<int:subject_id>/<int:quarter_id>/',views.getWeeklyProgress.as_view(),name='grades-by-params'),
     path('weekly-prog/batch-update/', WeeklyProgressBatchUpdateView.as_view(), name='studentgrade-batch-update'),
     path('remove-task/<int:pk>/', views.RemoveTaskView.as_view(), name='remove-task'),
+    path('filter-weekly-progress/', views.filter_weekly_progress, name='filter_weekly_progress'),
 
 
 

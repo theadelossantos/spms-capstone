@@ -23,6 +23,8 @@ from django.db import transaction
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.generics import ListAPIView, RetrieveUpdateAPIView,UpdateAPIView
+from datetime import date, timedelta
+from datetime import datetime
 
 
 class AddStudentView(APIView):
@@ -1073,6 +1075,7 @@ class getWeeklyProgress(ListAPIView):
         section_id = self.kwargs['section_id']
         subject_id = self.kwargs['subject_id']
         quarter_id = self.kwargs['quarter_id']
+        selected_month = self.request.query_params.get('month', None)
 
         queryset = WeeklyProgress.objects.filter(
             student_id = student_id,
@@ -1081,6 +1084,9 @@ class getWeeklyProgress(ListAPIView):
             subject_id=subject_id,
             quarter_id=quarter_id
         )
+
+        if selected_month and selected_month != 'This Week':
+            queryset = queryset.filter(input_date__month=datetime.strptime(selected_month, "%B").month)
 
         return queryset
 
@@ -1130,3 +1136,32 @@ class RemoveTaskView(generics.DestroyAPIView):
         instance = self.get_object()
         instance.delete()
         return Response({'message': 'Task removed successfully'}, status=status.HTTP_204_NO_CONTENT)
+
+def filter_weekly_progress(request):
+    selected_range = request.GET.get("selected_range")
+
+    today = date.today()
+    if selected_range == "This week":
+        start_date = today - timedelta(days=today.weekday()) 
+        end_date = today
+    elif selected_range == "Last Week":
+        start_date = today - timedelta(days=today.weekday() + 7)  
+        end_date = today - timedelta(days=today.weekday() + 1)  
+    elif selected_range == "Last Month":
+        start_date = today.replace(day=1, month=today.month - 1)
+        end_date = today.replace(day=1) - timedelta(days=1)
+    elif selected_range == "Last 3 months":
+        start_date = today.replace(day=1, month=today.month - 3)
+        end_date = today
+    else:
+        start_date = today - timedelta(days=today.weekday())
+        end_date = today
+
+    weekly_progress = WeeklyProgress.objects.filter(
+        input_date__range=(start_date, end_date)
+    )
+
+
+    serialized_data = WeeklyProgressSerializer(weekly_progress)
+
+    return JsonResponse({"data": serialized_data})

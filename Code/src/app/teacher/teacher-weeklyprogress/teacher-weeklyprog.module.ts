@@ -5,6 +5,7 @@ import { TeacherWeeklyprogRoutingModule } from './teacher-weeklyprog-routing.mod
 import { SectionWeeklyprogComponent } from './section-weeklyprog/section-weeklyprog.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { DatePipe } from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     FormsModule, 
     ReactiveFormsModule,
     NgbModule
-
-  ]
+  ],
+  providers: [DatePipe],
 })
 export class TeacherWeeklyprogModule { }

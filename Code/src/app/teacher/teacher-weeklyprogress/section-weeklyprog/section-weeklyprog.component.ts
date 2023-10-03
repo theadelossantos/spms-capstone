@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
+import { DatePipe } from '@angular/common';
+
 interface Student {
   id: number;
   fname: string;
@@ -17,6 +19,7 @@ interface Task {
   task_name: string;
   task_score: string;
   task_status: string;
+  input_date: string;
 }
 @Component({
   selector: 'app-section-weeklyprog',
@@ -40,8 +43,9 @@ export class SectionWeeklyprogComponent {
   selectedActivityStatus: string;
   quarters: any[]=[]
   selectedQuarter: number;
-
-  constructor(private route: ActivatedRoute, private authService: AuthService) {
+  selectedMonth: string = 'This Week'; 
+  filteredTasks: Task[] = [];
+  constructor(private route: ActivatedRoute, private authService: AuthService, private datePipe: DatePipe) {
     this.students.forEach((student) => {
       this.studentExpansionMap[student.id] = false;
     });
@@ -170,7 +174,7 @@ export class SectionWeeklyprogComponent {
     this.studentExpansionMap[studentId] = !this.studentExpansionMap[studentId];
   }
   addTask(studentId: number) {
-    this.studentTasks[studentId].push({id: null, student_id: studentId, dept_id: this.deptId, gradelvl_id: this.gradeLevelId, section_id: this.sectionId, subject_id: this.subjectId, quarter_id: this.selectedQuarter, task_name: '', task_score: '', task_status: '' });
+    this.studentTasks[studentId].push({id: null, student_id: studentId, dept_id: this.deptId, gradelvl_id: this.gradeLevelId, section_id: this.sectionId, subject_id: this.subjectId, quarter_id: this.selectedQuarter, task_name: '', task_score: '', task_status: '', input_date: this.datePipe.transform(new Date(), 'yyyy-MM-dd') });
     this.studentExpansionMap[studentId] = true;
   }
   removeTask(studentId: number, taskIndex: number) {
@@ -205,16 +209,15 @@ export class SectionWeeklyprogComponent {
         task_name: task.task_name,
         task_score: task.task_score,
         task_status: task.task_status,
+        input_date: this.datePipe.transform(new Date(), 'yyyy-MM-dd')
       };
   
       if (task.id) {
         updatedTasks.push(taskData);
       } else {
-        // Add new task individually
         this.authService.addWeeklyProgress(taskData).subscribe(
           (response: any) => {
             console.log('Task added successfully:', response);
-            // Optionally refresh the data here
             this.getWeeklyProgress(studentId);
           },
           (error) => {
@@ -225,7 +228,6 @@ export class SectionWeeklyprogComponent {
     }
   
     if (updatedTasks.length > 0) {
-      // Update existing tasks
       this.authService.updateWeeklyProgress(updatedTasks).subscribe(
         (response: any) => {
           console.log('Tasks updated successfully:', response);
@@ -243,20 +245,27 @@ export class SectionWeeklyprogComponent {
       );
     }
   }
-  
-  
+
+  filterByMonth() {
+    this.students.forEach((student) => {
+      this.studentTasks[student.id] = [];
+      this.getWeeklyProgress(student.id);
+    });
+  }
   
   getWeeklyProgress(studentId: number) {
-    this.authService.getStudentWeeklyProgress(studentId, this.gradeLevelId, this.sectionId, this.subjectId, this.selectedQuarter).subscribe(
+    this.authService.getStudentWeeklyProgress(studentId, this.gradeLevelId, this.sectionId, this.subjectId, this.selectedQuarter, this.selectedMonth).subscribe(
       (response: any) => {
         const tasks: Task[] = response.map((item: any) => ({
           id: item.id,
           task_name: item.task_name,
           task_score: item.task_score,
           task_status: item.task_status,
+          input_date: item.input_date
         }));
-  
         this.studentTasks[studentId] = tasks;
+        console.log(this.studentTasks[studentId])
+
       },
       (error) => {
         console.error('Error fetching Weekly Progress:', error);

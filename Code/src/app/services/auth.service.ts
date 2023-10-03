@@ -1,6 +1,6 @@
 import { Router } from '@angular/router';
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpErrorResponse} from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpErrorResponse,  HttpParams } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, filter } from 'rxjs/operators';
 import { CookieService } from 'ngx-cookie-service';
@@ -486,8 +486,13 @@ export class AuthService {
   addWeeklyProgress(studentWeeklyProg:any): Observable<any> {
     return this.http.post(`${this.api_url}add-weeklyprogress/`, studentWeeklyProg, this.httpOptions);
   }
-  getStudentWeeklyProgress(studentId, gradeLevelId: number,sectionId: number,subjectId: number,quarterId: number): Observable<any> {
-    return this.http.get<any>(`${this.api_url}get-weeklyprog/${studentId}/${gradeLevelId}/${sectionId}/${subjectId}/${quarterId}/`,this.httpOptions);
+  getStudentWeeklyProgress(studentId, gradeLevelId: number,sectionId: number,subjectId: number,quarterId: number,  month?: string): Observable<any> {
+    let url = `${this.api_url}get-weeklyprog/${studentId}/${gradeLevelId}/${sectionId}/${subjectId}/${quarterId}/`;
+    if (month) {
+      url += `?month=${month}`;
+    }
+  
+    return this.http.get<any>(url, this.httpOptions);
   }
   updateWeeklyProgress(updatedTasks:any): Observable<any> {
     return this.http.put<any>(`${this.api_url}weekly-prog/batch-update/`, updatedTasks, this.httpOptions);
@@ -495,6 +500,16 @@ export class AuthService {
   
   removeTask(taskId: number): Observable<any> {
     return this.http.delete(`${this.api_url}remove-task/${taskId}/`, this.httpOptions);
-
   }
+
+  filterWeeklyProgressByDate(selectedRange: string): Observable<any> {
+    const params = new HttpParams().set('selected_range', selectedRange);
+
+    return this.http.get<any>(
+      `${this.api_url}filter-weekly-progress/`,
+      { params, headers: this.httpOptions.headers }
+    );
+  }
+
+
 }

@@ -220,4 +220,5 @@ class WeeklyProgress(models.Model):
     task_name = models.CharField(max_length=50)
     task_score = models.CharField(max_length=50)
     task_status = models.CharField(max_length=50)
+    input_date = models.DateField()
 
