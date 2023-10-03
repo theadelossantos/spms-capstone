@@ -31,7 +31,7 @@
         <th>No.</th>
         <th>LEARNERS' NAMES</th>
         <th *ngFor="let subject of subjects">{{subject.subject_name}}</th>
-        <th>MAPEH</th>
+        <!-- <th>MAPEH</th> -->
         <th>AVERAGE</th>
     </tr>
     <tbody>
@@ -39,7 +39,7 @@
             <td>{{ i + 1}}</td>
             <td class="student-names">{{student.lname}}, {{student.fname}}</td>
             <td *ngFor="let subject of subjects ">{{ student[subject.subject_id] || '-' }}</td>
-            <td>mapeh grade</td>
+            <!-- <td>mapeh grade</td> -->
             <td [style.background-color]="student.backgroundColor"><b>{{ student.average }}</b></td> 
         </tr>
     </tbody>

@@ -1,3 +1,81 @@
-<div class="container-header">
-    <h1 class="text-header">Weekly Progress</h1>
+
+
+<div class="select-container d-flex justify-content-between">
+        <div class="container-header">
+            <h1 class="text-header">Weekly Progress</h1>
+        </div>
+        <select class="form-select select-opt mb-2" id="dateRangeSelect" [(ngModel)]="selectedMonth" (change)="filterByMonth()">
+            <option value="This Week">This Week</option>
+            <option value="January">January</option>
+            <option value="February">February</option>
+            <option value="March">March</option>
+            <option value="April">April</option>
+            <option value="May">May</option>
+            <option value="June">June</option>
+            <option value="July">July</option>
+            <option value="August">August</option>
+            <option value="September">September</option>
+            <option value="October">October</option>
+            <option value="November">November</option>
+            <option value="December">December</option>
+          </select>
+
+
+</div>
+
+
+<div class="classes-container" *ngFor="let subject of subjects; let i = index">
+    <div class="data-container">
+        <div class="secion-subject" (click)="toggleSubject(i)">
+            <h5>
+                {{subject.subject_name}}
+                <span *ngIf="subject.activities && subject.activities.length > 0">
+                    <span class="failed-act"*ngIf="countFailedActivities(subject.activities) > 0">
+                        {{ countFailedActivities(subject.activities) }}
+                    </span>
+                </span>
+            </h5>
+            
+            
+        </div>
+        <div class="angle-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-right" viewBox="0 0 16 16" *ngIf="!expandedState[i]">
+                <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
+            </svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16" *ngIf="expandedState[i]">
+                <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+            </svg>
+        </div>
+    </div>
+
+    <div class="subject-data" *ngIf="expandedState[i]">
+        <table class="mt-2">
+            <tr >
+                <th></th>
+                <th><b>Tasks</b></th>
+                <th><b>Score</b></th>
+                <th><b>Status</b></th>
+            </tr>
+
+                <tr *ngFor="let activity of subject.activities">
+                    <td>
+                        <ng-container *ngIf="activity.task_status === 'Completed'">
+                            <i class="bi bi-check-circle-fill text-success"></i> 
+                        </ng-container>
+                        <ng-container *ngIf="activity.task_status === 'Missing'">
+                            <i class="bi bi-question-circle-fill text-warning"></i> 
+                        </ng-container>
+                        <ng-container *ngIf="activity.task_status === 'Failed'">
+                            <i class="bi bi-x-circle-fill text-danger"></i>
+                        </ng-container>
+                    </td>
+                    <td>{{ activity.task_name }}</td>
+                    <td>{{ activity.task_score }} </td>
+                    <td>{{ activity.task_status }}</td>
+                </tr>
+        </table>
+        <div *ngIf="!subject.activities || subject.activities.length === 0">
+            No weekly progress for this subject.
+        </div>
+    </div>
 </div>
