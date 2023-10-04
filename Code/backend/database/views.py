@@ -1165,3 +1165,19 @@ def filter_weekly_progress(request):
     serialized_data = WeeklyProgressSerializer(weekly_progress)
 
     return JsonResponse({"data": serialized_data})
+
+class StudentGradesListView(ListAPIView):
+    serializer_class = StudentGradesSerializer
+
+    def get_queryset(self):
+        student_id = self.kwargs['student_id']
+        subject_id = self.kwargs['subject_id']
+        quarter_id = self.kwargs['quarter_id']
+
+        queryset = StudentGrade.objects.filter(
+            student=student_id,
+            subject=subject_id,
+            quarter=quarter_id
+        )
+
+        return queryset

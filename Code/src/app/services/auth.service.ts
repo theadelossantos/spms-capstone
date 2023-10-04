@@ -511,5 +511,9 @@ export class AuthService {
     );
   }
 
+  getStudentGrades(studentId: number, subjectId: number, quarterId:number): Observable<any> {
+    return this.http.get<any>(`${this.api_url}fetch-grades/${studentId}/${subjectId}/${quarterId}/`, this.httpOptions);
+  }
+
 
 }

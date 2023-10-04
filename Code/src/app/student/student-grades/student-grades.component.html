@@ -1,1 +1,37 @@
-<p>student-grades works!</p>
+<div class="container-header">
+    <h1 class="text-header">Grades</h1>
+</div>
+
+<table>
+    <tr>
+        <td colspan="11"><h3 class="class-record">GRADES</h3></td>
+    </tr>
+    <tr>
+        <th>Learning Areas</th>
+        <th *ngFor="let quarter of quarters" class="quarter">{{quarter.quarter_name}}</th>
+        <th>Final Grade</th>
+        <th>Remarks</th>
+
+    </tr>
+    <tbody>
+        <tr *ngFor="let subject of subjects; let i = index">
+            <td class="subject-names">{{subject.subject_name}}</td>
+            <td *ngFor="let quarterGrade of studentGrades[i]; let j = index" class="quarterly-grade">
+                {{ quarterGrade[0]?.quarterly_grade || '' }}
+            </td>     
+            <td><b>{{ getSubjectAverage(studentGrades[i]) }}</b></td>
+            <td><b>{{ getRemarks(generalAverage) }}</b></td>
+
+
+        </tr>
+        <tr>
+            <td class="subject-names"><b>General Average</b></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td colspan="2"><b>{{ generalAverage }}</b></td>
+
+        </tr>
+    </tbody>
+</table>
