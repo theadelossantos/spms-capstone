@@ -349,11 +349,12 @@ export class SectionGradesComponent {
               const ptScoreKey = `pt_score_${i}`;
               const qaScore = parseFloat(scoreData.qa_score)
               if (scoreData.hasOwnProperty(wwScoreKey)) {
-                studentToUpdate.ww_scores[i - 1] = parseFloat(scoreData[wwScoreKey]);
+                const wwScore = parseFloat(scoreData[wwScoreKey]);
+                studentToUpdate.ww_scores[i - 1] = isNaN(wwScore) ? 0 : wwScore;
               }
-
               if (scoreData.hasOwnProperty(ptScoreKey)) {
-                studentToUpdate.pt_scores[i - 1] = parseFloat(scoreData[ptScoreKey]);
+                const ptScore = parseFloat(scoreData[ptScoreKey]);
+                studentToUpdate.pt_scores[i - 1] = isNaN(ptScore) ? 0 : ptScore;              
               }
               if(!isNaN(qaScore)){
                 studentToUpdate.qa_score = qaScore;
@@ -878,16 +879,35 @@ submitForm() {
   };
   console.log('hps', hpsData)
 
+  this.authService.fetchHPSscores(hpsData).subscribe(
+    (existingHPSData) => {
+      if (existingHPSData && Array.isArray(existingHPSData) && existingHPSData.length > 0) {
+        const existingHPSRecord = existingHPSData[0];
+        const hpsId = existingHPSRecord.id; 
 
-
-  this.authService.addHPS(hpsData).subscribe(
-    (response) => {
-      console.log('HPS data added:', response);
-      this.saveAlert = true;
-
+        this.authService.updateHPS(hpsId, hpsData).subscribe(
+          (response) => {
+            console.log('HPS data updated:', response);
+            this.saveAlert = true;
+          },
+          (error) => {
+            console.error('Error updating HPS data:', error);
+          }
+        );
+      } else {
+        this.authService.addHPS(hpsData).subscribe(
+          (response) => {
+            console.log('HPS data added:', response);
+            this.saveAlert = true;
+          },
+          (error) => {
+            console.error('Error adding HPS data:', error);
+          }
+        );
+      }
     },
     (error) => {
-      console.error('Error adding HPS data:', error);
+      console.error('Error checking HPS data:', error);
     }
   );
 

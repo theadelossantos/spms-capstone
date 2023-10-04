@@ -1,0 +1,35 @@
+<div class="links d-flex">
+    <a class="classes" [routerLink]="['/teacher/analytics/analysis-reports']">Classes </a>
+    <p class="next">></p>
+    <a class="active"><b>{{ gradeLevelName}} - {{ sectionName }} - {{subjectName}}</b></a>
+</div>
+<select class="form-select shadow-none select-opt mb-2" [(ngModel)]="selectedQuarter" name="quarter" (ngModelChange)="onQuarterChange()">
+    <option *ngFor="let quarter of quarters" [value]="quarter.quarter_id">{{quarter.quarter_name}}</option>
+</select>
+<div class="containerr d-flex">
+    <div class="report-table w-100 mr-2 ">
+        <table class="mb-2">
+            <tr>
+                <th>ITEM NO.</th>
+                <th>No.of Correct Responses</th>
+                <th>Percentage of Correct Responses</th>
+            </tr>
+            <tbody>
+                <tr *ngFor="let item of generateItemNumbers(); let i = index">
+                    <td><b>{{item}}</b></td>
+                    <td>            
+                        <input
+                        type="text"
+                        class="form-control bg-none border-0 text-center"
+                        [(ngModel)] = "correctResponses[i]"
+                        name="correctPercentage"/>
+                    </td>
+                    <td>{{calculatePercentage(correctResponses[i])}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="analytics w-100">
+        <canvas id="donutChart"></canvas>
+    </div>
+</div>

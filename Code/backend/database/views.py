@@ -1015,6 +1015,10 @@ class HPSListCreateView(generics.ListCreateAPIView):
             return Response({'detail': 'This record already exists.'}, status=status.HTTP_400_BAD_REQUEST)
 
         return super().create(request, *args, **kwargs)
+    
+class HPSUpdateView(generics.UpdateAPIView):
+    queryset = HpsScores.objects.all()
+    serializer_class = HpsSerializer
 
 class StudentGradeByQuarterListView(ListAPIView):
     serializer_class = StudentGradesSerializer

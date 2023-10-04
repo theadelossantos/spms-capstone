@@ -62,6 +62,7 @@ urlpatterns = [
     path('quarters/', QuarterListCreateView.as_view(), name='quarter-list'),
     path('hps/', HPSListCreateView.as_view(), name='hps-list'),
     path('hps/filter/', views.HPSFilterView.as_view(), name='HPS-filter'),
+    path('hps/<int:pk>/', views.HPSUpdateView.as_view(), name='HPS-update'),
     path('student-grades/by-quarter/<int:quarter_id>/', StudentGradeByQuarterListView.as_view(), name='studentgrade-by-quarter'),
     path('hps/by-quarter/<int:quarter_id>/', HPSByQuarterListView.as_view(), name='hps-by-quarter'),
     path('admin/profile/', AdminProfileView.as_view(), name='admin-profile'),

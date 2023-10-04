@@ -27,7 +27,14 @@ export const navbarData: INavbarData[] = [
       routeLink: '/teacher/analytics',
       icon: 'fas fa-chart-line',
       label: 'Analytics',
-  },
+      expanded: false,
+      items: [
+        {
+          routeLink: '/teacher/analytics/analysis-reports',
+          label: 'Analysis Reports'
+        }
+      ]
+    },
     {
         routeLink: '/teacher/settings',
         icon: 'fa-solid fa-gears',

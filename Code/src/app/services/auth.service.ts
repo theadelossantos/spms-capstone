@@ -450,6 +450,9 @@ export class AuthService {
     );
   }
 
+  updateHPS(hpsId: number, hpsData: any): Observable<any> {
+    return this.http.put(`${this.api_url}hps/${hpsId}/`,hpsData,this.httpOptions);
+  }
 
   fetchStudentGrades(filters:any):Observable<any>{
     return this.http.post(`${this.api_url}student-grade/filter/`, filters, this.httpOptions);
@@ -458,6 +461,7 @@ export class AuthService {
   fetchHPSscores(filters:any):Observable<any>{
     return this.http.post(`${this.api_url}hps/filter/`, filters, this.httpOptions);
   }
+
   batchUpdateStudentGrades(studentGrades: any[]): Observable<any> {
     return this.http.put(`${this.api_url}student-grade/batch-update/`, studentGrades, this.httpOptions);
   }

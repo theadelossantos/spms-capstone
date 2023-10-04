@@ -222,3 +222,14 @@ class WeeklyProgress(models.Model):
     task_status = models.CharField(max_length=50)
     input_date = models.DateField()
 
+class Attendance(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    date = models.DateField()
+    is_present = models.BooleanField(default=True)
+    grade_level = models.ForeignKey(GradeLevel, on_delete=models.CASCADE)
+    section = models.ForeignKey(Section, on_delete=models.CASCADE)
+    subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ('student', 'date', 'grade_level', 'section', 'subject')
+
