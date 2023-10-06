@@ -1,7 +1,7 @@
-import { Component, AfterViewInit } from '@angular/core';
+import { Component, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
-import Chart from 'chart.js/auto';
+import { Chart } from 'chart.js/auto';
 
 @Component({
   selector: 'app-item-analysis',
@@ -9,6 +9,7 @@ import Chart from 'chart.js/auto';
   styleUrls: ['./item-analysis.component.css']
 })
 export class ItemAnalysisComponent implements AfterViewInit{
+  @ViewChild('donutChartCanvas', { static: false }) donutChartCanvas: ElementRef;
   deptId: number;
   gradeLevelId: number;
   sectionId: number;
@@ -29,12 +30,14 @@ export class ItemAnalysisComponent implements AfterViewInit{
   };
   selectedItemNumber: number | null = null;
   itemAnalysisData: any[] = [];
+  donutChart: Chart<'doughnut', number[], string> | undefined;
+  meanValue: number = 0;
 
   constructor(private route: ActivatedRoute, private authService: AuthService) {}
 
   ngAfterViewInit(): void {
     setTimeout(() => {
-      this.createDoughnutChart();
+      this.updateDonutChart();
     }, 100);
   }
 
@@ -86,7 +89,7 @@ export class ItemAnalysisComponent implements AfterViewInit{
         console.log('Selected Quarter ID:', this.selectedQuarter);
         this.fetchHps();
         this.getItemAnalysis()
-
+        this.updateDonutChart()
       }
 
       },
@@ -110,6 +113,9 @@ export class ItemAnalysisComponent implements AfterViewInit{
     if(this.selectedQuarter){
       this.fetchHps()
       this.getItemAnalysis()
+
+      this.updateDonutChart();
+
     }
     
   }
@@ -166,53 +172,76 @@ export class ItemAnalysisComponent implements AfterViewInit{
     }
     return Math.round((correctResponses / totalStudents) * 100);
   }
-  
-  categorizePercentage(percentage: number): string {
-    if (percentage >= 75) {
-      return 'Mastered';
-    } else if (percentage >= 50) {
-      return 'Below Master';
+  calculateTotalMean() {
+    if (this.totalStudents === 0) {
+      this.meanValue = 0;
     } else {
-      return 'Not Mastered';
+      const sumOfCorrectResponses = this.correctResponses
+        .map((val) => Number(val) || 0) 
+        .reduce((sum, val) => sum + val, 0);
+      console.log(sumOfCorrectResponses)
+      const mean = sumOfCorrectResponses / this.totalStudents;
+      this.meanValue = parseFloat(mean.toFixed(2));
+    
+    
+    }
+
+  }
+  
+  calculateMeanPercentage(): number {
+    if (this.formData.hps_qa_total_score === 0) {
+      return 0;
+    } else {
+      const meanPercentage = (this.meanValue / this.formData.hps_qa_total_score) * 100;
+      return parseFloat(meanPercentage.toFixed(2)); 
     }
   }
   
-
   
-  createDoughnutChart() {
-    const canvas: any = document.getElementById('donutChart');
-    const ctx = canvas.getContext('2d');
+  calculateItemCategories(correctResponses: number[]): number[] {
+    const categories = [0, 0, 0]; 
   
-    const masteredPercentage = this.calculateMean(
-      this.correctResponses.reduce((a, b) => a + b, 0),
-      this.totalStudents
-    );
-  
-    const categories = ['Mastered', 'Below Master', 'Not Mastered'];
-    const backgroundColors = ['green', 'blue', 'red'];
-    const labels = categories.slice(); 
-    const percentages = [masteredPercentage, 100 - masteredPercentage, 0];
-  
-    new Chart(ctx, {
-      type: 'doughnut',
-      data: {
-        labels: labels,
-        datasets: [
-          {
-            data: percentages,
-            backgroundColor: backgroundColors.concat('lightgray'), 
-          },
-        ],
-      },
-      options: {
-        responsive: true,
-        cutout: '60%',
-        animation: {
-          animateRotate: true,
-        },
-      },
-    });
+    for (const correctResponse of correctResponses) {
+      const percentage = this.calculatePercentage(correctResponse);
+      if (percentage >= 75) {
+        categories[0]++; 
+      } else if (percentage >= 50) {
+        categories[1]++; 
+      } else {
+        categories[2]++;
+      }
+    }
+    return categories;
+    
   }
+  
+  updateDonutChart() {
+    const itemCategories = this.calculateItemCategories(this.correctResponses);
+    console.log(itemCategories);
+    const donutChartCanvas = this.donutChartCanvas.nativeElement;
+  
+    if (donutChartCanvas) {
+      if (this.donutChart) {
+        this.donutChart.destroy();
+      }
+  
+      this.donutChart = new Chart(donutChartCanvas, {
+        type: 'doughnut',
+        data: {
+          labels: ['MASTERED', 'BELOW MASTERY', 'NOT MASTERED'],
+          datasets: [
+            {
+              data: itemCategories,
+              backgroundColor: ['#4ad12f', '#FFCE56', '#FF6384'],
+            },
+          ],
+        },
+      });
+    }
+  }
+  
+  
+  
 
   buildItemAnalysisData(selectedItemNumber: number): any[] {
   const itemAnalysisData: any[] = [];
@@ -291,7 +320,6 @@ saveItemAnalysisData() {
 }
 
 getItemAnalysis(){
-  console.log(this.selectedQuarter)
   this.authService.getItemAnalysisWithItemNumbers(this.gradeLevelId, this.sectionId, this.subjectId, this.selectedQuarter)
         .subscribe(
           (itemAnalysisData) => {
@@ -304,12 +332,17 @@ getItemAnalysis(){
             for (const item of itemAnalysisData) {
               item.id = item.id || null; 
             }
-            
+            this.updateDonutChart();
+
             this.itemAnalysisData = itemAnalysisData;
+
+            this.meanValue = Math.round(this.correctResponses.reduce((sum, val) => sum + val, 0) / this.totalStudents);
+
           },
           (error) => {
             console.error('Error fetching Item Analysis with Item Numbers:', error);
           }
         );
   }
+  
 }

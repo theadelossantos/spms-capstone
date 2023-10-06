@@ -7,27 +7,28 @@
     <option *ngFor="let quarter of quarters" [value]="quarter.quarter_id">{{quarter.quarter_name}}</option>
 </select>
 <div class="containerr d-flex">
-    <div class="report-table w-100 mr-2 ">
+    <div class="report-table mr-2 w-100">
         <table class="mb-2">
             <tr>
-                <th>ITEM NO.</th>
-                <th>No.of Correct Responses</th>
-                <th>Percentage of Correct Responses</th>
+                <th style="width: 20% !important;">ITEM NO.</th>
+                <th style="width: 20% !important;">No.of Correct Responses</th>
+                <th style="width: 60% !important;">Percentage of Correct Responses</th>
             </tr>
             <tbody>
                 <tr *ngFor="let item of generateItemNumbers(); let i = index">
-                    <td><b>{{item}}</b></td>
-                    <td>            
+                    <td style="width: 10% !important;"><b>{{item}}</b></td>
+                    <td style="width: 10% !important;">            
                         <input
                         type="text"
                         class="form-control bg-transparent border-0 text-center"
                         [(ngModel)] = "correctResponses[i]"
                         (click)="handleInputClick(i + 1)"
+                        (input)="updateDonutChart(); calculateTotalMean()"
                         name="correctPercentage"/>
                     </td>
-                    <td class="background"> 
-                        <div class="progress">
-                          <div [ngClass]="{'progress-bar bg-success bg-none text-light': calculateMean(correctResponses[i], totalStudents) >= 75, 'progress-bar bg-danger': calculateMean(correctResponses[i], totalStudents) <= 49, 'progress-bar bg-info text-light': calculateMean(correctResponses[i], totalStudents) <= 74 }" role="progressbar" [style.width.%]="calculatePercentage(correctResponses[i])">
+                    <td class="background" style="width: 60% !important;"> 
+                        <div class="progress text-light">
+                          <div [ngClass]="{'progress-bar bg-custom bg-none text-light': calculateMean(correctResponses[i], totalStudents) >= 75, 'progress-bar bg-danger': calculateMean(correctResponses[i], totalStudents) <= 49, 'progress-bar bg-mid text-light': calculateMean(correctResponses[i], totalStudents) <= 74 }" role="progressbar" [style.width.%]="calculatePercentage(correctResponses[i])">
                             {{ calculatePercentage(correctResponses[i]) }}%
                           </div>
                         </div>
@@ -35,13 +36,18 @@
  
                       
                 </tr>
-                <button class="btn btn-primary" (click)="saveItemAnalysisData()">Save Data</button>
-
             </tbody>
         </table>
+        <button class="btn btn-primary" (click)="saveItemAnalysisData()">Save Data</button>
 
     </div>
-    <div class="analytics w-25">
-        <canvas id="donutChart"></canvas>
+    <div class="analytics">
+        <canvas #donutChartCanvas id="donutChart"></canvas>
+        <div class="summary m-3 p-2">
+            <p><b>Total Students:</b> {{totalStudents}}</p>
+            <p><b>Highest Possible Score:</b> {{formData.hps_qa_total_score}}</p>
+            <p><b>Mean:</b> {{meanValue}} </p>
+            <p><b>Mean Percentage Score(MPS):</b> {{ calculateMeanPercentage() }}%</p>
+        </div>
     </div>
 </div>
