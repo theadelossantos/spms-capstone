@@ -237,6 +237,7 @@ class ItemAnalysis(models.Model):
     gradelvl_id = models.ForeignKey(GradeLevel, on_delete=models.CASCADE)
     section_id = models.ForeignKey(Section, on_delete=models.CASCADE)
     subject_id = models.ForeignKey(Subject, on_delete=models.CASCADE)
+    quarter_id = models.ForeignKey(Quarter, on_delete=models.CASCADE)
     correct_responses = models.IntegerField(default=0)
     percentage_correct = models.FloatField(default=0.0)
     item_number = models.IntegerField()

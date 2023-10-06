@@ -28,6 +28,7 @@ export class ItemAnalysisComponent implements AfterViewInit{
     hps_qa_total_score: 0, 
   };
   selectedItemNumber: number | null = null;
+  itemAnalysisData: any[] = [];
 
   constructor(private route: ActivatedRoute, private authService: AuthService) {}
 
@@ -84,7 +85,9 @@ export class ItemAnalysisComponent implements AfterViewInit{
         this.selectedQuarter = this.quarters[0].quarter_id;
         console.log('Selected Quarter ID:', this.selectedQuarter);
         this.fetchHps();
-        }
+        this.getItemAnalysis()
+
+      }
 
       },
       (error) => {
@@ -106,6 +109,7 @@ export class ItemAnalysisComponent implements AfterViewInit{
 
     if(this.selectedQuarter){
       this.fetchHps()
+      this.getItemAnalysis()
     }
     
   }
@@ -220,14 +224,30 @@ export class ItemAnalysisComponent implements AfterViewInit{
     const percentageCorrect = this.calculatePercentage(correctResponses);
     const itemNumber = itemNumbers[i];
 
-    const itemData = {
+    type ItemData = {
+      id?: number;
+      gradelvl_id: number;
+      section_id: number;
+      subject_id: number;
+      correct_responses: number;
+      percentage_correct: number;
+      item_number: number;
+      quarter_id: number;
+    };
+
+    const itemData: ItemData = {
       gradelvl_id: this.gradeLevelId,
       section_id: this.sectionId,
       subject_id: this.subjectId,
       correct_responses: correctResponses, 
       percentage_correct: percentageCorrect, 
       item_number: itemNumber,
+      quarter_id: this.selectedQuarter
     };
+
+    if (this.itemAnalysisData[i] && this.itemAnalysisData[i].id) {
+      itemData.id = this.itemAnalysisData[i].id;
+    }
 
     itemAnalysisData.push(itemData);
   }
@@ -235,24 +255,61 @@ export class ItemAnalysisComponent implements AfterViewInit{
   return itemAnalysisData;
 }
 
+
 saveItemAnalysisData() {
   const selectedItemNumber: number = this.selectedItemNumber;
   const itemAnalysisData = this.buildItemAnalysisData(selectedItemNumber);
+  const updateDataArray: any[] = [];
 
   console.log('correct responses', itemAnalysisData);
 
   for (const itemData of itemAnalysisData) {
-    this.authService.addItemAnalysis(itemData).subscribe(
+
+    if (itemData.id) {
+      updateDataArray.push(itemData);
+    } else {
+      this.authService.addItemAnalysis(itemData).subscribe(
+        (response) => {
+          console.log('New ItemAnalysis data added:', response);
+          this.getItemAnalysis(); 
+        },
+        (error) => {
+          console.error('Error adding New ItemAnalysis data:', error);
+        }
+      );
+    }
+    this.authService.updateItemAnalysis(updateDataArray).subscribe(
       (response) => {
-        console.log('ItemAnalysis data added:', response);
+        console.log('ItemAnalysis data updated:', response);
+        this.getItemAnalysis();
       },
       (error) => {
-        console.error('Error adding ItemAnalysis data:', error);
+        console.error('Error updating ItemAnalysis data:', error);
       }
     );
   }
 }
 
-  
-  
+getItemAnalysis(){
+  console.log(this.selectedQuarter)
+  this.authService.getItemAnalysisWithItemNumbers(this.gradeLevelId, this.sectionId, this.subjectId, this.selectedQuarter)
+        .subscribe(
+          (itemAnalysisData) => {
+            console.log('Item Analysis with Item Numbers:', itemAnalysisData);
+            this.correctResponses = new Array(itemAnalysisData.length);
+            for (let i = 0; i < itemAnalysisData.length; i++) {
+              this.correctResponses[i] = itemAnalysisData[i].correct_responses;
+            }
+
+            for (const item of itemAnalysisData) {
+              item.id = item.id || null; 
+            }
+            
+            this.itemAnalysisData = itemAnalysisData;
+          },
+          (error) => {
+            console.error('Error fetching Item Analysis with Item Numbers:', error);
+          }
+        );
+  }
 }

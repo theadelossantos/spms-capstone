@@ -76,6 +76,8 @@ urlpatterns = [
     path('filter-weekly-progress/', views.filter_weekly_progress, name='filter_weekly_progress'),
     path('fetch-grades/<int:student_id>/<int:subject_id>/<int:quarter_id>/',views.StudentGradesListView.as_view(),name='grades-by-params'),
     path('add-itemanalysis/', ItemAnalysisListCreateView.as_view(), name='item-analysis-add'),
+    path('item-analysis/<int:gradelvl_id>/<int:section_id>/<int:subject_id>/<int:quarter_id>/', views.ItemAnalysisWithItemNumberView.as_view(), name='item-analysis-with-item-number'),
+    path('item-analysis/batch-update/', ItemAnalysisBatchUpdateView.as_view(), name='itemanalysis-batch-update'),
 
 
 

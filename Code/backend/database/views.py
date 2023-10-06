@@ -1190,4 +1190,57 @@ class ItemAnalysisListCreateView(generics.ListCreateAPIView):
     queryset = ItemAnalysis.objects.all()
     serializer_class = ItemAnalysisSerializer
 
+class ItemAnalysisWithItemNumberView(generics.ListAPIView):
+    serializer_class = ItemAnalysisSerializer
+
+    def get_queryset(self):
+        gradelvl_id = self.kwargs['gradelvl_id']  
+        section_id = self.kwargs['section_id']   
+        subject_id = self.kwargs['subject_id']    
+        quarter_id = self.kwargs['quarter_id']
+
+        queryset = ItemAnalysis.objects.filter(
+            gradelvl_id=gradelvl_id,
+            section_id=section_id,
+            subject_id=subject_id,
+            quarter_id=quarter_id
+        )
+
+        return queryset
     
+class ItemAnalysisBatchUpdateView(APIView):
+    serializer_class = ItemAnalysisSerializer
+
+    def put(self, request, *args, **kwargs):
+        data = request.data
+
+        for record_data in data:
+            if isinstance(record_data, dict):
+                itemanalysis_id = record_data.get('id')
+                subject_id = record_data.get('subject_id')
+                gradelevel_id = record_data.get('gradelvl_id')
+                section_id = record_data.get('section_id')
+                quarter_id = record_data.get('quarter_id')
+
+                try:
+                    item_analysis = ItemAnalysis.objects.get(
+                        id=itemanalysis_id,
+                        subject_id=subject_id,
+                        gradelvl_id=gradelevel_id,
+                        section_id=section_id,
+                        quarter_id=quarter_id
+                    )
+
+                    serializer = ItemAnalysisSerializer(item_analysis, data=record_data, partial=True)
+
+                    if serializer.is_valid():
+                        serializer.save()
+                    else:
+                        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+                except ItemAnalysis.DoesNotExist:
+                    return Response({'detail': 'Record not found.'}, status=status.HTTP_404_NOT_FOUND)
+            else:
+                return Response({'detail': 'Invalid data format.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response({'detail': 'Batch update successful.'}, status=status.HTTP_200_OK)

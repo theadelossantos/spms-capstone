@@ -518,11 +518,16 @@ export class AuthService {
   getStudentGrades(studentId: number, subjectId: number, quarterId:number): Observable<any> {
     return this.http.get<any>(`${this.api_url}fetch-grades/${studentId}/${subjectId}/${quarterId}/`, this.httpOptions);
   }
-
   
   addItemAnalysis(itemAnalysisData: any): Observable<any> {
     return this.http.post(`${this.api_url}add-itemanalysis/`, itemAnalysisData, this.httpOptions);
   }
 
+  getItemAnalysisWithItemNumbers(gradelvlId: number, sectionId: number, subjectId: number, quarterId:number): Observable<any> {
+    return this.http.get(`${this.api_url}item-analysis/${gradelvlId}/${sectionId}/${subjectId}/${quarterId}/`, this.httpOptions);
+  }
 
+  updateItemAnalysis(updatedItemAnalysis:any): Observable<any> {
+    return this.http.put<any>(`${this.api_url}item-analysis/batch-update/`, updatedItemAnalysis, this.httpOptions);
+  }
 }

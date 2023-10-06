@@ -27,11 +27,12 @@
                     </td>
                     <td class="background"> 
                         <div class="progress">
-                          <div [ngClass]="{'progress-bar bg-success bg-none text-light': calculateMean(correctResponses[i], totalStudents) >= 75, 'progress-bar bg-danger': calculateMean(correctResponses[i], totalStudents) < 75}" role="progressbar" [style.width.%]="calculatePercentage(correctResponses[i])">
+                          <div [ngClass]="{'progress-bar bg-success bg-none text-light': calculateMean(correctResponses[i], totalStudents) >= 75, 'progress-bar bg-danger': calculateMean(correctResponses[i], totalStudents) <= 49, 'progress-bar bg-info text-light': calculateMean(correctResponses[i], totalStudents) <= 74 }" role="progressbar" [style.width.%]="calculatePercentage(correctResponses[i])">
                             {{ calculatePercentage(correctResponses[i]) }}%
                           </div>
                         </div>
                       </td>
+ 
                       
                 </tr>
                 <button class="btn btn-primary" (click)="saveItemAnalysisData()">Save Data</button>
