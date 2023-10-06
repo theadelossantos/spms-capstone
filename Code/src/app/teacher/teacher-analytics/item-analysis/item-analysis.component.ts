@@ -27,8 +27,7 @@ export class ItemAnalysisComponent implements AfterViewInit{
   } = {
     hps_qa_total_score: 0, 
   };
-
-
+  selectedItemNumber: number | null = null;
 
   constructor(private route: ActivatedRoute, private authService: AuthService) {}
 
@@ -144,14 +143,18 @@ export class ItemAnalysisComponent implements AfterViewInit{
   
     return itemNumbers;
   }
-
-  calculatePercentage(correctResponses:number): string{
-    if(this.totalStudents && correctResponses !== undefined){
-      return Math.round((correctResponses / this.totalStudents) * 100) + '%';
-
-    }
-    return '';
+  handleInputClick(itemNumber: number) {
+    this.selectedItemNumber = itemNumber;
   }
+
+
+  calculatePercentage(correctResponses: number): number {
+    if (this.totalStudents && correctResponses !== undefined) {
+      return Math.round((correctResponses / this.totalStudents) * 100);
+    }
+    return 0;
+  }
+  
 
   calculateMean(correctResponses: number, totalStudents: number): number {
     if (totalStudents === 0) {
@@ -182,7 +185,7 @@ export class ItemAnalysisComponent implements AfterViewInit{
     );
   
     const categories = ['Mastered', 'Below Master', 'Not Mastered'];
-    const backgroundColors = ['green', 'yellow', 'red'];
+    const backgroundColors = ['green', 'blue', 'red'];
     const labels = categories.slice(); 
     const percentages = [masteredPercentage, 100 - masteredPercentage, 0];
   
@@ -206,8 +209,50 @@ export class ItemAnalysisComponent implements AfterViewInit{
       },
     });
   }
+
+  buildItemAnalysisData(selectedItemNumber: number): any[] {
+  const itemAnalysisData: any[] = [];
   
-  
+  const itemNumbers = this.generateItemNumbers();
+
+  for (let i = 0; i < this.correctResponses.length; i++) {
+    const correctResponses = this.correctResponses[i];
+    const percentageCorrect = this.calculatePercentage(correctResponses);
+    const itemNumber = itemNumbers[i];
+
+    const itemData = {
+      gradelvl_id: this.gradeLevelId,
+      section_id: this.sectionId,
+      subject_id: this.subjectId,
+      correct_responses: correctResponses, 
+      percentage_correct: percentageCorrect, 
+      item_number: itemNumber,
+    };
+
+    itemAnalysisData.push(itemData);
+  }
+
+  return itemAnalysisData;
+}
+
+saveItemAnalysisData() {
+  const selectedItemNumber: number = this.selectedItemNumber;
+  const itemAnalysisData = this.buildItemAnalysisData(selectedItemNumber);
+
+  console.log('correct responses', itemAnalysisData);
+
+  for (const itemData of itemAnalysisData) {
+    this.authService.addItemAnalysis(itemData).subscribe(
+      (response) => {
+        console.log('ItemAnalysis data added:', response);
+      },
+      (error) => {
+        console.error('Error adding ItemAnalysis data:', error);
+      }
+    );
+  }
+}
+
   
   
 }

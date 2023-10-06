@@ -48,6 +48,10 @@ class WeeklyProgressAdmin(admin.ModelAdmin):
     list_display = ('student_id','dept_id','gradelvl_id','section_id','subject_id', 'quarter_id', 'task_name', 'task_score', 'task_status', 'input_date')
 admin.site.register(WeeklyProgress, WeeklyProgressAdmin)
 
+class ItemAnalysisAdmin(admin.ModelAdmin):
+    list_display = ('gradelvl_id','section_id','subject_id', 'correct_responses', 'percentage_correct') 
+admin.site.register(ItemAnalysis, ItemAnalysisAdmin)
+
 admin.site.register(HpsScores)    
 admin.site.register(CustomUser)
 admin.site.register(StudentGrade)

@@ -1185,3 +1185,9 @@ class StudentGradesListView(ListAPIView):
         )
 
         return queryset
+
+class ItemAnalysisListCreateView(generics.ListCreateAPIView):
+    queryset = ItemAnalysis.objects.all()
+    serializer_class = ItemAnalysisSerializer
+
+    

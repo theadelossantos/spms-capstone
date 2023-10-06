@@ -270,3 +270,9 @@ class HPSFilterSerializer(serializers.Serializer):
     section = serializers.IntegerField()
     subject = serializers.IntegerField()
     quarter = serializers.IntegerField()
+
+class ItemAnalysisSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ItemAnalysis
+        fields = '__all__'
+    

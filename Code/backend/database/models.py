@@ -233,3 +233,12 @@ class Attendance(models.Model):
     class Meta:
         unique_together = ('student', 'date', 'grade_level', 'section', 'subject')
 
+class ItemAnalysis(models.Model):
+    gradelvl_id = models.ForeignKey(GradeLevel, on_delete=models.CASCADE)
+    section_id = models.ForeignKey(Section, on_delete=models.CASCADE)
+    subject_id = models.ForeignKey(Subject, on_delete=models.CASCADE)
+    correct_responses = models.IntegerField(default=0)
+    percentage_correct = models.FloatField(default=0.0)
+    item_number = models.IntegerField()
+    
+

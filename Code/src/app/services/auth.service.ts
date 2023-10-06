@@ -519,5 +519,10 @@ export class AuthService {
     return this.http.get<any>(`${this.api_url}fetch-grades/${studentId}/${subjectId}/${quarterId}/`, this.httpOptions);
   }
 
+  
+  addItemAnalysis(itemAnalysisData: any): Observable<any> {
+    return this.http.post(`${this.api_url}add-itemanalysis/`, itemAnalysisData, this.httpOptions);
+  }
+
 
 }
