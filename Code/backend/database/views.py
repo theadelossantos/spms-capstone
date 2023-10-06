@@ -1244,3 +1244,25 @@ class ItemAnalysisBatchUpdateView(APIView):
                 return Response({'detail': 'Invalid data format.'}, status=status.HTTP_400_BAD_REQUEST)
 
         return Response({'detail': 'Batch update successful.'}, status=status.HTTP_200_OK)
+
+class GetStudentGrade(APIView):
+    def post(self, request):
+        serializer = IndividualStudentGradesFilterSerializer(data=request.data)
+        if serializer.is_valid():
+            gradelevel = serializer.validated_data['gradelevel']
+            section = serializer.validated_data['section']
+            subject = serializer.validated_data['subject']
+            quarter = serializer.validated_data['quarter']
+            student = serializer.validated_data['student']
+
+            student_grades = StudentGrade.objects.filter(
+                gradelevel=gradelevel,
+                section=section,
+                subject=subject,
+                quarter=quarter,
+                student = student
+            )
+
+            serializer = StudentGradesSerializer(student_grades, many=True)
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

@@ -21,6 +21,7 @@ import { AttendanceComponent } from './teacher/attendance/attendance.component';
 import { TeacherWeeklyprogressComponent } from './teacher/teacher-weeklyprogress/teacher-weeklyprogress.component';
 import { TeacherGradesComponent } from './teacher/teacher-grades/teacher-grades.component';
 import { TeacherAnalyticsComponent } from './teacher/teacher-analytics/teacher-analytics.component';
+import { StudentAnalyticsComponent } from './student/student-analytics/student-analytics.component';
 
 const routes: Routes = [
  {
@@ -86,6 +87,10 @@ const routes: Routes = [
     {
       path: 'grades',
       component: StudentGradesComponent,
+    },
+    {
+      path: 'analytics',
+      loadChildren:() => import('./student/student-analytics/student-analytics.module').then(m => m.StudentAnalyticsModule)
     },
     {
       path: 'settings',

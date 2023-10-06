@@ -1,0 +1,16 @@
+<div class="links d-flex">
+    <a class="classes" [routerLink]="['/student/analytics']">Analytics </a>
+    <p class="next">></p>
+    <a class="active"><b>{{subjectName}}</b></a>
+</div>
+
+<circle-progress
+  [percent]="initialGrade"
+  [radius]="100"
+  [outerStrokeWidth]="16"
+  [innerStrokeWidth]="8"
+  [outerStrokeColor]="'#78C000'"
+  [innerStrokeColor]="'#C7E596'"
+  [animation]="true"
+  [animationDuration]="300"
+></circle-progress>

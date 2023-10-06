@@ -275,4 +275,11 @@ class ItemAnalysisSerializer(serializers.ModelSerializer):
     class Meta:
         model = ItemAnalysis
         fields = '__all__'
+
+class IndividualStudentGradesFilterSerializer(serializers.Serializer):
+    gradelevel = serializers.IntegerField()
+    section = serializers.IntegerField()
+    subject = serializers.IntegerField()
+    quarter = serializers.IntegerField()
+    student = serializers.IntegerField()
     

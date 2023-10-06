@@ -530,4 +530,8 @@ export class AuthService {
   updateItemAnalysis(updatedItemAnalysis:any): Observable<any> {
     return this.http.put<any>(`${this.api_url}item-analysis/batch-update/`, updatedItemAnalysis, this.httpOptions);
   }
+
+  fetchIndivStudentGrades(filters:any):Observable<any>{
+    return this.http.post(`${this.api_url}indiv-student-grade/filter/`, filters, this.httpOptions);
+  }
 }

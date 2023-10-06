@@ -32,6 +32,7 @@ import { TeacherSettingsComponent } from './teacher/teacher-settings/teacher-set
 import { AdminSettingsComponent } from './admin/admin-settings/admin-settings.component';
 import { PrivacyComponent } from './admin/admin-settings/privacy/privacy.component';
 import { TeacherAnalyticsComponent } from './teacher/teacher-analytics/teacher-analytics.component';
+import { StudentAnalyticsComponent } from './student/student-analytics/student-analytics.component';
 
 
 @NgModule({
@@ -62,6 +63,7 @@ import { TeacherAnalyticsComponent } from './teacher/teacher-analytics/teacher-a
     AdminSettingsComponent,
     PrivacyComponent,
     TeacherAnalyticsComponent,
+    StudentAnalyticsComponent,
   ],
   imports: [
     BrowserModule,
