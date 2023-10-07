@@ -17,6 +17,21 @@ a:hover{
 .links .active{
     text-decoration: underline;
 }
-.progress{
-    height: 300;
+.progress-div{
+    background-color: white;
+    border-radius: 10px;
 }
+.h5-text{
+    font-weight: 600;
+}
+.line{
+    border: 1px solid gray;
+}
+.circle-progress-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%; 
+}
+

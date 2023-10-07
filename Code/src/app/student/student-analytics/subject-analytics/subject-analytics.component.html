@@ -1,16 +1,37 @@
+
 <div class="links d-flex">
     <a class="classes" [routerLink]="['/student/analytics']">Analytics </a>
     <p class="next">></p>
     <a class="active"><b>{{subjectName}}</b></a>
 </div>
 
-<circle-progress
-  [percent]="initialGrade"
-  [radius]="100"
-  [outerStrokeWidth]="16"
-  [innerStrokeWidth]="8"
-  [outerStrokeColor]="'#78C000'"
-  [innerStrokeColor]="'#C7E596'"
-  [animation]="true"
-  [animationDuration]="300"
-></circle-progress>
+<div class="analytics-container d-flex ">
+  <div class="progress-div p-3 mr-3">
+    <div class="text-flex d-flex justify-content-between align-items-center">
+      <p>Activities</p>
+      <p>This Week</p>
+    </div>
+    <canvas id="weeklyProgressChart" class="weeklyprogresschart" width="1000" height="400"></canvas>
+  
+  </div>
+  <div class="progress-div p-3 w-100">
+    <h5 class="h5-text">Subject Performance</h5>
+    <div class="circle-progress-container">
+      <circle-progress
+      [percent]="convertToPerspectiveGrade(initialGrade)"
+      [radius]="150"
+      [outerStrokeWidth]="16"
+      [innerStrokeWidth]="8"
+      [maxPercent]="100"
+      [outerStrokeColor]="'#78C000'"
+      [innerStrokeColor]="'#C7E596'"
+      [animation]="true"
+      [animationDuration]="300"
+      [clockwise]="false"
+      [subtitle]="'performance'"
+    ></circle-progress>
+    </div>
+</div>
+
+
+</div>
