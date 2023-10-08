@@ -282,4 +282,9 @@ class IndividualStudentGradesFilterSerializer(serializers.Serializer):
     subject = serializers.IntegerField()
     quarter = serializers.IntegerField()
     student = serializers.IntegerField()
+
+class AnnouncementSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Announcement
+        fields = '__all__'
     

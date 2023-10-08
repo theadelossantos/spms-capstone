@@ -52,6 +52,7 @@ class ItemAnalysisAdmin(admin.ModelAdmin):
     list_display = ('gradelvl_id','section_id','subject_id', 'correct_responses', 'percentage_correct') 
 admin.site.register(ItemAnalysis, ItemAnalysisAdmin)
 
+admin.site.register(Announcement)
 admin.site.register(HpsScores)    
 admin.site.register(CustomUser)
 admin.site.register(StudentGrade)

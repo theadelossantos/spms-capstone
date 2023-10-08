@@ -534,4 +534,18 @@ export class AuthService {
   fetchIndivStudentGrades(filters:any):Observable<any>{
     return this.http.post(`${this.api_url}indiv-student-grade/filter/`, filters, this.httpOptions);
   }
+
+  addAnnouncement(announcementData:any): Observable<any> {
+    return this.http.post(`${this.api_url}add-announcement/`, announcementData, this.httpOptions);
+  }
+
+  getAnnouncement(): Observable<any> {
+    return this.http.get(`${this.api_url}add-announcement/`, this.httpOptions);
+  }
+  editAnnouncement(announcementId:number, updatedAnnouncement: any): Observable<any> {
+    return this.http.put(`${this.api_url}announcements/${announcementId}/`, updatedAnnouncement, this.httpOptions);
+  }
+  deleteAnnouncement(announcementId:number): Observable<any> {
+    return this.http.delete(`${this.api_url}announcements/${announcementId}/`, this.httpOptions);
+  }
 }

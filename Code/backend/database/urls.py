@@ -79,6 +79,8 @@ urlpatterns = [
     path('item-analysis/<int:gradelvl_id>/<int:section_id>/<int:subject_id>/<int:quarter_id>/', views.ItemAnalysisWithItemNumberView.as_view(), name='item-analysis-with-item-number'),
     path('item-analysis/batch-update/', ItemAnalysisBatchUpdateView.as_view(), name='itemanalysis-batch-update'),
     path('indiv-student-grade/filter/', views.GetStudentGrade.as_view(), name='indiv-studentgrade-filter'),
+    path('add-announcement/', AnnouncementCreateView.as_view(), name='add-announcement'),
+    path('announcements/<int:pk>/', views.AnnouncementEditDeleteView.as_view(), name='announcement-detail'),
 
 
 

@@ -100,4 +100,16 @@ handleclick(item: INavbarData):void{
     this.departmentSelected.emit(department);
   }
 
+  logout(){
+    console.log('Logout function called');
+    this.authService.logout().subscribe(
+      () => {
+        console.log('Logged out successfully.');
+        this.router.navigate(['/login']);
+      },
+      (error) => {
+        console.error('Error logging out:', error);
+      }
+    )
+  }
 }

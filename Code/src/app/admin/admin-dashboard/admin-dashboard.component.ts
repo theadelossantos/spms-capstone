@@ -1,6 +1,7 @@
 import { Component, AfterViewInit, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/services/auth.service';
 import { ChangeDetectorRef } from '@angular/core';
+import { count } from 'rxjs';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -17,6 +18,14 @@ export class AdminDashboardComponent implements AfterViewInit, OnInit {
   daysArray: { value: number; isActive: boolean }[] = [];
   studentCount: any = {};
   teacherCount: any = {};
+  departments:any[] = []
+  selectedDepartments: number[] = [];
+  announcementMessage = '';
+  announcementSubject: string = ''
+  announcementlist: any [] = []
+  selectedAnnouncement: any = {};  
+  selectedDepartmentsForEdit: { [key: number]: boolean } = {};
+  selectedDepartmentId: number;
   constructor(private authService: AuthService, private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
@@ -30,7 +39,109 @@ export class AdminDashboardComponent implements AfterViewInit, OnInit {
         this.teacherCount = count;
       }
     )
+    this.authService.getDepartments().subscribe(
+      (data) => {
+        this.departments = data.departments
+        console.log('dept',this.departments)
+      }
+    )
+    this.authService.getAnnouncement().subscribe(
+      (data) => {
+        this.announcementlist = data
+        console.log('announcements', this.announcementlist)
+
+        
+      }
+    )
   }
+
+  toggleDepartmentSelection(deptId: number) {
+    const index = this.selectedDepartments.indexOf(deptId);
+    if (index === -1) {
+      this.selectedDepartments.push(deptId);
+    } else {
+      this.selectedDepartments.splice(index, 1);
+    }
+    console.log(this.selectedDepartments); 
+  }
+  
+  postAnnouncement(){
+    if (this.selectedDepartments.length === 0) {
+      console.error('Please select at least one department.');
+      return;
+    }
+    for (const deptId of this.selectedDepartments) {
+      const announcementData = {
+        department: deptId, 
+        subject: this.announcementSubject,
+        message: this.announcementMessage,
+      };
+  
+      this.authService.addAnnouncement(announcementData).subscribe(
+        (response: any) => {
+          console.log(`Announcement posted for department ${deptId}`, response);
+  
+          this.announcementMessage = '';
+          this.announcementSubject = '';
+
+        },
+        (error: any) => {
+          console.error(`Error posting announcement for department ${deptId}`, error);
+        }
+      );
+    }
+  }
+
+  editAnnouncement() {
+    if (this.selectedAnnouncement && this.selectedAnnouncement.id) {
+      this.authService.editAnnouncement(this.selectedAnnouncement.id, this.selectedAnnouncement).subscribe(
+        (response) => {
+          console.log('Announcement updated', response);
+        },
+        (error) => {
+          console.error('Error updating announcement:', error);
+        }
+      );
+    } else {
+      console.error('Selected announcement is missing an ID.');
+    }
+  }
+
+  deleteAnnouncement(){
+    if(this.selectedAnnouncement.id){
+      this.authService.deleteAnnouncement(this.selectedAnnouncement.id).subscribe(
+        (response) => {
+          console.log('successfully deleted')
+
+          this.authService.getAnnouncement().subscribe(
+            (data) => {
+              this.announcementlist = data
+              console.log('announcements', this.announcementlist)
+      
+              
+            }
+          )
+
+        }
+      )
+    }
+  }
+
+  openAnnouncementModal(announcement: any) {
+    this.selectedAnnouncement = announcement;
+    this.selectedDepartmentId = announcement.department;
+  
+    this.selectedDepartmentsForEdit = {};
+    this.selectedDepartmentsForEdit[announcement.department] = true;
+  
+    console.log("Selected Announcement:", announcement);
+    console.log("Selected Department ID:", this.selectedDepartmentId);
+  }
+  
+  isSelectedDepartment(deptId: number): boolean {
+    return !!this.selectedDepartmentsForEdit[deptId];
+  }
+
 
   ngAfterViewInit() {
     this.currentDate = document.querySelector(".current-date") as HTMLElement;

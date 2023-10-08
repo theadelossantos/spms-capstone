@@ -1,0 +1,157 @@
+*{
+    font-family: 'Poppins', sans-serif;
+}
+.header-text{
+    font-weight: 700;
+}
+.students-container, .teachers-container{
+    background-color: #ffffff;
+    border-radius: 15px;
+}
+.student-div{
+    padding: 30px;
+}
+.icon{
+    margin-right: 30px;
+    background-color: #a70000;
+    padding: 15px;
+    border-radius: 15px;
+}
+.studentsinfo-count{
+    margin-right: 50px;
+}
+.student-count{
+    font-weight: 600;
+}
+.custom-svg{
+    fill: white;
+}
+/* .info-container{
+    /* justify-content: space-between; 
+
+} */
+.body-container{
+    display: flex;
+}
+.other-details{
+    background-color: #fff;
+    border-radius: 15px;
+    padding: 15px;
+}
+/* .wrapper{
+    width: 450px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+  } */
+.calendar-container{
+    background-color: white;
+    border-radius: 15px;
+}
+.wrapper header{
+    display: flex;
+    justify-content: space-between;
+    padding: 25px 30px 10px;
+}
+header .current-date{
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+header .icons span{
+    padding: 10px 18px 15px 18px;
+    margin: 0 1px;
+    text-align: center;
+    border-radius: 50%;
+    cursor: pointer;
+    fill: #878787;
+}
+header .icons span:hover{
+    background: #f1efef;
+}
+
+.calendar{
+    padding: 0 0 20px 0;
+    padding-right: 30px;
+}
+
+.calendar ul{
+    display: flex;
+    flex-wrap: wrap;
+    list-style: none;
+    text-align: center;
+  }
+  .calendar .days{
+    margin-bottom: 20px;
+  }
+  .calendar li{
+    color: #333;
+    width: calc(100% / 7);
+    font-size: 1.07rem;
+  }
+  .calendar .weeks li{
+    font-weight: 600;
+    cursor: default;
+  }
+  .calendar .days li{
+    z-index: 1;
+    cursor: pointer;
+    position: relative;
+    margin-top: 30px;
+  }
+  .days li.inactive{
+    color: #aaa;
+  }
+  .days li.active{
+    color: #fff;
+  }
+  .days li::before{
+    position: absolute;
+    content: "";
+    left: 50%;
+    top: 50%;
+    height: 40px;
+    width: 40px;
+    z-index: -1;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .days li.active::before{
+    background: #a70000;
+  }
+  .days li:not(.active):hover::before{
+    background: #f2f2f2;
+  }
+
+  .label-announce{
+    font-weight: 600;
+  }
+@media (max-width: 768px) {
+    .students-container,
+    .teachers-container {
+        margin-right: 0;
+    }
+    
+    .icon {
+        margin-right: 10px;
+        padding: 10px;
+    }
+    
+    .studentsinfo-count {
+        margin-right: 8px;
+    }
+    .info-container{
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .student-count, .label{
+        font-size: 15px;
+    }
+    .student-div{
+        padding: 15px;
+    }
+    .custom-svg{
+        height: 2em;
+    }
+}

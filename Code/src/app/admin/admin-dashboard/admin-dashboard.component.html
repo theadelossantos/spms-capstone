@@ -1,101 +1,227 @@
-<h1 class="header-text">Dashboard</h1>
+<div class="main-div">
+
+    <h1 class="header-text">Dashboard</h1>
+        
+    <div class="body-container d-flex flex-row">
+        <div class="first-column mr-4">
+            <div class="info-container d-flex">
+                <div class="students-container mr-3">
+                    <div class="student-div d-flex align-items-center">
+                        <div class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="custom-svg" height="3em" viewBox="0 0 448 512">
+                               <path d="M319.4 320.6L224 416l-95.4-95.4C57.1 323.7 0 382.2 0 454.4v9.6c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48v-9.6c0-72.2-57.1-130.7-128.6-133.8zM13.6 79.8l6.4 1.5v58.4c-7 4.2-12 11.5-12 20.3 0 8.4 4.6 15.4 11.1 19.7L3.5 242c-1.7 6.9 2.1 14 7.6 14h41.8c5.5 0 9.3-7.1 7.6-14l-15.6-62.3C51.4 175.4 56 168.4 56 160c0-8.8-5-16.1-12-20.3V87.1l66 15.9c-8.6 17.2-14 36.4-14 57 0 70.7 57.3 128 128 128s128-57.3 128-128c0-20.6-5.3-39.8-14-57l96.3-23.2c18.2-4.4 18.2-27.1 0-31.5l-190.4-46c-13-3.1-26.7-3.1-39.7 0L13.6 48.2c-18.1 4.4-18.1 27.2 0 31.6z"/>
+                            </svg>
+                        </div>
+                        <div class="studentsinfo-count">
+                            <h3 class="student-count">{{studentCount.student_count}}</h3>
+                            <h6 class="label">Students</h6>
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="teachers-container mr-3">
+                    <div class="student-div d-flex align-items-center">
+                        <div class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="custom-svg"  height="3em" viewBox="0 0 448 512">
+                                <path d="M224 256c70.7 0 128-57.3 128-128S294.7 0 224 0 96 57.3 96 128s57.3 128 128 128zm95.8 32.6L272 480l-32-136 32-56h-96l32 56-32 136-47.8-191.4C56.9 292 0 350.3 0 422.4V464c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48v-41.6c0-72.1-56.9-130.4-128.2-133.8z"/>
+                            </svg>
+                        </div>
+                        <div class="studentsinfo-count">
+                            <h3 class="student-count">{{teacherCount.teacher_count}}</h3>
+                            <h6 class="label">Teachers</h6>
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="teachers-container">
+                    <div class="student-div d-flex align-items-center">
+                        <div class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="custom-svg" height="3em" viewBox="0 0 512 512">
+                                <path d="M256 32C114.6 32 0 125.1 0 240c0 49.6 21.4 95 57 130.7C44.5 421.1 2.7 466 2.2 466.5c-2.2 2.3-2.8 5.7-1.5 8.7S4.8 480 8 480c66.3 0 116-31.8 140.6-51.4 32.7 12.3 69 19.4 107.4 19.4 141.4 0 256-93.1 256-208S397.4 32 256 32z"/>
+                            
+                            </svg>
+                        </div>
+                        <div class="studentsinfo-count">
+                            <h3 class="student-count">20</h3>
+                            <h6 class="label">Queries</h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="other-details p-4">
+                <div class="header d-flex justify-content-between align-items-center mb-4">
+                    <h2 class="label-announce">Announcements</h2>
+                    <button class="btn shadow-none" data-bs-toggle="modal" data-bs-target="#addAnnouncement"> 
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/>
+                    </svg>
+                    Add Announcement
+                    </button>
+                </div>
+                <div class="announcement-list ">
+                    <div *ngFor="let announcement of announcementlist" class="announce-div-list d-flex flex-row align-items-center justify-content-between mb-2 p-3">
+                        <h6 class="mt-2"><b>Subject: {{announcement.subject}}</b></h6>
+                        <button class="btn shadow-none" (click)="openAnnouncementModal(announcement)" data-bs-toggle="modal" data-bs-target="#editAnnouncement">View announcement</button>
+                    </div>
+                </div>
+            </div>
     
-<div class="body-container d-flex flex-row">
-    <div class="first-column mr-4">
-        <div class="info-container d-flex">
-            <div class="students-container mr-3">
-                <div class="student-div d-flex align-items-center">
-                    <div class="icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="custom-svg" height="3em" viewBox="0 0 448 512">
-                           <path d="M319.4 320.6L224 416l-95.4-95.4C57.1 323.7 0 382.2 0 454.4v9.6c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48v-9.6c0-72.2-57.1-130.7-128.6-133.8zM13.6 79.8l6.4 1.5v58.4c-7 4.2-12 11.5-12 20.3 0 8.4 4.6 15.4 11.1 19.7L3.5 242c-1.7 6.9 2.1 14 7.6 14h41.8c5.5 0 9.3-7.1 7.6-14l-15.6-62.3C51.4 175.4 56 168.4 56 160c0-8.8-5-16.1-12-20.3V87.1l66 15.9c-8.6 17.2-14 36.4-14 57 0 70.7 57.3 128 128 128s128-57.3 128-128c0-20.6-5.3-39.8-14-57l96.3-23.2c18.2-4.4 18.2-27.1 0-31.5l-190.4-46c-13-3.1-26.7-3.1-39.7 0L13.6 48.2c-18.1 4.4-18.1 27.2 0 31.6z"/>
-                        </svg>
+            <!-- ADD ANNOUNCEMENT MODAL -->
+            <div class="modal fade" id="addAnnouncement" tabindex="-1" role="dialog" aria-labelledby="addSectionModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="addSectionModalLabel">Add Announcement</h5>
+                      <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
                     </div>
-                    <div class="studentsinfo-count">
-                        <h3 class="student-count">{{studentCount.student_count}}</h3>
-                        <h6 class="label">Students</h6>
+                    <div class="modal-body">
+                        <h6><b>Department:</b></h6>
+    
+                        <div class="radio-button d-flex flex-row">
+                            <div class="form-check mr-3" *ngFor="let dept of departments">
+                                <input
+                                  class="form-check-input"
+                                  type="checkbox"
+                                  [value]="dept.id"
+                                  id="flexCheckDefault{{ dept.id }}"
+                                  [checked]="selectedDepartments.includes(dept.id)"
+                                  (change)="toggleDepartmentSelection(dept.id)"
+                                  name="departments"
+                                />
+                                <label class="form-check-label" [for]="'flexCheckDefault' + dept.id">
+                                  {{ dept.name }}
+                                </label>
+                              </div>
+                        </div>
+    
+                        <h6><b>Subject:</b></h6>
+                        <input type="text" class="form-control" [(ngModel)]="announcementSubject" name="announcementSubject" id="exampleFormControlInput1" placeholder="Subject">
+    
+                        <div class="form-group mt-3">
+                            <h6><b>Announcement:</b></h6>
+                            <textarea class="form-control" id="message" [(ngModel)]="announcementMessage" name="announcementMessage" rows="3"></textarea>
+                        </div>
+    
+                        <button class="btn btn-success w-100" (click)="postAnnouncement()">Post Announcement</button>
                     </div>
+                    
+                  </div>
+    
                 </div>
             </div>
-        
-            <div class="teachers-container mr-3">
-                <div class="student-div d-flex align-items-center">
-                    <div class="icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="custom-svg"  height="3em" viewBox="0 0 448 512">
-                            <path d="M224 256c70.7 0 128-57.3 128-128S294.7 0 224 0 96 57.3 96 128s57.3 128 128 128zm95.8 32.6L272 480l-32-136 32-56h-96l32 56-32 136-47.8-191.4C56.9 292 0 350.3 0 422.4V464c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48v-41.6c0-72.1-56.9-130.4-128.2-133.8z"/>
-                        </svg>
+    
+            <!-- EDIT ANNOUNCEMENT MODAL -->
+            <div class="modal fade" id="editAnnouncement" tabindex="-1" role="dialog" aria-labelledby="addSectionModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addSectionModalLabel">Edit Announcement</h5>
+                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
-                    <div class="studentsinfo-count">
-                        <h3 class="student-count">{{teacherCount.teacher_count}}</h3>
-                        <h6 class="label">Teachers</h6>
-                    </div>
-                </div>
-            </div>
-        
-            <div class="teachers-container">
-                <div class="student-div d-flex align-items-center">
-                    <div class="icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="custom-svg" height="3em" viewBox="0 0 512 512">
-                            <path d="M256 32C114.6 32 0 125.1 0 240c0 49.6 21.4 95 57 130.7C44.5 421.1 2.7 466 2.2 466.5c-2.2 2.3-2.8 5.7-1.5 8.7S4.8 480 8 480c66.3 0 116-31.8 140.6-51.4 32.7 12.3 69 19.4 107.4 19.4 141.4 0 256-93.1 256-208S397.4 32 256 32z"/>
-                        
-                        </svg>
-                    </div>
-                    <div class="studentsinfo-count">
-                        <h3 class="student-count">20</h3>
-                        <h6 class="label">Queries</h6>
+                    <div class="modal-body">
+                        <div>
+                            <p><b>Date Posted:</b> {{ selectedAnnouncement?.date_posted | date: 'medium' }}</p>
+                            <div class="department-div mb-3">
+                                <h6><b>Department:</b></h6>
+                                <div class="radio-button d-flex flex-row">
+                                    <div class="form-check mr-3" *ngFor="let dept of departments">
+                                        <input
+                                        class="form-check-input"
+                                        type="checkbox"
+                                        [value]="dept.id"
+                                        [id]="'editFlexCheckDefault' + dept.id"
+                                        [(ngModel)]="selectedDepartmentsForEdit[dept.id]"
+                                        [checked]="isSelectedDepartment(dept.id)"
+                                        name="editDepartments"
+                                        />
+                                        <label class="form-check-label" [for]="'editFlexCheckDefault' + dept.id">
+                                        {{ dept.name }}
+                                        </label>
+                                    </div>
+                                </div>   
+                            </div>
+                            <div class="subject-div mb-3">
+                                <h6><b>Subject:</b></h6>
+                                <input
+                                type="text"
+                                [(ngModel)]="selectedAnnouncement.subject"
+                                name="subject"
+                                class="form-control"
+                                />
+                            
+                            </div>
+                            <div class="announcement-div mb-2">
+                                <h6><b>Announcement:</b></h6>
+                                <textarea
+                                  [(ngModel)]="selectedAnnouncement.message"
+                                  name="message"
+                                  class="form-control"
+                                  rows="4"
+                                ></textarea>
+                            </div>
+    
+                        </div>
+                        <div class="button-flex d-flex flex-row mt-2">
+                            <button class="btn btn-success w-100 mr-2 text-light" (click)="editAnnouncement()">Edit Announcement</button>
+                            <button class="btn btn-danger w-100" (click)="deleteAnnouncement()">Delete Announcement</button>
+                        </div>
+                      </div>  
                     </div>
                 </div>
             </div>
         </div>
-        <div class="other-details">
-            <h2 class="label-announce">Announcements</h2>
+    
+        <div class="second-column">
+            <div class="calendar-container">
+                <div class="wrapper">
+                    <header>
+                        <p class="current-date"></p>
+                        <div class="icons">
+                            <span id="prev">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 320 512">
+                                    <path d="M34.52 239.03L228.87 44.69c9.37-9.37 24.57-9.37 33.94 0l22.67 22.67c9.36 9.36 9.37 24.52.04 33.9L131.49 256l154.02 154.75c9.34 9.38 9.32 24.54-.04 33.9l-22.67 22.67c-9.37 9.37-24.57 9.37-33.94 0L34.52 272.97c-9.37-9.37-9.37-24.57 0-33.94z"/>
+                                </svg>
+                            </span>
+                            <span id="next">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 320 512">
+                                    <path d="M285.476 272.971L91.132 467.314c-9.373 9.373-24.569 9.373-33.941 0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941 0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z"/>
+                                </svg>
+                            </span>
+                        </div>
+                    </header>
+                    <div class="calendar">
+                        <ul class="weeks">
+                            <li>Sun</li>
+                            <li>Mon</li>
+                            <li>Tue</li>
+                            <li>Wed</li>
+                            <li>Thu</li>
+                            <li>Fri</li>
+                            <li>Sat</li>
+                        </ul>
+                        <ul class="days" #daysTag>
+                            <li *ngFor="let day of daysArray" [class.inactive]="!day.isActive" [class.active]="day.isActive">
+                                {{ day.value }}
+                            </li>
+                        </ul>
+                    </div>
+                    
+                </div>
+            </div>
         </div>
     </div>
-    <div class="second-column">
-        <div class="calendar-container">
-            <div class="wrapper">
-                <header>
-                    <p class="current-date"></p>
-                    <div class="icons">
-                        <span id="prev">
-                            <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 320 512">
-                                <path d="M34.52 239.03L228.87 44.69c9.37-9.37 24.57-9.37 33.94 0l22.67 22.67c9.36 9.36 9.37 24.52.04 33.9L131.49 256l154.02 154.75c9.34 9.38 9.32 24.54-.04 33.9l-22.67 22.67c-9.37 9.37-24.57 9.37-33.94 0L34.52 272.97c-9.37-9.37-9.37-24.57 0-33.94z"/>
-                            </svg>
-                        </span>
-                        <span id="next">
-                            <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 320 512">
-                                <path d="M285.476 272.971L91.132 467.314c-9.373 9.373-24.569 9.373-33.941 0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941 0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z"/>
-                            </svg>
-                        </span>
-                    </div>
-                </header>
-                <div class="calendar">
-                    <ul class="weeks">
-                        <li>Sun</li>
-                        <li>Mon</li>
-                        <li>Tue</li>
-                        <li>Wed</li>
-                        <li>Thu</li>
-                        <li>Fri</li>
-                        <li>Sat</li>
-                    </ul>
-                    <ul class="days" #daysTag>
-                        <li *ngFor="let day of daysArray" [class.inactive]="!day.isActive" [class.active]="day.isActive">
-                            {{ day.value }}
-                        </li>
-                    </ul>
-                </div>
-                
-            </div>
-        </div>
-    </div>
+    
+    <script>
+        const currentDate = document.querySelector(".current-date");
+    
+        let date = new Date(),
+        currYear = date.getFullYear(),
+        currMonth = date.getMonth();
+    
+        console.log(date, currYear, currMonth)
+    </script>
 </div>
-
-<script>
-    const currentDate = document.querySelector(".current-date");
-
-    let date = new Date(),
-    currYear = date.getFullYear(),
-    currMonth = date.getMonth();
-
-    console.log(date, currYear, currMonth)
-</script>

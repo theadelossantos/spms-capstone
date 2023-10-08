@@ -241,5 +241,14 @@ class ItemAnalysis(models.Model):
     correct_responses = models.IntegerField(default=0)
     percentage_correct = models.FloatField(default=0.0)
     item_number = models.IntegerField()
+
+class Announcement(models.Model):
+    department = models.ForeignKey(Department, on_delete=models.CASCADE)  
+    subject = models.CharField(max_length=50)
+    message = models.TextField() 
+    date_posted = models.DateTimeField(auto_now_add=True)
+
     
+    def create(self, validated_data):
+        return Announcement.objects.create(**validated_data)
 

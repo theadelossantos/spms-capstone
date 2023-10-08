@@ -44,6 +44,12 @@
                 </div>
 
             </li>
+            <li class="sidenav-nav-item">
+                <a class="sidenav-nav-link" (click)="logout()">
+                    <i class="sidenav-link-icon fa-solid fa-right-from-bracket"></i>
+                    <span class="sidenav-link-text" @fadeInOut *ngIf="collapsed">Logout</span>
+                </a>
+            </li>
         </ul>
     </div>
 
