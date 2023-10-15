@@ -47,10 +47,6 @@ export const navbarData: INavbarData[] = [
                 routeLink: '/admin-home/settings/profile',
                 label: 'Profile'
             },
-            {
-                routeLink: '/admin-home/settings/privacy',
-                label: 'Privacy'
-            }
         ]
     },
     

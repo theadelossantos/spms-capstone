@@ -315,6 +315,23 @@ class AdminProfileView(RetrieveUpdateAPIView):
 
     def get_object(self):
         return get_object_or_404(Admin, user=self.request.user)
+
+
+class TeacherProfileView(RetrieveUpdateAPIView):
+    queryset = Teacher.objects.all()
+    serializer_class = TeacherSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        return get_object_or_404(Teacher, user=self.request.user)
+
+class StudentProfileView(RetrieveUpdateAPIView):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        return get_object_or_404(Student, user=self.request.user)
     
 class AdminLoginView(APIView):
     def post(self,request):
@@ -1271,7 +1288,37 @@ class AnnouncementCreateView(generics.ListCreateAPIView):
     queryset = Announcement.objects.all()
     serializer_class = AnnouncementSerializer
 
+
+
 class AnnouncementEditDeleteView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Announcement.objects.all()
     serializer_class = AnnouncementSerializer
 
+class ChangePasswordView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        serializer = ChangePasswordSerializer(data=request.data, context={'request': request})
+        if serializer.is_valid():
+            user = request.user
+            current_password = serializer.validated_data.get("current_password")
+            new_password = serializer.validated_data.get("new_password")
+
+            if user.check_password(current_password):
+                user.set_password(new_password)
+                user.save()
+                return Response({"message": "Password changed successfully."}, status=status.HTTP_200_OK)
+            else:
+                return Response({"error": "Current password is incorrect."}, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class AnnouncementByDepartmentView(generics.ListAPIView):
+    serializer_class = AnnouncementSerializer
+
+    def get_queryset(self):
+        department_id = self.kwargs.get("department_id")
+        try:
+            queryset = Announcement.objects.filter(department=department_id)
+            return queryset
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)

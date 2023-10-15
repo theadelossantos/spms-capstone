@@ -81,6 +81,10 @@ urlpatterns = [
     path('indiv-student-grade/filter/', views.GetStudentGrade.as_view(), name='indiv-studentgrade-filter'),
     path('add-announcement/', AnnouncementCreateView.as_view(), name='add-announcement'),
     path('announcements/<int:pk>/', views.AnnouncementEditDeleteView.as_view(), name='announcement-detail'),
+    path('change-password/', ChangePasswordView.as_view(), name='change-password'),
+    path('teacher/profile/', TeacherProfileView.as_view(), name='teacher-profile'),
+    path('student/profile/', StudentProfileView.as_view(), name='student-profile'),
+    path('announcements/<int:department_id>/', views.AnnouncementByDepartmentView.as_view(), name='announcements-by-department'),
 
 
 

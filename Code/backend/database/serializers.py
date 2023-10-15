@@ -75,6 +75,21 @@ class TeacherSerializer(serializers.ModelSerializer):
         user = User.objects.create_user(**user_data)
         teacher = Teacher.objects.create(user=user, **validated_data)
         return teacher
+
+    def update(self, instance, validated_data):
+        instance.fname = validated_data.get('fname', instance.fname)
+        instance.mname = validated_data.get('mname', instance.mname)
+        instance.lname = validated_data.get('lname', instance.lname)
+        instance.phone = validated_data.get('phone', instance.phone)
+        instance.gender = validated_data.get('gender', instance.gender)
+        instance.address = validated_data.get('address', instance.address)
+
+        profile_picture = validated_data.get('profile_picture')
+        if profile_picture is not None:
+            instance.profile_picture = profile_picture
+
+        instance.save()
+        return instance
     
 class AssignmentSerializer(serializers.ModelSerializer):
     class Meta:
@@ -287,4 +302,15 @@ class AnnouncementSerializer(serializers.ModelSerializer):
     class Meta:
         model = Announcement
         fields = '__all__'
-    
+
+class ChangePasswordSerializer(serializers.Serializer):
+    current_password = serializers.CharField(required=True)
+    new_password = serializers.CharField(required=True)
+
+    def validate_current_password(self, value):
+        user = self.context['request'].user
+
+        if not user.check_password(value):
+            raise serializers.ValidationError('Current password is incorrect.')
+
+        return value

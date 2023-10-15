@@ -431,6 +431,14 @@ export class AuthService {
     const authHeader = this.setAuthHeader();
     return this.http.put(`${this.api_url}admin/profile/`, profileData, { headers: authHeader });
 }
+  updateTeacherProfile(profileData: any): Observable<any> {
+    const authHeader = this.setAuthHeader();
+    return this.http.put(`${this.api_url}teacher/profile/`, profileData, { headers: authHeader });
+  }
+  updateStudentProfile(profileData: any): Observable<any> {
+    const authHeader = this.setAuthHeader();
+    return this.http.put(`${this.api_url}student/profile/`, profileData, { headers: authHeader });
+  }
 
   logout(): Observable<any> {
     return this.http.post(`${this.api_url}logout/`, null);
@@ -547,5 +555,9 @@ export class AuthService {
   }
   deleteAnnouncement(announcementId:number): Observable<any> {
     return this.http.delete(`${this.api_url}announcements/${announcementId}/`, this.httpOptions);
+  }
+  changePassword(password:any) {
+    const authHeader = this.setAuthHeader();
+    return this.http.post(`${this.api_url}change-password/`, password, { headers: authHeader });
   }
 }

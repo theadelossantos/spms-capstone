@@ -13,3 +13,6 @@ label{
 .input-container:first-child {
     margin-right: 10px;
   }
+  .alert-css{
+    z-index: 2;
+}

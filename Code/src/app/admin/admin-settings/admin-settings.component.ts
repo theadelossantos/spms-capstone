@@ -20,6 +20,11 @@ export class AdminSettingsComponent {
   phone: string = ''
   gender: string = ''
   birthdate: string = ''
+  currentPassword: string = ''
+  newPassword: string = ''
+  showAlert: boolean = false; 
+  showPasswordAlert: boolean = false
+  passwordAlertMessage = '';
 
   constructor(private authService: AuthService, private fb: FormBuilder,) {
     this.form = this.fb.group({
@@ -59,7 +64,6 @@ export class AdminSettingsComponent {
     onImageSelected(event: any) {
       const file = event.target.files[0];
       if (file) {
-          // Read the selected file as a Data URL and set it as the src of the image element
           const reader = new FileReader();
           reader.onload = (e: any) => {
               const profileImageElement = document.getElementById('profileImage') as HTMLImageElement;
@@ -108,12 +112,46 @@ export class AdminSettingsComponent {
   
     this.authService.updateAdminProfile(profileData).subscribe(
       (response: any) => {
-        console.log('Profile updated successfully!', response);
+        this.showAlert = true
+        setTimeout(() => {
+          this.hideAlert();
+        }, 3000)
       },
       (error: any) => {
-        console.error('Error updating profile:', error);
       }
     );
   }
+  changePassword() {
+    const password = {
+      current_password: this.currentPassword,
+      new_password: this.newPassword
+    }
+    this.authService.changePassword(password)
+      .subscribe(
+        response => {
+          this.showAlert = false; 
+          this.showPasswordAlert = true; 
+          setTimeout(() => {
+            this.hidePasswordAlert();
+          }, 3000);        },
+        error => {
+          if (error.error && error.error.current_password) {
+            this.passwordAlertMessage = error.error.current_password[0];
+            this.showAlert = false;
+            this.showPasswordAlert = true; 
+            setTimeout(() => {
+              this.hidePasswordAlert();
+            }, 3000);
+          } else {
+            console.error('Error changing password', error);
+          }        }
+      );
+  }
+  hideAlert(){
+    this.showAlert = false
+  }
   
+  hidePasswordAlert() {
+    this.showPasswordAlert = false;
+  }
 }
