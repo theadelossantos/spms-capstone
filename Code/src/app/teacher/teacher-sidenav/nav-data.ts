@@ -9,11 +9,6 @@ export const navbarData: INavbarData[] = [
         label: 'Dashboard'
     },
     {
-      routeLink: '/teacher/attendance',
-      icon: 'fas fa-tasks',
-      label: 'Attendance'
-  },
-    {
         routeLink: '/teacher/weeklyprog',
         icon: 'fas fa-list-alt',
         label: 'Weekly Progress',
@@ -44,10 +39,6 @@ export const navbarData: INavbarData[] = [
             {
                 routeLink: '/teacher/settings/profile',
                 label: 'Profile'
-            },
-            {
-                routeLink: '/teacher/settings/privacy',
-                label: 'Privacy'
             }
         ]
     },

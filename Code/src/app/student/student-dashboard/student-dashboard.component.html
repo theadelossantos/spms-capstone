@@ -3,7 +3,20 @@
 <div class="body-container d-flex flex-row">
     <div class="first-column mr-4 w-100">
         <div class="other-details">
-            <h3 class="label-announce">Announcements</h3>
+            <h3 class="label-announce mr-3 ml-3 mt-2">Announcements</h3>
+                <div class="announcement-list ">
+                    <div *ngFor="let announcement of announcementlist" class="announce-div-list mb-2 ml-3 mr-3 p-4">
+                        <div class="d-flex flex-row justify-content-between">
+                            <h6 class="mt-2"><b>New Announcement</b></h6>
+                            <p><b>Date Posted:</b> {{ announcement?.date_posted | date: 'medium' }}</p>
+    
+                        </div>
+    
+                        <p>{{announcement.message}}</p>
+    
+                        <!-- <button class="btn shadow-none" (click)="openAnnouncementModal(announcement)" data-bs-toggle="modal" data-bs-target="#editAnnouncement">View announcement</button> -->
+                    </div>
+            </div>
         </div>
 
     </div>

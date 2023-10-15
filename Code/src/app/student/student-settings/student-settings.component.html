@@ -1,23 +1,78 @@
-<div class="user-profile">
-    <h2>Student Profile</h2> 
-   
-    <form [formGroup] = "form">
-    
-      <label>First Name:</label>
-      <input type="email" class="form-control" aria-describedby="emailHelp" formControlName="studentName">
-      <label>Middle Name:</label>
-      <input type="email" class="form-control" aria-describedby="emailHelp" formControlName="studentMname">
-      <label> Last Name: </label>
-      <input type="email" class="form-control" aria-describedby="emailHelp" formControlName="studentLname">
-      <label>Gender: </label>
-      <input type="email" class="form-control" aria-describedby="emailHelp" formControlName="gender">
-      <label>Address:</label>
-      <input type="email" class="form-control" aria-describedby="emailHelp" formControlName="address">
-      <label>Phone Number:</label>
-      <input type="email" class="form-control" aria-describedby="emailHelp" formControlName="phone">
-      <Label>Email:</Label>
-      <input type="email" class="form-control" aria-describedby="emailHelp" formControlName="email">
-    </form>
-
-
+<div class="alert-css position-fixed top-0 end-0 p-3">
+    <div *ngIf="showAlert" class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong>Success!</strong> Profile Updated Successfully.
+        <button type="button" class="btn-close" (click)="hideAlert()" aria-label="Close"></button>
+      </div>
+</div>
+<div class="alert-css position-fixed top-0 end-0 p-3">
+    <div *ngIf="showPasswordAlert && !passwordAlertMessage" class="alert alert-success alert-dismissible fade show" role="alert">
+      <strong>Success!</strong> Password Updated Successfully.
+      <button type="button" class="btn-close" (click)="hidePasswordAlert()" aria-label="Close"></button>
+    </div>
+  
+    <div *ngIf="showPasswordAlert && passwordAlertMessage" class="alert alert-danger alert-dismissible fade show" role="alert">
+      {{ passwordAlertMessage }}
+      <button type="button" class="btn-close" (click)="hidePasswordAlert()" aria-label="Close"></button>
+    </div>
   </div>
+  
+<div class="containerr mb-3">
+    <div class="roww">
+        <div class="col-lg-12 mb-4 mb-sm-5">
+            <div class="card-style1 border-0">
+                <div class="card-body p-1-9 p-sm-2-3 p-md-6 p-lg-7 mb-5">
+                    <div class="card border-0 row align-items-center">
+                        <div class="col-lg-6 mb-4 mb-lg-0 align-items-center text-center">
+                            <img id="profileImage" src="https://bootdey.com/img/Content/avatar/avatar7.png" class="border mt-4" alt="..." width="50%" height="50%">
+                            <input type="file" (change)="onImageSelected($event)" accept="image/*" style="display: none;" #fileInput>
+                            <h3 class="h2 text-black mb-0 mt-2 fw-bold">{{studentInfo.lname}}, {{studentInfo.fname}}</h3>
+                            <h6 class="text-danger">Admin</h6>
+                            <button class="btn btn-success align-items-center" (click)="fileInput.click()">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle-fill mr-2" viewBox="0 0 16 16">
+                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
+                                </svg>
+                                <span>Add Image</span>
+                            </button>
+                        </div>
+                        
+                        <div class="col-lg-10 px-xl-10">
+                            <div class=" d-lg-inline-block py-1-9 px-1-9 px-sm-6 mb-1-9 rounded">
+                                
+                            </div>
+                            <form [formGroup] = "form" class="pr-3 pb-3">
+                              <label>First Name:</label>
+                              <input type="email" class="form-control" aria-describedby="emailHelp" formControlName="studentName">
+                              <label>Middle Name:</label>
+                              <input type="email" class="form-control" aria-describedby="emailHelp" formControlName="studentMname">
+                              <label> Last Name: </label>
+                              <input type="email" class="form-control" aria-describedby="emailHelp" formControlName="studentLname">
+                              <label>Gender: </label>
+                              <input type="email" class="form-control" aria-describedby="emailHelp" formControlName="gender">
+                              <label>Address:</label>
+                              <input type="email" class="form-control" aria-describedby="emailHelp" formControlName="address">
+                              <label>Phone Number:</label>
+                              <input type="email" class="form-control" aria-describedby="emailHelp" formControlName="phone">
+                              <Label>Email:</Label>
+                              <input type="email" class="form-control" aria-describedby="emailHelp" formControlName="email">
+                              <button class="btn btn-success w-100 mt-3" (click)="saveChanges()">Save Changes</button>
+                            </form>
+                        </div>
+                        <div class="col-lg-10 px-xl-10 mt-4 mb-3">
+                            <h5><b>Change Password</b></h5>
+                            <form (ngSubmit)="changePassword()">
+                                <div class="form-group">
+                                <label for="currentPassword">Current Password</label>
+                                <input type="password" id="currentPassword" name="currentPassword" [(ngModel)]="currentPassword" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                <label for="newPassword">New Password</label>
+                                <input type="password" id="newPassword" name="newPassword" [(ngModel)]="newPassword" class="form-control">
+                                </div>
+                                <button type="submit" class="btn btn-success w-100 mt-3">Change Password</button>
+                            </form>
+  
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>

@@ -866,18 +866,16 @@ def calculate_weighted_scores_view(request, student_id):
 
         qa_weighted_score = (qa_score / total_hps_qa) * 20 if total_hps_qa > 0 else 0
 
-        # Calculate percentage score
         percentage_score = (ww_total_score / pt_total_score) * 100 if pt_total_score > 0 else 0
 
-        # Calculate initial grade
         initial_grade = ww_weighted_score + pt_weighted_score + qa_weighted_score
 
         response_data = {
             'ww_weighted_score': ww_weighted_score,
             'pt_weighted_score': pt_weighted_score,
             'qa_weighted_score': qa_weighted_score,
-            'percentage_score': percentage_score,  # Add percentage score to response
-            'initial_grade': initial_grade,  # Add initial grade to response
+            'percentage_score': percentage_score,  
+            'initial_grade': initial_grade,  
         }
 
         return JsonResponse(response_data)
@@ -1316,9 +1314,6 @@ class AnnouncementByDepartmentView(generics.ListAPIView):
     serializer_class = AnnouncementSerializer
 
     def get_queryset(self):
-        department_id = self.kwargs.get("department_id")
-        try:
-            queryset = Announcement.objects.filter(department=department_id)
-            return queryset
-        except Exception as e:
-            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        department_id = self.kwargs['department_id']
+        queryset = Announcement.objects.filter(department=department_id)
+        return queryset

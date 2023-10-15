@@ -17,6 +17,9 @@ export class StudentDashboardComponent {
   daysArray: { value: number; isActive: boolean }[] = [];
   studentCount: any = {};
   teacherCount: any = {};
+  announcementlist: any [] = []
+  dept_id: any;
+
   constructor(private authService: AuthService, private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
@@ -30,8 +33,21 @@ export class StudentDashboardComponent {
         this.teacherCount = count;
       }
     )
+    this.authService.getStudentProfile().subscribe((userData: any) => {
+      this.dept_id = userData.dept_id
+      this.getAnnouncement()
+
+
+    });
   }
 
+  getAnnouncement(){
+    console.log(this.dept_id)
+    this.authService.getAnnouncementbyDept(this.dept_id).subscribe((data: any) => {
+      console.log(data)
+      this.announcementlist = data
+    })
+  }
   ngAfterViewInit() {
     this.currentDate = document.querySelector(".current-date") as HTMLElement;
     this.prevNextIcon = document.querySelectorAll(".icons span") as NodeListOf<HTMLElement>;

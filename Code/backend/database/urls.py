@@ -84,7 +84,7 @@ urlpatterns = [
     path('change-password/', ChangePasswordView.as_view(), name='change-password'),
     path('teacher/profile/', TeacherProfileView.as_view(), name='teacher-profile'),
     path('student/profile/', StudentProfileView.as_view(), name='student-profile'),
-    path('announcements/<int:department_id>/', views.AnnouncementByDepartmentView.as_view(), name='announcements-by-department'),
+    path('get-announcements/<int:department_id>/', AnnouncementByDepartmentView.as_view(), name='announcements-by-department'),
 
 
 

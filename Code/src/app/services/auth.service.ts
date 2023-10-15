@@ -560,4 +560,8 @@ export class AuthService {
     const authHeader = this.setAuthHeader();
     return this.http.post(`${this.api_url}change-password/`, password, { headers: authHeader });
   }
+  getAnnouncementbyDept(deptId:any){
+    return this.http.get(`${this.api_url}get-announcements/${deptId}/`, this.httpOptions);
+
+  }
 }

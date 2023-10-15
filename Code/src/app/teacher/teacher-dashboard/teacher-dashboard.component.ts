@@ -17,6 +17,14 @@ export class TeacherDashboardComponent {
   daysArray: { value: number; isActive: boolean }[] = [];
   studentCount: any = {};
   teacherCount: any = {};
+  announcementlist: any [] = []
+  dept_id: any;
+  gradelvl_id: any;
+  section_id: any;
+  user: any;
+  assignedSubjectsCount: number;
+  studentsCounts:number;
+
   constructor(private authService: AuthService, private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
@@ -30,6 +38,42 @@ export class TeacherDashboardComponent {
         this.teacherCount = count;
       }
     )
+    this.authService.getTeacherProfile().subscribe((userData: any) => {
+      this.dept_id = userData.dept_id
+      this.gradelvl_id = userData.gradelvl_id
+      this.section_id = userData.section_id
+      this.getAnnouncement()
+
+      this.authService.filterStudents(this.dept_id, this.gradelvl_id, this.section_id).subscribe((data:any) => {
+        this.studentsCounts = data.students.length
+        console.log('count', this.studentsCounts)
+      })
+
+    });
+    this.authService.getTeacherProfile().subscribe((userData: any) => {
+      this.user = userData; 
+
+      const teacherId = userData.teacher_id
+
+      this.authService.getAssignments(teacherId).subscribe(
+        (data : any []) => {
+          this.assignedSubjectsCount = data.length;
+
+        },
+        (error) => {
+          console.error('Error fetching assigned data:', error);
+        }
+      )
+    });
+
+  }
+  
+  getAnnouncement(){
+    console.log(this.dept_id)
+    this.authService.getAnnouncementbyDept(this.dept_id).subscribe((data: any) => {
+      console.log(data)
+      this.announcementlist = data
+    })
   }
 
   ngAfterViewInit() {
