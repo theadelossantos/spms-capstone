@@ -167,7 +167,8 @@ SIMPLE_JWT = {
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
-
+CSRF_COOKIE_NAME = 'csrftoken'
+CSRF_COOKIE_HTTPONLY = True
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_HEADERS = (
@@ -193,3 +194,9 @@ CORS_ALLOW_ORIGIN_REGEX = r"^https://localhost:\d+$"
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_USE_TLS = False
+EMAIL_USE_SSL = False
+EMAIL_PORT = 587  
+EMAIL_HOST = 'localhost'

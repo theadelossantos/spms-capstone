@@ -33,6 +33,7 @@ import { AdminSettingsComponent } from './admin/admin-settings/admin-settings.co
 import { PrivacyComponent } from './admin/admin-settings/privacy/privacy.component';
 import { TeacherAnalyticsComponent } from './teacher/teacher-analytics/teacher-analytics.component';
 import { StudentAnalyticsComponent } from './student/student-analytics/student-analytics.component';
+import { ForgotPasswordComponent } from './landing/forgot-password/forgot-password.component';
 
 
 @NgModule({
@@ -64,6 +65,7 @@ import { StudentAnalyticsComponent } from './student/student-analytics/student-a
     PrivacyComponent,
     TeacherAnalyticsComponent,
     StudentAnalyticsComponent,
+    ForgotPasswordComponent,
   ],
   imports: [
     BrowserModule,

@@ -12,6 +12,7 @@ import jwt_decode from 'jwt-decode';
   providedIn: 'root'
 })
 export class AuthService {
+  private csrfToken: string;
   private api_url: string = 'http://localhost:8000/api/auth/';
   private httpOptions = {
     headers: new HttpHeaders({
@@ -21,7 +22,8 @@ export class AuthService {
     withCredentials: true
   };
   
-  constructor(private http: HttpClient, private router: Router, private cookieService: CookieService) { }
+  constructor(private http: HttpClient, private router: Router, private cookieService: CookieService) {
+   }
 
   private handleError(error: HttpErrorResponse): Observable<any> {
     if (error.error instanceof ErrorEvent) {
@@ -412,6 +414,32 @@ export class AuthService {
       'Content-Type': 'application/json',
     });
   }
+  // private getCSRFToken(): string {
+  //   const csrfToken = document.cookie
+  //     .split('; ')
+  //     .find((cookie) => cookie.startsWith('csrftoken='));
+  //   if (csrfToken) {
+  //     return csrfToken.split('=')[1];
+  //   }
+  //   return '';
+  // }
+  // private setAuthHeader(): HttpHeaders {
+  //   const accessToken = this.getAccessToken();
+  //   const csrfToken = this.getCSRFToken(); 
+  //   let headers = new HttpHeaders({
+  //     'Content-Type': 'application/json',
+  //   });
+
+  //   if (accessToken) {
+  //     headers = headers.set('Authorization', `Bearer ${accessToken}`);
+  //   }
+
+  //   if (csrfToken) {
+  //     headers = headers.set('X-CSRFToken', csrfToken);
+  //   }
+
+  //   return headers;
+  // }
 
   getStudentProfile(): Observable<any> {
     const authHeader = this.setAuthHeader();
@@ -562,6 +590,24 @@ export class AuthService {
   }
   getAnnouncementbyDept(deptId:any){
     return this.http.get(`${this.api_url}get-announcements/${deptId}/`, this.httpOptions);
+  }
 
+  getCsrfToken(): string | null {
+    const cookieValue = document.cookie
+      .split('; ')
+      .find((cookie) => cookie.startsWith('csrftoken='));
+    if (cookieValue) {
+      return cookieValue.split('=')[1];
+    }
+    return null;
+  }
+  private fetchCsrfToken(): void {
+    this.http.get<{ csrf_token: string }>('get-csrf-token/').subscribe(data => {
+      this.csrfToken = data.csrf_token;
+    });
+  }
+  requestPasswordReset(email: any): Observable<any> {
+    const authHeader = this.setAuthHeader();
+    return this.http.post(`${this.api_url}password_reset/`, email, { headers: authHeader, withCredentials: true, });
   }
 }

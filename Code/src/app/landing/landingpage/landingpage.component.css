@@ -1,5 +1,5 @@
 *{
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Poppins', sans-serif;
 }
 a{
     font-family: 'Montserrat', sans-serif;
@@ -208,6 +208,9 @@ a{
 .card-text{
   text-align: justify;
 
+}
+.forgotpassword{
+  text-align: left;
 }
 
 @media (max-width: 767px) {

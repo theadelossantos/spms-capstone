@@ -52,7 +52,6 @@ export class SubjectAnalyticsComponent implements OnInit{
       );
       this.authService.getQuarters().subscribe((quartersData) => {
         this.quarters = quartersData;
-        console.log('quarters', this.quarters);
   
           if (this.quarters && this.quarters.length > 0) {
           this.selectedQuarter = this.quarters[0].quarter_id;
@@ -72,7 +71,6 @@ export class SubjectAnalyticsComponent implements OnInit{
       }
 
   onQuarterChange(){
-    console.log('Selected Quarter ID:', this.selectedQuarter);
 
     if(this.selectedQuarter){
           this.fetchStudentRawScores()
@@ -80,8 +78,7 @@ export class SubjectAnalyticsComponent implements OnInit{
   }
 
   fetchStudentRawScores() {
-    console.log('student', this.studentId)
-    console.log('quarter', this.selectedQuarter)
+
 
     const filters = {
       gradelevel: this.gradeLevelId,
@@ -242,6 +239,11 @@ export class SubjectAnalyticsComponent implements OnInit{
       }
     });
   }
-  
+  getCircleColor(grade: number){
+    return grade < 75 ? '#ff0e0e' : '#78C000' 
+  }
+  getInnerCircleColor(grade: number){
+    return grade < 75 ? '#fcc0c0' : '#C7E596' 
+  }
   
 }

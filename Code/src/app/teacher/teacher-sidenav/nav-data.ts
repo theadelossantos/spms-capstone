@@ -27,6 +27,10 @@ export const navbarData: INavbarData[] = [
         {
           routeLink: '/teacher/analytics/analysis-reports',
           label: 'Analysis Reports'
+        },
+        {
+          routeLink: '/teacher/analytics/student-analytics',
+          label: 'Student Analytics'
         }
       ]
     },

@@ -25,6 +25,10 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.generics import ListAPIView, RetrieveUpdateAPIView,UpdateAPIView
 from datetime import date, timedelta
 from datetime import datetime
+from django.http import JsonResponse
+from django.views.decorators.csrf import ensure_csrf_cookie
+from django.utils.decorators import method_decorator
+from django.middleware.csrf import get_token
 
 
 class AddStudentView(APIView):
@@ -374,7 +378,8 @@ class AdminTokenObtainPairView(TokenObtainPairView):
         self.set_cookie(response, 'access', access_token, secure=secure, samesite=samesite)
 
         return response
-        
+
+
 class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
 
@@ -1317,3 +1322,11 @@ class AnnouncementByDepartmentView(generics.ListAPIView):
         department_id = self.kwargs['department_id']
         queryset = Announcement.objects.filter(department=department_id)
         return queryset
+
+class CsrfTokenView(View):
+
+    @method_decorator(ensure_csrf_cookie)
+    def get(self, request):
+        csrf_token = get_token(request)
+        response = JsonResponse({"csrf_token": csrf_token})
+        return response

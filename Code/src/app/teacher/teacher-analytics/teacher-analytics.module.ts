@@ -5,10 +5,17 @@ import { ItemAnalysisComponent } from './item-analysis/item-analysis.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
+import { StudentAnalyticsTeacherComponent } from './student-analytics-teacher/student-analytics-teacher.component';
+import { StudentsListComponent } from './students-list/students-list.component';
+import { IndividualAnalyticsComponent } from './individual-analytics/individual-analytics.component';
+import { NgCircleProgressModule } from 'ng-circle-progress';
 
 @NgModule({
   declarations: [
-    ItemAnalysisComponent
+    ItemAnalysisComponent,
+    StudentAnalyticsTeacherComponent,
+    StudentsListComponent,
+    IndividualAnalyticsComponent
   ],
   imports: [
     CommonModule,
@@ -16,6 +23,8 @@ import { FormsModule } from '@angular/forms';
     FormsModule,
     NgbModule,
     ReactiveFormsModule,
+    NgCircleProgressModule.forRoot()
+
   ]
 })
 export class TeacherAnalyticsModule { }

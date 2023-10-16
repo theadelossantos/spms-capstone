@@ -64,7 +64,6 @@
             <label for="role">Role</label>
             <select class="form-control" formControlName="role" id="role">
               <option value="" disabled selected>Role</option>
-              <option value="admin">Admin</option>
               <option value="teacher">Teacher</option>
               <option value="student">Student</option>
             </select>
@@ -74,6 +73,7 @@
             <div class="error_message">{{msg}}</div>
           </ng-container>
           <div class="modal-footer">
+            <a [routerLink]="['/forgot-password']"><i>Forgot Password?</i></a>
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             <button type="submit" class="btn btn-primary" [disabled]="!validationFormUser.valid">Login</button>
           </div>

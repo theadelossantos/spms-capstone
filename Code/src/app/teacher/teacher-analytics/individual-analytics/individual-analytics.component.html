@@ -1,0 +1,28 @@
+<div class="containerr">
+    <div class="links d-flex">
+        <a class="classes" [routerLink]="['/teacher/analytics/student-analytics']">Classes </a>
+        <p class="next">></p>
+        <a class="active"><b>{{studentlname}}, {{ studentfname }}</b></a>
+    </div>
+    <div class="subject-grid">
+        <div *ngFor="let subject of subjects" class="subject-card">
+            <p>{{subject.subject_name}}</p>
+            <div class="circle-progress-container ">
+                <circle-progress
+                [percent]="subjectGrades[subject.subject_id]"
+                [radius]="80"
+                [outerStrokeWidth]="16"
+                [innerStrokeWidth]="8"
+                [maxPercent]="100"
+                [outerStrokeColor]="getCircleColor(subjectGrades[subject.subject_id])"
+                [innerStrokeColor]="getInnerCircleColor(subjectGrades[subject.subject_id])"
+                [animation]="true"
+                [animationDuration]="300"
+                [clockwise]="false"
+                [subtitle]="'performance'"
+              ></circle-progress>
+            </div>
+        </div>
+        
+    </div>
+</div>

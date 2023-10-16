@@ -22,10 +22,14 @@ import { TeacherWeeklyprogressComponent } from './teacher/teacher-weeklyprogress
 import { TeacherGradesComponent } from './teacher/teacher-grades/teacher-grades.component';
 import { TeacherAnalyticsComponent } from './teacher/teacher-analytics/teacher-analytics.component';
 import { StudentAnalyticsComponent } from './student/student-analytics/student-analytics.component';
+import { ForgotPasswordComponent } from './landing/forgot-password/forgot-password.component';
 
 const routes: Routes = [
  {
   path: 'admin', component:LoginComponent
+ },
+ {
+  path: 'forgot-password', component:ForgotPasswordComponent
  },
  {
   path: 'teacher', 
