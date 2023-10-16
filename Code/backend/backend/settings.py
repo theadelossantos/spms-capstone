@@ -195,8 +195,10 @@ CORS_ALLOW_ORIGIN_REGEX = r"^https://localhost:\d+$"
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-EMAIL_USE_TLS = False
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
-EMAIL_PORT = 587  
-EMAIL_HOST = 'localhost'
+EMAIL_HOST_USER = 'thelipagraceacademytlga@gmail.com'  
+EMAIL_HOST_PASSWORD = 'goda kvzz ghbp uoel'  

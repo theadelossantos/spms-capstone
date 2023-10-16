@@ -314,3 +314,10 @@ class ChangePasswordSerializer(serializers.Serializer):
             raise serializers.ValidationError('Current password is incorrect.')
 
         return value
+
+class PasswordResetSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+
+class PasswordResetConfirmSerializer(serializers.Serializer):
+    token = serializers.CharField()
+    password = serializers.CharField(write_only=True)

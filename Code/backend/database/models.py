@@ -251,4 +251,10 @@ class Announcement(models.Model):
     
     def create(self, validated_data):
         return Announcement.objects.create(**validated_data)
+    
+
+class PasswordResetToken(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    token = models.CharField(max_length=100)
+    created_at = models.DateTimeField(auto_now_add=True)
 

@@ -592,22 +592,12 @@ export class AuthService {
     return this.http.get(`${this.api_url}get-announcements/${deptId}/`, this.httpOptions);
   }
 
-  getCsrfToken(): string | null {
-    const cookieValue = document.cookie
-      .split('; ')
-      .find((cookie) => cookie.startsWith('csrftoken='));
-    if (cookieValue) {
-      return cookieValue.split('=')[1];
-    }
-    return null;
-  }
-  private fetchCsrfToken(): void {
-    this.http.get<{ csrf_token: string }>('get-csrf-token/').subscribe(data => {
-      this.csrfToken = data.csrf_token;
-    });
-  }
   requestPasswordReset(email: any): Observable<any> {
-    const authHeader = this.setAuthHeader();
-    return this.http.post(`${this.api_url}password_reset/`, email, { headers: authHeader, withCredentials: true, });
+    return this.http.post(`${this.api_url}password-reset/`, email, this.httpOptions);
+  }
+  resetPassword(token: string, newPassword: string): Observable<any> {
+    const body = { token, password: newPassword };
+  
+    return this.http.post(`${this.api_url}password-reset-confirm/`, body);
   }
 }

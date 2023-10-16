@@ -85,11 +85,8 @@ urlpatterns = [
     path('teacher/profile/', TeacherProfileView.as_view(), name='teacher-profile'),
     path('student/profile/', StudentProfileView.as_view(), name='student-profile'),
     path('get-announcements/<int:department_id>/', AnnouncementByDepartmentView.as_view(), name='announcements-by-department'),
-    path('password_reset/', PasswordResetView.as_view(), name='password_reset'),
-    path('password_reset/done/', PasswordResetDoneView.as_view(), name='password_reset_done'),
-    path('reset/<uidb64>/<token>/', PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
-    path('reset/done/', PasswordResetCompleteView.as_view(), name='password_reset_complete'),
-    path('get-csrf-token/', CsrfTokenView.as_view(), name='get-csrf-token'),
+    path('password-reset/', PasswordResetVieww.as_view(), name='password-reset'),
+    path('password-reset-confirm/', PasswordResetConfirmVieww.as_view(), name='password-reset-confirm'),
 
 
 

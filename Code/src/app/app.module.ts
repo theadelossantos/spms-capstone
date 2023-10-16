@@ -34,6 +34,7 @@ import { PrivacyComponent } from './admin/admin-settings/privacy/privacy.compone
 import { TeacherAnalyticsComponent } from './teacher/teacher-analytics/teacher-analytics.component';
 import { StudentAnalyticsComponent } from './student/student-analytics/student-analytics.component';
 import { ForgotPasswordComponent } from './landing/forgot-password/forgot-password.component';
+import { ResetPasswordComponent } from './landing/reset-password/reset-password.component';
 
 
 @NgModule({
@@ -66,6 +67,7 @@ import { ForgotPasswordComponent } from './landing/forgot-password/forgot-passwo
     TeacherAnalyticsComponent,
     StudentAnalyticsComponent,
     ForgotPasswordComponent,
+    ResetPasswordComponent,
   ],
   imports: [
     BrowserModule,

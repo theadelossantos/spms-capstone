@@ -23,7 +23,7 @@ import { TeacherGradesComponent } from './teacher/teacher-grades/teacher-grades.
 import { TeacherAnalyticsComponent } from './teacher/teacher-analytics/teacher-analytics.component';
 import { StudentAnalyticsComponent } from './student/student-analytics/student-analytics.component';
 import { ForgotPasswordComponent } from './landing/forgot-password/forgot-password.component';
-
+import { ResetPasswordComponent } from './landing/reset-password/reset-password.component';
 const routes: Routes = [
  {
   path: 'admin', component:LoginComponent
@@ -31,6 +31,10 @@ const routes: Routes = [
  {
   path: 'forgot-password', component:ForgotPasswordComponent
  },
+ {
+  path: 'reset-password/:token',
+  component: ResetPasswordComponent,
+},
  {
   path: 'teacher', 
   component:TeacherHomepageComponent,

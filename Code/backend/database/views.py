@@ -29,7 +29,8 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.utils.decorators import method_decorator
 from django.middleware.csrf import get_token
-
+from django.core.mail import send_mail
+from django.utils.crypto import get_random_string
 
 class AddStudentView(APIView):
     def post(self, request):
@@ -1323,10 +1324,39 @@ class AnnouncementByDepartmentView(generics.ListAPIView):
         queryset = Announcement.objects.filter(department=department_id)
         return queryset
 
-class CsrfTokenView(View):
+class PasswordResetVieww(APIView):
+    def post(self, request):
+        email = request.data.get('email')
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
 
-    @method_decorator(ensure_csrf_cookie)
-    def get(self, request):
-        csrf_token = get_token(request)
-        response = JsonResponse({"csrf_token": csrf_token})
-        return response
+        token = get_random_string(length=32)
+        reset_token = PasswordResetToken(user=user, token=token)
+        reset_token.save()
+
+        subject = 'Reset Your Password'
+        message = f'Click the following link to reset your password: http://localhost:4200/reset-password/{token}/'
+        from_email = 'theadelossantos14@gmail.com'  
+        recipient_list = [email]
+        send_mail(subject, message, from_email, recipient_list)
+
+        return Response({'message': 'Password reset email sent'}, status=status.HTTP_200_OK)
+
+class PasswordResetConfirmVieww(APIView):
+    def post(self, request):
+        serializer = PasswordResetConfirmSerializer(data=request.data)
+        if serializer.is_valid():
+            token = serializer.validated_data['token']
+            password = serializer.validated_data['password']
+            try:
+                reset_token = PasswordResetToken.objects.get(token=token)
+                user = reset_token.user
+                user.password = make_password(password)
+                user.save()
+                reset_token.delete()
+                return Response({'message': 'Password reset successful'}, status=status.HTTP_200_OK)
+            except PasswordResetToken.DoesNotExist:
+                return Response({'error': 'Invalid or expired token'}, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

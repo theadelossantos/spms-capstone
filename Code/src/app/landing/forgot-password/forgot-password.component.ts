@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from 'src/app/services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-forgot-password',
@@ -9,8 +10,9 @@ import { AuthService } from 'src/app/services/auth.service';
 })
 export class ForgotPasswordComponent {
   passwordResetForm: FormGroup
-  
-  constructor(private fb:FormBuilder, private authService: AuthService){}
+  successMessage: string | null = null;
+
+  constructor(private fb:FormBuilder, private authService: AuthService, private router: Router){}
 
   ngOnInit(){
     this.passwordResetForm = this.fb.group({
@@ -20,11 +22,18 @@ export class ForgotPasswordComponent {
   onSubmit(){
     if(this.passwordResetForm.valid){
       const email = this.passwordResetForm.get('email').value;
-      this.authService.requestPasswordReset(email).subscribe(
+      const payload = { email: email };
+      this.authService.requestPasswordReset(payload).subscribe(
         (response) => {
-          console.log('success')
+          this.successMessage = 'Email successfully sent';        
         }
       )
     }
+  }
+  hideAlert(){
+    this.successMessage = ''
+  }
+  navigate(){
+    this.router.navigate(['/'])
   }
 }

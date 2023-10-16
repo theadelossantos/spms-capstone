@@ -21,7 +21,7 @@ export class AddsectionComponent {
 
   successMessage: string = '';
   errorMessage:string = '';
-  showAlert: boolean = true;
+  showAlert: boolean = false;
  
   validationMessages = {
     grlevel: [{type: "required", message: "Choose Grade Level"}],
