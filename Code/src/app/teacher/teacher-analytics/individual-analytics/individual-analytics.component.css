@@ -29,15 +29,45 @@ a:hover{
     display: inline-block;
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 }
+
 .subject-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr); 
+    grid-template-columns: repeat(2, 1fr); 
     gap: 20px;
-  }
+}
+
 .circle-progress-container {
     text-align: center;
 }
 
+.progress-bar {
+    width: 100%;
+    height: 14px;
+    background-color: #f0f0f0;
+    margin: 8px 0;
+    border-radius: 10px;
+
+}
+
+.progress {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    color: #fff;
+}
+.percentage-text {
+    text-align: center;
+    width: 100%; 
+}
+.bi-info-circle-fill{
+    fill: rgb(241, 241, 61);
+    margin-bottom: 3px;
+}
+.bi-check-circle-fill{
+    fill: green;
+    margin-bottom: 3px;
+
+}
 /* .containerr{
     background-color: white;
     padding: 25px;

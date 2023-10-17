@@ -157,4 +157,21 @@ export class IndividualAnalyticsComponent {
   getInnerCircleColor(grade: number){
     return grade < 75 ? '#fcc0c0' : '#C7E596' 
   }
+  getOverallAverage(): number {
+    const totalGrades = Object.values(this.subjectGrades);
+    const sum = totalGrades.reduce((acc, grade) => acc + grade, 0);
+    return totalGrades.length > 0 ? Math.round(sum / totalGrades.length) : 0;
+  }
+
+  getHonorQualificationProgress(){
+    const overallAverage = this.getOverallAverage();
+    const honorRollThreshold = 90;
+
+    if(overallAverage >= honorRollThreshold){
+      return 0
+    }
+    else{
+      return honorRollThreshold - overallAverage
+    }
+  }
 }
