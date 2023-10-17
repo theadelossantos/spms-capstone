@@ -9,13 +9,15 @@ import { StudentAnalyticsTeacherComponent } from './student-analytics-teacher/st
 import { StudentsListComponent } from './students-list/students-list.component';
 import { IndividualAnalyticsComponent } from './individual-analytics/individual-analytics.component';
 import { NgCircleProgressModule } from 'ng-circle-progress';
+import { QuarterlyPerformanceComponent } from './quarterly-performance/quarterly-performance.component';
 
 @NgModule({
   declarations: [
     ItemAnalysisComponent,
     StudentAnalyticsTeacherComponent,
     StudentsListComponent,
-    IndividualAnalyticsComponent
+    IndividualAnalyticsComponent,
+    QuarterlyPerformanceComponent
   ],
   imports: [
     CommonModule,

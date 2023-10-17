@@ -3,6 +3,8 @@
         <a class="classes" [routerLink]="['/teacher/analytics/student-analytics']">Classes </a>
         <p class="next">></p>
         <a class="active"><b>{{studentlname}}, {{ studentfname }}</b></a>
+        <p class="next">></p>
+        <a class="classes" [routerLink]="['/teacher/analytics/quarterly-performance', studentId]">Quarterly Performance </a>
     </div>
     <select class="form-select shadow-none select-opt mb-2" [(ngModel)]="selectedQuarter" name="quarter" (ngModelChange)="onQuarterChange()">
         <option *ngFor="let quarter of quarters" [value]="quarter.quarter_id">{{quarter.quarter_name}}</option>

@@ -5,6 +5,7 @@ import { ItemAnalysisComponent } from './item-analysis/item-analysis.component';
 import { StudentAnalyticsTeacherComponent } from './student-analytics-teacher/student-analytics-teacher.component';
 import { StudentsListComponent } from './students-list/students-list.component';
 import { IndividualAnalyticsComponent } from './individual-analytics/individual-analytics.component';
+import { QuarterlyPerformanceComponent } from './quarterly-performance/quarterly-performance.component';
 
 const routes: Routes = [
   {
@@ -26,6 +27,10 @@ const routes: Routes = [
   {
     path: 'indiv-analytics/:studentId',
     component: IndividualAnalyticsComponent,
+  },
+  {
+    path: 'quarterly-performance/:studentId',
+    component: QuarterlyPerformanceComponent,
   },
 ];
 
