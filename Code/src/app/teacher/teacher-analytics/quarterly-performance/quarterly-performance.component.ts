@@ -143,8 +143,9 @@ export class QuarterlyPerformanceComponent {
           {
             label: 'Quarterly Average',
             data: data,
-            borderColor: '#1B59F8',
+            borderColor: 'rgba(75, 192, 192, 1)',
             backgroundColor: 'rgba(54, 162, 235, 0.2)',
+
             borderWidth: 2,
             fill: true,
             pointRadius: 4,
