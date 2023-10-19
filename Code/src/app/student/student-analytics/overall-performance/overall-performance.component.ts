@@ -3,11 +3,12 @@ import { AuthService } from 'src/app/services/auth.service';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 
 @Component({
-  selector: 'app-individual-analytics',
-  templateUrl: './individual-analytics.component.html',
-  styleUrls: ['./individual-analytics.component.css']
+  selector: 'app-overall-performance',
+  templateUrl: './overall-performance.component.html',
+  styleUrls: ['./overall-performance.component.css']
 })
-export class IndividualAnalyticsComponent {
+export class OverallPerformanceComponent {
+  user:any;
   studentId: number
   studentfname: string;
   studentlname: string;
@@ -21,6 +22,7 @@ export class IndividualAnalyticsComponent {
   initialGrade: number = 0;
   weeklyProgress: any[] = [];
   subjectGrades: { [key: string]: number } = {};
+  subjectName: string
 
   constructor(private route: ActivatedRoute, private authService: AuthService) {}
 
@@ -31,22 +33,27 @@ export class IndividualAnalyticsComponent {
     });
     
     this.authService.getStudentProfile().subscribe(
-      (studentName: any) => {
-        console.log(studentName)
-       this.studentfname = studentName.fname;
-       this.studentlname = studentName.lname;
-       this.deptId = studentName.dept_id;
-       this.gradelvlId = studentName.gradelvl_id;
-       this.sectionId = studentName.section_id;
+      (userData: any) => {
+        console.log(userData)
+        this.user = userData
 
+        this.studentId = userData.student_id
+        this.deptId = userData.dept_id
+        this.gradelvlId = userData.gradelvl_id
+        this.sectionId = userData.section_id
 
-      this.authService.getSubjectsByDeptGL(this.deptId, this.gradelvlId).subscribe((response) => {
-        this.subjects = response.subjects;
-        if (this.subjects.length > 0) {
-          this.subjectId = this.subjects[0].subject_id;
-        }
-        console.log('Subjects:', this.subjects);
-
+        this.authService.getSubjectsByDeptGL(this.deptId, this.gradelvlId).subscribe(
+          (subjectData: any) => {
+            this.subjects = subjectData.subjects;
+            if (this.subjects.length > 0) {
+              this.subjectId = this.subjects[0].subject_id;
+            }
+            console.log('Subjects:', this.subjects);
+          },
+          (error) => {
+            console.error('Error fetching subject name:', error);
+          }
+        );
         this.authService.getQuarters().subscribe((quartersData) => {
           this.quarters = quartersData;
     
@@ -56,21 +63,20 @@ export class IndividualAnalyticsComponent {
             }
             for (const subject of this.subjects) {
               this.fetchStudentRawScoresForSubject(subject);
-            }            
-            // this.getWeeklyProgress()
-            // this.createWeeklyProgressChart();
+            }   
+
             
           },
           (error) => {
             console.error('Error fetching students:', error);
           }
         )
+       
 
-      });
-      },
-      (error) => {
-        console.error('Error fetching grade level name:', error);
-      }
+    },
+    (error) => {
+      console.error('Error fetching grade level name:', error);
+    }
       
     );
 
@@ -83,7 +89,6 @@ export class IndividualAnalyticsComponent {
       }    
     }
   }
-
   fetchStudentRawScoresForSubject(subject: any) {
     const filters = {
       gradelevel: this.gradelvlId,
@@ -96,10 +101,14 @@ export class IndividualAnalyticsComponent {
     this.authService.fetchIndivStudentGrades(filters).subscribe(
       (data) => {
         console.log('Raw Scores Data:', data);
-        const initialGrade = parseFloat(data[0].initial_grade);
-        console.log(initialGrade);
-
-        this.subjectGrades[subject.subject_id] = this.convertToPerspectiveGrade(initialGrade);
+        if (data.length > 0){
+          const initialGrade = parseFloat(data[0].initial_grade);
+          console.log(initialGrade);
+  
+          this.subjectGrades[subject.subject_id] = this.convertToPerspectiveGrade(initialGrade);
+        }else{
+          this.subjectGrades[subject.subject_id] = 0
+        }
       },
       (error) => {
         console.error('Error fetching student raw scores:', error);
@@ -108,7 +117,6 @@ export class IndividualAnalyticsComponent {
   }
 
   convertToPerspectiveGrade(initialGrade: number): number {
-    // console.log(this.initialGrade)
     if (initialGrade >= 100) return 100;
     if (initialGrade >= 98.4) return 99;
     if (initialGrade >= 96.8) return 98;

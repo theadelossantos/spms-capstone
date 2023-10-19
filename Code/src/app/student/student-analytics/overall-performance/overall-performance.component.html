@@ -1,13 +1,13 @@
 <div class="containerr">
     <div class="links d-flex">
-        <a class="classes" [routerLink]="['/teacher/analytics/student-analytics']">Classes </a>
+        <a class="classes" [routerLink]="['/student/analytics']">Analytics </a>
         <p class="next">></p>
-        <a class="active"><b>{{studentlname}}, {{ studentfname }}</b></a>
-        <p class="next">></p>
+        <a class="active" [routerLink]="['/student/analytics/overall-performance']"><b>Overall Performance</b> </a>
     </div>
+<!--     
     <select class="form-select shadow-none select-opt mb-2" [(ngModel)]="selectedQuarter" name="quarter" (ngModelChange)="onQuarterChange()">
         <option *ngFor="let quarter of quarters" [value]="quarter.quarter_id">{{quarter.quarter_name}}</option>
-    </select>
+    </select> -->
     <div class="row">
         <div class="col-md-6">
             <div class="subject-card overall-average-container p-3 d-flex justify-content-center flex-column align-items-center">

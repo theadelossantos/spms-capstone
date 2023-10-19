@@ -7,9 +7,6 @@ a{
     margin-right: 3px;
     text-decoration: none;
 }
-.form-control:focus {
-    box-shadow:none;
- }
 a:hover{
     text-decoration: underline;
 }
@@ -73,8 +70,3 @@ a:hover{
     margin-bottom: 3px;
 
 }
-/* .containerr{
-    background-color: white;
-    padding: 25px;
-    border-radius: 10px;
-} */
