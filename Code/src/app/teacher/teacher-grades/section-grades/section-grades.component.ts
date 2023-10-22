@@ -335,7 +335,7 @@ export class SectionGradesComponent {
     this.authService.fetchStudentGrades(filters).subscribe(
       (data) => {
         console.log('Raw Scores Data:', data);
-
+  
         for (const scoreData of data) {
           const studentId = scoreData.student;
           console.log('Processing scores for Student ID:', studentId);
@@ -347,32 +347,37 @@ export class SectionGradesComponent {
             for (let i = 1; i <= 10; i++) {
               const wwScoreKey = `ww_score_${i}`;
               const ptScoreKey = `pt_score_${i}`;
-              const qaScore = parseFloat(scoreData.qa_score)
+              const qaScore = parseFloat(scoreData.qa_score);
+  
               if (scoreData.hasOwnProperty(wwScoreKey)) {
                 const wwScore = parseFloat(scoreData[wwScoreKey]);
-                studentToUpdate.ww_scores[i - 1] = isNaN(wwScore) ? 0 : wwScore;
+                studentToUpdate.ww_scores[i - 1] = isNaN(wwScore) ? null : wwScore;
+              } else {
+                studentToUpdate.ww_scores[i - 1] = null;
               }
+  
               if (scoreData.hasOwnProperty(ptScoreKey)) {
                 const ptScore = parseFloat(scoreData[ptScoreKey]);
-                studentToUpdate.pt_scores[i - 1] = isNaN(ptScore) ? 0 : ptScore;              
+                studentToUpdate.pt_scores[i - 1] = isNaN(ptScore) ? null : ptScore;
+              } else {
+                studentToUpdate.pt_scores[i - 1] = null;
               }
-              if(!isNaN(qaScore)){
+  
+              if (!isNaN(qaScore)) {
                 studentToUpdate.qa_score = qaScore;
-              }else{
-                studentToUpdate.qa_score = 0;
-                studentToUpdate.ww_scores[i - 1] = 0;
-                studentToUpdate.pt_scores[i - 1] = 0;
+              } else {
+                studentToUpdate.qa_score = null;
               }
             }
+  
             studentToUpdate.totalWrittenWorkRS = parseFloat(scoreData.ww_total_score);
             studentToUpdate.totalPerfTaskRS = parseFloat(scoreData.pt_total_score);
             studentToUpdate.initialTotalWrittenWorkRS = studentToUpdate.totalWrittenWorkRS;
             studentToUpdate.quarter = parseFloat(scoreData.quarter);
             studentToUpdate.totalPerfTaskWS = parseFloat(scoreData.pt_weighted_score);
-            studentToUpdate.totalWrittenWorkWS = parseFloat(scoreData.ww_weighted_score)
-            studentToUpdate.totalQAPercentage = parseFloat(scoreData.qa_percentage_score)
-            studentToUpdate.totalQuarterlyAssessmentWS = parseFloat(scoreData.qa_weighted_score)
-
+            studentToUpdate.totalWrittenWorkWS = parseFloat(scoreData.ww_weighted_score);
+            studentToUpdate.totalQAPercentage = parseFloat(scoreData.qa_percentage_score);
+            studentToUpdate.totalQuarterlyAssessmentWS = parseFloat(scoreData.qa_weighted_score);
           } else {
             console.error(`Student with ID ${studentId} not found in students array.`);
           }
@@ -385,6 +390,7 @@ export class SectionGradesComponent {
       }
     );
   }
+  
   
   
 

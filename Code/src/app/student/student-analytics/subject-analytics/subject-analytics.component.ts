@@ -151,7 +151,7 @@ export class SubjectAnalyticsComponent implements OnInit{
 
   getWeeklyProgress() {
 
-    this.authService.getStudentWeeklyProgress(this.studentId, this.gradeLevelId,this.sectionId,this.subjectId,this.selectedQuarter).subscribe(
+    this.authService.getStudentWeeklyProgress(this.gradeLevelId,this.sectionId,this.subjectId,this.selectedQuarter).subscribe(
       (response: any) => {
         console.log('weekly progress',response)
         this.weeklyProgress = response

@@ -526,8 +526,8 @@ export class AuthService {
   addWeeklyProgress(studentWeeklyProg:any): Observable<any> {
     return this.http.post(`${this.api_url}add-weeklyprogress/`, studentWeeklyProg, this.httpOptions);
   }
-  getStudentWeeklyProgress(studentId, gradeLevelId: number,sectionId: number,subjectId: number,quarterId: number,  month?: string): Observable<any> {
-    let url = `${this.api_url}get-weeklyprog/${studentId}/${gradeLevelId}/${sectionId}/${subjectId}/${quarterId}/`;
+  getStudentWeeklyProgress(gradeLevelId: number,sectionId: number,subjectId: number,quarterId: number,  month?: string): Observable<any> {
+    let url = `${this.api_url}get-weeklyprog/${gradeLevelId}/${sectionId}/${subjectId}/${quarterId}/`;
     if (month) {
       url += `?month=${month}`;
     }

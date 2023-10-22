@@ -69,7 +69,6 @@ export class StudentWeeklyprogComponent {
         const subjectId = this.subjects[index].subject_id;
 
         this.authService.getStudentWeeklyProgress(
-            this.studentId,
             this.gradelvlId,
             this.sectionId,
             subjectId, 
@@ -103,7 +102,6 @@ filterByMonth() {
 
     this.authService
         .getStudentWeeklyProgress(
-            this.studentId,
             this.gradelvlId,
             this.sectionId,
             subjectId,

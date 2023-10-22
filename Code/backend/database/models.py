@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils import timezone
 from django.contrib.auth.hashers import make_password, check_password
+from datetime import datetime
 
 class CustomUser(AbstractUser):
     STUDENT = 'student'
@@ -157,8 +158,6 @@ class HpsScores(models.Model):
 
     hps_qa_total_score = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
 
-
-
 class StudentGrade(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
@@ -166,10 +165,15 @@ class StudentGrade(models.Model):
     gradelevel = models.ForeignKey(GradeLevel, on_delete=models.CASCADE)
     section = models.ForeignKey(Section, on_delete=models.CASCADE)
 
-
     ww_score_1 = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
+    date_input_ww_score_1 = models.DateField(null=True, blank=True)
+
+
     ww_score_2 = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
+    date_input_ww_score_2 = models.DateField(null=True, blank=True)
+
     ww_score_3 = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
+
     ww_score_4 = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
     ww_score_5 = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
     ww_score_6 = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
@@ -204,9 +208,7 @@ class StudentGrade(models.Model):
     initial_grade = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
     
     quarterly_grade = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
-
-   
-
+    
     def __str__(self):
         return f" {self.student} in {self.subject}"
 
@@ -252,7 +254,6 @@ class Announcement(models.Model):
     def create(self, validated_data):
         return Announcement.objects.create(**validated_data)
     
-
 class PasswordResetToken(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     token = models.CharField(max_length=100)

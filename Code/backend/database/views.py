@@ -1091,11 +1091,31 @@ class WeeklyProgressListCreateView(generics.ListCreateAPIView):
     queryset = WeeklyProgress.objects.all()
     serializer_class = WeeklyProgressSerializer
 
+    # def create(self, request, *args, **kwargs):
+    #     subject_id = request.data.get('subject_id')
+    #     gradelevel_id = request.data.get('gradelvl_id')
+    #     section_id = request.data.get('section_id')
+    #     quarter_id = request.data.get('quarter_id')
+    #     task_name = request.data.get('task_name')
+
+    #     existing_record = WeeklyProgress.objects.filter(
+    #         subject_id=subject_id,
+    #         gradelvl_id=gradelevel_id,
+    #         section_id=section_id,
+    #         quarter_id=quarter_id,
+    #         task_name=task_name,
+
+    #     ).first()
+
+    #     if existing_record:
+    #         return Response({'detail': 'This record already exists.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    #     return super().create(request, *args, **kwargs)
+
 class getWeeklyProgress(ListAPIView):
     serializer_class = WeeklyProgressSerializer
 
     def get_queryset(self):
-        student_id = self.kwargs['student_id']
         grade_level_id = self.kwargs['grade_level_id'] 
         section_id = self.kwargs['section_id']
         subject_id = self.kwargs['subject_id']
@@ -1103,7 +1123,6 @@ class getWeeklyProgress(ListAPIView):
         selected_month = self.request.query_params.get('month', None)
 
         queryset = WeeklyProgress.objects.filter(
-            student_id = student_id,
             gradelvl_id=grade_level_id,
             section_id=section_id,
             subject_id=subject_id,
@@ -1114,7 +1133,7 @@ class getWeeklyProgress(ListAPIView):
             queryset = queryset.filter(input_date__month=datetime.strptime(selected_month, "%B").month)
 
         return queryset
-
+    
 class WeeklyProgressBatchUpdateView(generics.UpdateAPIView):
     serializer_class = WeeklyProgressSerializer
     permission_classes = [permissions.AllowAny]
@@ -1123,35 +1142,33 @@ class WeeklyProgressBatchUpdateView(generics.UpdateAPIView):
         data = request.data
 
         for record_data in data:
-            if isinstance(record_data, dict):
-                weeklyprog_id = record_data.get('id')
-                subject_id = record_data.get('subject_id')
-                gradelevel_id = record_data.get('gradelvl_id')
-                section_id = record_data.get('section_id')
-                quarter_id = record_data.get('quarter_id')
+            student_id = record_data.get('student_id')
+            subject_id = record_data.get('subject_id')
+            gradelevel_id = record_data.get('gradelvl_id')
+            section_id = record_data.get('section_id')
+            quarter_id = record_data.get('quarter_id')
 
-                try:
-                    student_weeklyprog = WeeklyProgress.objects.get(
-                        id=weeklyprog_id,
-                        subject_id=subject_id,
-                        gradelvl_id=gradelevel_id,
-                        section_id=section_id,
-                        quarter_id=quarter_id
-                    )
+            try:
+                student_weeklyprog = WeeklyProgress.objects.get(
+                    student_id=student_id,
+                    subject_id=subject_id,
+                    gradelvl_id=gradelevel_id,
+                    section_id=section_id,
+                    quarter_id=quarter_id
+                )
 
-                    serializer = WeeklyProgressSerializer(student_weeklyprog, data=record_data, partial=True)
+                serializer = WeeklyProgressSerializer(student_weeklyprog, data=record_data, partial=True)
 
-                    if serializer.is_valid():
-                        serializer.save()
-                    else:
-                        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                if serializer.is_valid():
+                    serializer.save()
+                else:
+                    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-                except StudentGrade.DoesNotExist:
-                    return Response({'detail': 'Record not found.'}, status=status.HTTP_404_NOT_FOUND)
-            else:
-                return Response({'detail': 'Invalid data format.'}, status=status.HTTP_400_BAD_REQUEST)
+            except WeeklyProgress.DoesNotExist:
+                return Response({'detail': 'Record not found.'}, status=status.HTTP_404_NOT_FOUND)
 
         return Response({'detail': 'Batch update successful.'}, status=status.HTTP_200_OK)
+
 
 class RemoveTaskView(generics.DestroyAPIView):
     queryset = WeeklyProgress.objects.all()

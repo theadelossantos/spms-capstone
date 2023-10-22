@@ -44,7 +44,7 @@ class QuarterAdmin(admin.ModelAdmin):
     list_display = ('quarter_id','quarter_name')
 admin.site.register(Quarter, QuarterAdmin)
 
-class WeeklyProgressAdmin(admin.ModelAdmin):
+class WeeklyProgressAdmin(admin.ModelAdmin): 
     list_display = ('student_id','dept_id','gradelvl_id','section_id','subject_id', 'quarter_id', 'task_name', 'task_score', 'task_status', 'input_date')
 admin.site.register(WeeklyProgress, WeeklyProgressAdmin)
 
@@ -55,5 +55,6 @@ admin.site.register(ItemAnalysis, ItemAnalysisAdmin)
 admin.site.register(Announcement)
 admin.site.register(HpsScores)    
 admin.site.register(CustomUser)
+
 admin.site.register(StudentGrade)
 

@@ -6,70 +6,174 @@
 <div class="toggle-select-container d-flex justify-content-between mt-4">
   <div class="d-flex flex-row">
     <h3 class="learners-names">LEARNERS' NAMES</h3>
-
   </div>
   <div >
-    <select class="form-select" id="dateRangeSelect" [(ngModel)]="selectedMonth" (change)="filterByMonth()">
-      <option value="This Week">This Week</option>
-      <option value="January">January</option>
-      <option value="February">February</option>
-      <option value="March">March</option>
-      <option value="April">April</option>
-      <option value="May">May</option>
-      <option value="June">June</option>
-      <option value="July">July</option>
-      <option value="August">August</option>
-      <option value="September">September</option>
-      <option value="October">October</option>
-      <option value="November">November</option>
-      <option value="December">December</option>
+    <select  class="form-select" [(ngModel)]="selectedAssessmentType">
+      <option *ngFor="let type of assessmentTypes" [value]="type">{{ type }}</option>
     </select>
-    
   </div>
-
 </div>
+
+
+
+<form (submit)="submitForm()">
+  <input type="text"  class="taskName" name="taskName" [(ngModel)]="taskName" placeholder="Task Name"/>
+  <input type="text" [(ngModel)]="hpsData[selectedAssessmentType]"   name="highestPossibleScore" placeholder="Highest Possible Score" />
+  <input
+  *ngIf="selectedAssessmentType === 'Written Work 1'"
+  type="date"
+  [(ngModel)]="selectedDateWW1"
+  name="assessmentDateWW1"
+/>
+
+<input
+  *ngIf="selectedAssessmentType === 'Written Work 2'"
+  type="date"
+  [(ngModel)]="selectedDateWW2"
+  name="assessmentDateWW2"
+/>  
+<table *ngIf="selectedAssessmentType" class="student-scores mt-4" id="grades-table">
+    <thead>
+      <tr>
+        <th>No.</th>
+        <th>Learners' Names</th>
+        <th>{{ selectedAssessmentType }}</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let student of students; let i = index">
+        <td>{{ i + 1 }}</td>
+        <td>{{ student.lname }}, {{ student.fname }}</td>
+        <td>
+          <input type="text" [ngModel]="getStudentScore(student, selectedAssessmentType)" (input)="setStudentScore(student, selectedAssessmentType, $event)" [name]="'studentScores_' + selectedAssessmentType + '_' + student.id"/>
+        </td>
+        <td>
+          <select [(ngModel)]="student.status" [name]="'studentStatus_' + selectedAssessmentType + '_' + student.id">
+            <option value="Completed">Completed</option>
+            <option value="Missing">Missing</option>
+          </select>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <button type="submit" class="btn btn-primary align-items-center mt-2">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-floppy-fill" viewBox="0 0 16 16">
+      <path d="M0 1.5A1.5 1.5 0 0 1 1.5 0H3v5.5A1.5 1.5 0 0 0 4.5 7h7A1.5 1.5 0 0 0 13 5.5V0h.086a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5H14v-5.5A1.5 1.5 0 0 0 12.5 9h-9A1.5 1.5 0 0 0 2 10.5V16h-.5A1.5 1.5 0 0 1 0 14.5v-13Z"/>
+      <path d="M3 16h10v-5.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5V16Zm9-16H4v5.5a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V0ZM9 1h2v4H9V1Z"/>
+    </svg>
+    Save</button>
+</form>
+
 <!-- <select class="form-select shadow-none select-opt mb-2" [(ngModel)]="selectedQuarter" name="quarter" (ngModelChange)="onQuarterChange()">
   <option *ngFor="let quarter of quarters" [value]="quarter.quarter_id">{{quarter.quarter_name}}</option>
 </select> -->
-<ng-container *ngIf="students.length > 0; else noDataFound">
+<!-- <form (submit)="submitForm()">
+  <table #printableContent id="grades-table"  class="printable-table">
+    <thead>
+      <tr>
+        <td colspan="33"><h2 class="class-record">CLASS RECORD</h2></td>
+      </tr>
+      <tr>
+        <td class="header" colspan="11"><b>QUARTER:</b> {{ selectedQuarter }}</td>
+        <td class="header" colspan="11"><b>GRADE & SECTION:</b> {{ gradeLevelName}} - {{ sectionName }} </td>
+        <td class="header" colspan="11"><b>SUBJECT: </b>{{ selectedSubject.subjectName }}</td>
+      </tr>
+      <tr>
+        <th>No.</th>
+        <th>LEARNERS' NAMES</th>
+        <th colspan="10">WRITTEN WORKS ({{ calculationWWPercentage  }}%)</th>
+        <th colspan="10">PERFORMANCE TASKS ({{ calculationPTPercentage }}%)</th>
+        <th colspan="3">QUARTERLY ASSESSMENT({{ calculationQAPercentage }}%)</th>
+      </tr>
+      <tr>
+        <td></td>
+            <td></td>
+            <td><b>1</b></td>
+            <td><b>2</b></td>
+            <td><b>3</b></td>
+            <td><b>4</b></td>
+            <td><b>5</b></td>
+            <td><b>6</b></td>
+            <td><b>7</b></td>
+            <td><b>8</b></td>
+            <td><b>9</b></td>
+            <td><b>10</b></td>
+  
+            <td><b>1</b></td>
+            <td><b>2</b></td>
+            <td><b>3</b></td>
+            <td><b>4</b></td>
+            <td><b>5</b></td>
+            <td><b>6</b></td>
+            <td><b>7</b></td>
+            <td><b>8</b></td>
+            <td><b>9</b></td>
+            <td><b>10</b></td>
+  
+            <td><b>1</b></td>
+      </tr>
+      <tr>
+            <td></td>
+            <td class="hps"><b>HIGHEST POSSIBLE SCORE</b></td>
+            <td *ngFor="let hps of formData.writtenWorkHPS; let i = index; trackBy: trackByIndex">
+              <input
+                type="text"
+                [(ngModel)]="formData.writtenWorkHPS[i]"
+                [name]="'wwhps' + (i + 1)"
+              />
+            </td>
+  
+            <td *ngFor="let hps of formData.performanceTaskHPS; let i = index; trackBy: trackByIndex">
+              <input
+                type="text"
+                [(ngModel)]="formData.performanceTaskHPS[i]"
+                [name]="'pthps' + (i + 1)"
+              />
+            </td>
+  
+  
+            <td><input type="text"  [(ngModel)]="formData.quarterlyAssessmentHPS" name="qahps1"/></td>
+            
+      </tr>
+      
+    </thead>
+    <tbody>
+      <tr *ngFor="let student of students; let i = index">
+        <td>{{ i + 1}}</td>
+        <td class="student-name" >{{student.lname}}, {{student.fname}}</td>
+        <td *ngFor="let wwScore of student.ww_scores; let j = index; trackBy: trackByIndex">
+          <input
+            type="text"
+            [(ngModel)]="student.ww_scores[j]"
+            name="wwrs{{ i }}_{{ j }}" 
+          />
+        </td>       
+        
+  
+        <td *ngFor="let ptScore of student.pt_scores; let j = index; trackBy: trackByIndex">
+          <input
+            type="text"
+            [(ngModel)]="student.pt_scores[j]"
+            name="ptrs{{ i }}_{{ j }}" 
+          />
+        </td>
+        
+        
+        <td><input type="text" [(ngModel)]="student.qa_score" name="qa_score_{{student.id}}"/></td>
+  
+  
+  
+  
+      </tr>
+    </tbody>
+  </table>
+  <button type="submit" class="btn btn-primary align-items-center mt-2">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-floppy-fill" viewBox="0 0 16 16">
+      <path d="M0 1.5A1.5 1.5 0 0 1 1.5 0H3v5.5A1.5 1.5 0 0 0 4.5 7h7A1.5 1.5 0 0 0 13 5.5V0h.086a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5H14v-5.5A1.5 1.5 0 0 0 12.5 9h-9A1.5 1.5 0 0 0 2 10.5V16h-.5A1.5 1.5 0 0 1 0 14.5v-13Z"/>
+      <path d="M3 16h10v-5.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5V16Zm9-16H4v5.5a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V0ZM9 1h2v4H9V1Z"/>
+    </svg>
+    Save</button>
+</form> -->
 
-  <div class="classes-container" *ngFor="let student of students">
-      <div class="data-container" >
-          <div class="secion-subject">
-              <h5 (click)="toggleStudentExpansion(student.id)">{{student.lname}}, {{student.fname}}</h5>
-          </div>
-          <div class="angle-icon" (click)="toggleStudentExpansion(student.id)">
-              <svg *ngIf="!studentExpansionMap[student.id]; else notExpanded" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-right" viewBox="0 0 16 16">
-                  <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
-              </svg>
-              <ng-template #notExpanded>
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
-                  <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
-                </svg>
-              </ng-template>
-          </div>
-      </div>
-      <div class="student-details" *ngIf="studentExpansionMap[student.id]">
-        <div class="task-row d-flex mb-2" *ngFor="let task of studentTasks[student.id]; let i = index">
-          <input class="form-control mr-2" type="text" [(ngModel)]="task.task_name" placeholder="Task Name">
-          <input class="form-control mr-2" type="text" [(ngModel)]="task.task_score" placeholder="Task Score" >
-          <select class="form-select mr-2" [(ngModel)]="task.task_status">
-            <option value ="" selected disabled>Status</option>
-            <option value="Completed">Completed</option>
-            <option value="Missing">Missing</option>
-            <option value="Failed">Failed</option>
-          </select>
-          <button type="button" class="btn btn-danger" (click)="removeTask(student.id, i)">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
-            <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
-          </svg>
-        </button>
-        </div>        
-        <button class="btn btn-primary mt-2 mr-2" (click)="addTask(student.id)">Add Task</button>
-        <button class="btn btn-success mt-2 " (click)="saveTask(student.id)">Save Task</button>
-      </div>
-  </div>
-</ng-container>
-<ng-template #noDataFound>
-    <p>No Data Found</p>
-</ng-template>
+  
