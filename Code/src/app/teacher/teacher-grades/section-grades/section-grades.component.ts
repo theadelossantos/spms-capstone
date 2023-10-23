@@ -344,6 +344,9 @@ export class SectionGradesComponent {
           console.log('Student to Update:', studentToUpdate);
   
           if (studentToUpdate) {
+            // Initialize the totalWrittenWorkRS for the student to zero
+            studentToUpdate.totalWrittenWorkRS = 0;
+  
             for (let i = 1; i <= 10; i++) {
               const wwScoreKey = `ww_score_${i}`;
               const ptScoreKey = `pt_score_${i}`;
@@ -352,6 +355,8 @@ export class SectionGradesComponent {
               if (scoreData.hasOwnProperty(wwScoreKey)) {
                 const wwScore = parseFloat(scoreData[wwScoreKey]);
                 studentToUpdate.ww_scores[i - 1] = isNaN(wwScore) ? null : wwScore;
+                // Update the totalWrittenWorkRS while fetching
+                studentToUpdate.totalWrittenWorkRS += isNaN(wwScore) ? 0 : wwScore;
               } else {
                 studentToUpdate.ww_scores[i - 1] = null;
               }
@@ -370,10 +375,9 @@ export class SectionGradesComponent {
               }
             }
   
-            studentToUpdate.totalWrittenWorkRS = parseFloat(scoreData.ww_total_score);
-            studentToUpdate.totalPerfTaskRS = parseFloat(scoreData.pt_total_score);
             studentToUpdate.initialTotalWrittenWorkRS = studentToUpdate.totalWrittenWorkRS;
             studentToUpdate.quarter = parseFloat(scoreData.quarter);
+            studentToUpdate.totalPerfTaskRS = parseFloat(scoreData.pt_total_score);
             studentToUpdate.totalPerfTaskWS = parseFloat(scoreData.pt_weighted_score);
             studentToUpdate.totalWrittenWorkWS = parseFloat(scoreData.ww_weighted_score);
             studentToUpdate.totalQAPercentage = parseFloat(scoreData.qa_percentage_score);
@@ -383,6 +387,9 @@ export class SectionGradesComponent {
           }
         }
   
+        // Calculate the totalWrittenWorkRS for all students after fetching
+        this.calculateTotalWrittenWorkRS();
+        
         console.log('Updated Students:', this.students);
       },
       (error) => {
@@ -390,6 +397,7 @@ export class SectionGradesComponent {
       }
     );
   }
+  
   
   
   

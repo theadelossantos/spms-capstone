@@ -17,21 +17,26 @@
 
 
 <form (submit)="submitForm()">
-  <input type="text"  class="taskName" name="taskName" [(ngModel)]="taskName" placeholder="Task Name"/>
   <input type="text" [(ngModel)]="hpsData[selectedAssessmentType]"   name="highestPossibleScore" placeholder="Highest Possible Score" />
-  <input
-  *ngIf="selectedAssessmentType === 'Written Work 1'"
-  type="date"
-  [(ngModel)]="selectedDateWW1"
-  name="assessmentDateWW1"
-/>
 
-<input
-  *ngIf="selectedAssessmentType === 'Written Work 2'"
-  type="date"
-  [(ngModel)]="selectedDateWW2"
-  name="assessmentDateWW2"
-/>  
+  <!-- TASK NAME PER ASSESSMENT -->
+  <input type="text"  *ngIf="selectedAssessmentType === 'Written Work 1'" type="text" [(ngModel)]="nameWW1" name="nameWW1" placeholder="Task Name"/>
+  <input type="text"  *ngIf="selectedAssessmentType === 'Written Work 2'" type="text" [(ngModel)]="nameWW2" name="nameWW2"/>
+
+  <!-- INPUT DATES PER ASSESSMENT -->
+  <input *ngIf="selectedAssessmentType === 'Written Work 1'" type="date" [(ngModel)]="selectedDateWW1" name="assessmentDateWW1"/>
+  <input *ngIf="selectedAssessmentType === 'Written Work 2'" type="date" [(ngModel)]="selectedDateWW2" name="assessmentDateWW2"/>  
+  <input *ngIf="selectedAssessmentType === 'Written Work 3'" type="date" [(ngModel)]="selectedDateWW3" name="assessmentDateWW3"/>  
+  <input *ngIf="selectedAssessmentType === 'Written Work 4'" type="date" [(ngModel)]="selectedDateWW4" name="assessmentDateWW4"/>  
+  <input *ngIf="selectedAssessmentType === 'Written Work 5'" type="date" [(ngModel)]="selectedDateWW5" name="assessmentDateWW5"/> 
+  <input *ngIf="selectedAssessmentType === 'Written Work 6'" type="date" [(ngModel)]="selectedDateWW6" name="assessmentDateWW6"/>  
+  <input *ngIf="selectedAssessmentType === 'Written Work 7'" type="date" [(ngModel)]="selectedDateWW7" name="assessmentDateWW7"/>  
+  <input *ngIf="selectedAssessmentType === 'Written Work 8'" type="date" [(ngModel)]="selectedDateWW8" name="assessmentDateWW8"/>  
+  <input *ngIf="selectedAssessmentType === 'Written Work 9'" type="date" [(ngModel)]="selectedDateWW9" name="assessmentDateWW9"/> 
+  <input *ngIf="selectedAssessmentType === 'Written Work 10'" type="date" [(ngModel)]="selectedDateWW10" name="assessmentDateWW10"/>  
+ 
+ 
+
 <table *ngIf="selectedAssessmentType" class="student-scores mt-4" id="grades-table">
     <thead>
       <tr>

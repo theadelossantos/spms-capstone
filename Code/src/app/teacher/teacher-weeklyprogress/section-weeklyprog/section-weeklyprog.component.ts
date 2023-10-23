@@ -127,6 +127,31 @@ export class SectionWeeklyprogComponent {
 
   selectedDateWW1: string;
   selectedDateWW2: string;
+  selectedDateWW3: string;
+  selectedDateWW4: string;
+  selectedDateWW5: string;
+  selectedDateWW6: string;
+  selectedDateWW7: string;
+  selectedDateWW8: string;
+  selectedDateWW9: string;
+  selectedDateWW10: string;
+
+  selectedDatePT1: string;
+  selectedDatePT2: string;
+  selectedDatePT3: string;
+  selectedDatePT4: string;
+  selectedDatePT5: string;
+  selectedDatePT6: string;
+  selectedDatePT7: string;
+  selectedDatePT8: string;
+  selectedDatePT9: string;
+  selectedDatePT10: string;
+
+  selectedDateQA: string;
+
+  nameWW1: string;
+  nameWW2: string;
+
 
   assessmentTypes = [
     'Written Work 1', 'Written Work 2', 'Written Work 3', 'Written Work 4', 'Written Work 5',
@@ -513,9 +538,14 @@ export class SectionWeeklyprogComponent {
             quarter: this.selectedQuarter,
             ww_score_1: student.ww_scores[0],
             date_input_ww_score_1:  this.selectedDateWW1,
+            ww_score_1_name: this.nameWW1,
+
             ww_score_2: student.ww_scores[1],
             date_input_ww_score_2: this.selectedDateWW2 ,
+            ww_score_2_name: this.nameWW2,
+
             ww_score_3: student.ww_scores[2],
+            date_input_ww_score_3: this.selectedDateWW3,
             ww_score_4: student.ww_scores[3],
             ww_score_5: student.ww_scores[4],
             ww_score_6: student.ww_scores[5],
@@ -619,8 +649,12 @@ export class SectionWeeklyprogComponent {
                 quarter: this.selectedQuarter,
                 ww_score_1: student.ww_scores[0],
                 date_input_ww_score_1:  this.selectedDateWW1,
+                ww_score_1_name: this.nameWW1,
+
                 ww_score_2: student.ww_scores[1],
                 date_input_ww_score_2:  this.selectedDateWW2,
+                ww_score_2_name: this.nameWW2,
+
                 ww_score_3: student.ww_scores[2],
                 ww_score_4: student.ww_scores[3],
                 ww_score_5: student.ww_scores[4],
@@ -912,6 +946,8 @@ export class SectionWeeklyprogComponent {
         return this.selectedDateWW1;
       case 'Written Work 2':
         return this.selectedDateWW2;
+      case 'Written Work 3':
+        return this.selectedDateWW3;
       default:
         return '';
     }
@@ -922,6 +958,8 @@ export class SectionWeeklyprogComponent {
       this.selectedDateWW1 = date;
     } else if (assessmentType === 'Written Work 2') {
       this.selectedDateWW2 = date;
+    }else if (assessmentType === 'Written Work 3') {
+      this.selectedDateWW3 = date;
     }
   }
 
