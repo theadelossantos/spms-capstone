@@ -96,7 +96,7 @@
               <input
                 type="text"
                 [(ngModel)]="formData.writtenWorkHPS[i]"
-                (input)="updateTotalWrittenWorkHPS(i)"
+                [value]="updateTotalWrittenWorkHPS(i)"
                 (input)="calculateWeightedScores()"
                 [name]="'wwhps' + (i + 1)"
               />
@@ -117,7 +117,7 @@
               <input
                 type="text"
                 [(ngModel)]="formData.performanceTaskHPS[i]"
-                (input)="updateTotalPerformanceTaskHPS(i)"
+                [value]="updateTotalPerformanceTaskHPS(i)"
                 [name]="'pthps' + (i + 1)"
               />
             </td>
@@ -159,6 +159,8 @@
             [(ngModel)]="student.ww_scores[j]"
             (input)="updateWrittenWorkRS(student.id, j)"
             (input)="calculateWeightedScores()"
+            [value]="calculateWeightedScores()"
+
             name="wwrs{{ i }}_{{ j }}" 
           />
         </td>       
@@ -193,12 +195,13 @@
             [(ngModel)]="student.pt_scores[j]"
             (input)="updatePerfTaskRS(student.id, j)"
             (input)="calculatePTWeightedScores()"
+            [value]="calculatePTWeightedScores()"
             name="ptrs{{ i }}_{{ j }}" 
           />
         </td>
         
 
-        <td><input type="text" [value]="student.totalPerfTaskRS || ''" readonly (click)="showStudentId(student.id)" /></td>
+        <td>{{student.totalPerfTaskRS || ''}}</td>
         <td>
           <input
             *ngIf="calculatePTPercentageScore(student.id) !== 0"

@@ -24,6 +24,7 @@ interface Student {
   totalQAPercentage?: number;
   ww_weighted_score: number;
   initialTotalWrittenWorkRS?:number;
+  initialTotalPerfTaskRS?:number;
   quarter: number;
 }
 
@@ -303,16 +304,15 @@ export class SectionGradesComponent {
               const wwkey = `hps_ww_${i}`;
               const ptkey = `hps_pt_${i}`;
               if (hpsData.hasOwnProperty(wwkey)) {
-                this.formData.writtenWorkHPS.push(parseFloat(hpsData[wwkey]) || 0);
+                this.formData.writtenWorkHPS.push(parseFloat(hpsData[wwkey]) || null);
               }
               if (hpsData.hasOwnProperty(ptkey)) {
-                this.formData.performanceTaskHPS.push(parseFloat(hpsData[ptkey]) || 0); 
-              }
-              
+                this.formData.performanceTaskHPS.push(parseFloat(hpsData[ptkey]) || null); 
+              }  
             }
-            this.formData.totalWrittenWorkHPS = parseFloat(hpsData.hps_ww_total_score) || 0;
-            this.formData.totalPerformanceTaskHPS = parseFloat(hpsData.hps_pt_total_score) || 0; 
-            this.formData.quarterlyAssessmentHPS = parseFloat(hpsData.hps_qa_total_score)
+            this.formData.totalWrittenWorkHPS = parseFloat(hpsData.hps_ww_total_score) || null;
+            this.formData.totalPerformanceTaskHPS = parseFloat(hpsData.hps_pt_total_score) || null; 
+            this.formData.quarterlyAssessmentHPS = parseFloat(hpsData.hps_qa_total_score) || null
 
           }
 
@@ -344,8 +344,8 @@ export class SectionGradesComponent {
           console.log('Student to Update:', studentToUpdate);
   
           if (studentToUpdate) {
-            // Initialize the totalWrittenWorkRS for the student to zero
             studentToUpdate.totalWrittenWorkRS = 0;
+            studentToUpdate.totalPerfTaskRS = 0;
   
             for (let i = 1; i <= 10; i++) {
               const wwScoreKey = `ww_score_${i}`;
@@ -355,8 +355,9 @@ export class SectionGradesComponent {
               if (scoreData.hasOwnProperty(wwScoreKey)) {
                 const wwScore = parseFloat(scoreData[wwScoreKey]);
                 studentToUpdate.ww_scores[i - 1] = isNaN(wwScore) ? null : wwScore;
-                // Update the totalWrittenWorkRS while fetching
                 studentToUpdate.totalWrittenWorkRS += isNaN(wwScore) ? 0 : wwScore;
+                // studentToUpdate.totalWrittenWorkWS += isNaN(wwScore) ? 0 : wwScore;
+
               } else {
                 studentToUpdate.ww_scores[i - 1] = null;
               }
@@ -364,6 +365,7 @@ export class SectionGradesComponent {
               if (scoreData.hasOwnProperty(ptScoreKey)) {
                 const ptScore = parseFloat(scoreData[ptScoreKey]);
                 studentToUpdate.pt_scores[i - 1] = isNaN(ptScore) ? null : ptScore;
+                studentToUpdate.totalPerfTaskRS += isNaN(ptScore) ? 0 : ptScore;
               } else {
                 studentToUpdate.pt_scores[i - 1] = null;
               }
@@ -373,23 +375,25 @@ export class SectionGradesComponent {
               } else {
                 studentToUpdate.qa_score = null;
               }
+
             }
-  
             studentToUpdate.initialTotalWrittenWorkRS = studentToUpdate.totalWrittenWorkRS;
+            studentToUpdate.initialTotalPerfTaskRS = studentToUpdate.totalPerfTaskRS;
             studentToUpdate.quarter = parseFloat(scoreData.quarter);
-            studentToUpdate.totalPerfTaskRS = parseFloat(scoreData.pt_total_score);
+            // studentToUpdate.totalPerfTaskRS = parseFloat(scoreData.pt_total_score);
             studentToUpdate.totalPerfTaskWS = parseFloat(scoreData.pt_weighted_score);
             studentToUpdate.totalWrittenWorkWS = parseFloat(scoreData.ww_weighted_score);
             studentToUpdate.totalQAPercentage = parseFloat(scoreData.qa_percentage_score);
-            studentToUpdate.totalQuarterlyAssessmentWS = parseFloat(scoreData.qa_weighted_score);
+            studentToUpdate.totalQuarterlyAssessmentWS = parseFloat(scoreData.qa_weighted_score) || null;
           } else {
             console.error(`Student with ID ${studentId} not found in students array.`);
           }
         }
-  
-        // Calculate the totalWrittenWorkRS for all students after fetching
+        this.calculateWeightedScores();
+        this.calculatePTWeightedScores();
         this.calculateTotalWrittenWorkRS();
-        
+        this.calculateTotalPerfTaskRS();
+
         console.log('Updated Students:', this.students);
       },
       (error) => {
@@ -397,12 +401,6 @@ export class SectionGradesComponent {
       }
     );
   }
-  
-  
-  
-  
-
-
 
 
   onQuarterChange(){
@@ -565,11 +563,14 @@ calculateWWPercentageScore(studentId: number) {
 
 // weighted score of written work
 calculateWeightedScores() {
+
   if (this.selectedSubject) {
     const parsedPercentage = parseFloat(String(this.selectedSubject.wwPercentage));
 
     if (!isNaN(parsedPercentage)) {
       this.students.forEach((student) => {
+        console.log('Calculating weighted scores for student:', student.id);
+
         const totalWW = student.ww_scores.reduce((acc, score) => {
           const parsedScore = parseFloat(String(score)) || 0;
           return acc + parsedScore;
@@ -632,6 +633,8 @@ calculatePTWeightedScores() {
 
     if (!isNaN(parsedPercentage)) {
       this.students.forEach((student) => {
+          console.log('Calculating PT weighted scores for student:', student.id);
+
         const totalPT = student.pt_scores.reduce((acc, score) => {
           const parsedScore = parseFloat(String(score)) || 0;
           return acc + parsedScore;

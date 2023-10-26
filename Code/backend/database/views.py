@@ -1309,8 +1309,6 @@ class AnnouncementCreateView(generics.ListCreateAPIView):
     queryset = Announcement.objects.all()
     serializer_class = AnnouncementSerializer
 
-
-
 class AnnouncementEditDeleteView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Announcement.objects.all()
     serializer_class = AnnouncementSerializer

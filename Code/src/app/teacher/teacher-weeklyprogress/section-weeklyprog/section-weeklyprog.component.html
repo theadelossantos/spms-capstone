@@ -17,11 +17,57 @@
 
 
 <form (submit)="submitForm()">
-  <input type="text" [(ngModel)]="hpsData[selectedAssessmentType]"   name="highestPossibleScore" placeholder="Highest Possible Score" />
+  <input type="text" [(ngModel)]="hpsData[selectedAssessmentType]" name="highestPossibleScore" placeholder="Highest Possible Score" />
+
+  <!-- <input type="text"  *ngIf="selectedAssessmentType === 'Written Work 1'" type="text" [(ngModel)]="hpsWW1" name="hpsWW1" placeholder="Highest Possible Score"/>
+  <input type="text"  *ngIf="selectedAssessmentType === 'Written Work 2'" type="text" [(ngModel)]="hpsWW2" name="hpsWW2" placeholder="Highest Possible Score"/>
+  <input type="text"  *ngIf="selectedAssessmentType === 'Written Work 3'" type="text" [(ngModel)]="hpsWW3" name="hpsWW3" placeholder="Highest Possible Score"/>
+  <input type="text"  *ngIf="selectedAssessmentType === 'Written Work 4'" type="text" [(ngModel)]="hpsWW4" name="hpsWW4" placeholder="Highest Possible Score"/>
+  <input type="text"  *ngIf="selectedAssessmentType === 'Written Work 5'" type="text" [(ngModel)]="hpsWW5" name="hpsWW5" placeholder="Highest Possible Score"/>
+  <input type="text"  *ngIf="selectedAssessmentType === 'Written Work 6'" type="text" [(ngModel)]="hpsWW6" name="hpsWW6" placeholder="Highest Possible Score"/>
+  <input type="text"  *ngIf="selectedAssessmentType === 'Written Work 7'" type="text" [(ngModel)]="hpsWW7" name="hpsWW7" placeholder="Highest Possible Score"/>
+  <input type="text"  *ngIf="selectedAssessmentType === 'Written Work 8'" type="text" [(ngModel)]="hpsWW8" name="hpsWW8" placeholder="Highest Possible Score"/>
+  <input type="text"  *ngIf="selectedAssessmentType === 'Written Work 9'" type="text" [(ngModel)]="hpsWW9" name="hpsWW9" placeholder="Highest Possible Score"/>
+  <input type="text"  *ngIf="selectedAssessmentType === 'Written Work 10'" type="text" [(ngModel)]="hpsWW10" name="hpsWW10" placeholder="Highest Possible Score"/>
+
+  <input type="text"  *ngIf="selectedAssessmentType === 'Performance Task 1'" type="text" [(ngModel)]="hpsPT1" name="hpsPT1" placeholder="Task Name"/>
+  <input type="text"  *ngIf="selectedAssessmentType === 'Performance Task 2'" type="text" [(ngModel)]="hpsPT2" name="hpsPT2" placeholder="Task Name"/>
+  <input type="text"  *ngIf="selectedAssessmentType === 'Performance Task 3'" type="text" [(ngModel)]="hpsPT3" name="hpsPT3" placeholder="Task Name"/>
+  <input type="text"  *ngIf="selectedAssessmentType === 'Performance Task 4'" type="text" [(ngModel)]="hpsPT4" name="hpsPT4" placeholder="Task Name"/>
+  <input type="text"  *ngIf="selectedAssessmentType === 'Performance Task 5'" type="text" [(ngModel)]="hpsPT5" name="hpsPT5" placeholder="Task Name"/>
+  <input type="text"  *ngIf="selectedAssessmentType === 'Performance Task 6'" type="text" [(ngModel)]="hpsPT6" name="hpsPT6" placeholder="Task Name"/>
+  <input type="text"  *ngIf="selectedAssessmentType === 'Performance Task 7'" type="text" [(ngModel)]="hpsPT7" name="hpsPT7" placeholder="Task Name"/>
+  <input type="text"  *ngIf="selectedAssessmentType === 'Performance Task 8'" type="text" [(ngModel)]="hpsPT8" name="hpsPT8" placeholder="Task Name"/>
+  <input type="text"  *ngIf="selectedAssessmentType === 'Performance Task 9'" type="text" [(ngModel)]="hpsPT9" name="hpsPT9" placeholder="Task Name"/>
+  <input type="text"  *ngIf="selectedAssessmentType === 'Performance Task 10'" type="text" [(ngModel)]="hpsPT10" name="hpsPT10" placeholder="Task Name"/>
+
+  <input type="text"  *ngIf="selectedAssessmentType === 'Quarterly Assessment'" type="text" [(ngModel)]="hpsQA" name="hpsQA" placeholder="Task Name"/> -->
 
   <!-- TASK NAME PER ASSESSMENT -->
   <input type="text"  *ngIf="selectedAssessmentType === 'Written Work 1'" type="text" [(ngModel)]="nameWW1" name="nameWW1" placeholder="Task Name"/>
-  <input type="text"  *ngIf="selectedAssessmentType === 'Written Work 2'" type="text" [(ngModel)]="nameWW2" name="nameWW2"/>
+  <input type="text"  *ngIf="selectedAssessmentType === 'Written Work 2'" type="text" [(ngModel)]="nameWW2" name="nameWW2" placeholder="Task Name"/>
+  <input type="text"  *ngIf="selectedAssessmentType === 'Written Work 3'" type="text" [(ngModel)]="nameWW3" name="nameWW3" placeholder="Task Name"/>
+  <input type="text"  *ngIf="selectedAssessmentType === 'Written Work 4'" type="text" [(ngModel)]="nameWW4" name="nameWW4" placeholder="Task Name"/>
+  <input type="text"  *ngIf="selectedAssessmentType === 'Written Work 5'" type="text" [(ngModel)]="nameWW5" name="nameWW5" placeholder="Task Name"/>
+  <input type="text"  *ngIf="selectedAssessmentType === 'Written Work 6'" type="text" [(ngModel)]="nameWW6" name="nameWW6" placeholder="Task Name"/>
+  <input type="text"  *ngIf="selectedAssessmentType === 'Written Work 7'" type="text" [(ngModel)]="nameWW7" name="nameWW7" placeholder="Task Name"/>
+  <input type="text"  *ngIf="selectedAssessmentType === 'Written Work 8'" type="text" [(ngModel)]="nameWW8" name="nameWW8" placeholder="Task Name"/>
+  <input type="text"  *ngIf="selectedAssessmentType === 'Written Work 9'" type="text" [(ngModel)]="nameWW9" name="nameWW9" placeholder="Task Name"/>
+  <input type="text"  *ngIf="selectedAssessmentType === 'Written Work 10'" type="text" [(ngModel)]="nameWW10" name="nameWW10" placeholder="Task Name"/>
+
+  <input type="text"  *ngIf="selectedAssessmentType === 'Performance Task 1'" type="text" [(ngModel)]="namePT1" name="namePT1" placeholder="Task Name"/>
+  <input type="text"  *ngIf="selectedAssessmentType === 'Performance Task 2'" type="text" [(ngModel)]="namePT2" name="namePT2" placeholder="Task Name"/>
+  <input type="text"  *ngIf="selectedAssessmentType === 'Performance Task 3'" type="text" [(ngModel)]="namePT3" name="namePT3" placeholder="Task Name"/>
+  <input type="text"  *ngIf="selectedAssessmentType === 'Performance Task 4'" type="text" [(ngModel)]="namePT4" name="namePT4" placeholder="Task Name"/>
+  <input type="text"  *ngIf="selectedAssessmentType === 'Performance Task 5'" type="text" [(ngModel)]="namePT5" name="namePT5" placeholder="Task Name"/>
+  <input type="text"  *ngIf="selectedAssessmentType === 'Performance Task 6'" type="text" [(ngModel)]="namePT6" name="namePT6" placeholder="Task Name"/>
+  <input type="text"  *ngIf="selectedAssessmentType === 'Performance Task 7'" type="text" [(ngModel)]="namePT7" name="namePT7" placeholder="Task Name"/>
+  <input type="text"  *ngIf="selectedAssessmentType === 'Performance Task 8'" type="text" [(ngModel)]="namePT8" name="namePT8" placeholder="Task Name"/>
+  <input type="text"  *ngIf="selectedAssessmentType === 'Performance Task 9'" type="text" [(ngModel)]="namePT9" name="namePT9" placeholder="Task Name"/>
+  <input type="text"  *ngIf="selectedAssessmentType === 'Performance Task 10'" type="text" [(ngModel)]="namePT10" name="namePT10" placeholder="Task Name"/>
+
+  <input type="text"  *ngIf="selectedAssessmentType === 'Quarterly Assessment'" type="text" [(ngModel)]="nameQA" name="nameQA" placeholder="Task Name"/>
+
 
   <!-- INPUT DATES PER ASSESSMENT -->
   <input *ngIf="selectedAssessmentType === 'Written Work 1'" type="date" [(ngModel)]="selectedDateWW1" name="assessmentDateWW1"/>
@@ -34,7 +80,20 @@
   <input *ngIf="selectedAssessmentType === 'Written Work 8'" type="date" [(ngModel)]="selectedDateWW8" name="assessmentDateWW8"/>  
   <input *ngIf="selectedAssessmentType === 'Written Work 9'" type="date" [(ngModel)]="selectedDateWW9" name="assessmentDateWW9"/> 
   <input *ngIf="selectedAssessmentType === 'Written Work 10'" type="date" [(ngModel)]="selectedDateWW10" name="assessmentDateWW10"/>  
- 
+
+  <input *ngIf="selectedAssessmentType === 'Performance Task 1'" type="date" [(ngModel)]="selectedDateWW1" name="assessmentDateWW1"/>
+  <input *ngIf="selectedAssessmentType === 'Performance Task 2'" type="date" [(ngModel)]="selectedDateWW2" name="assessmentDateWW2"/>  
+  <input *ngIf="selectedAssessmentType === 'Performance Task 3'" type="date" [(ngModel)]="selectedDateWW3" name="assessmentDateWW3"/>  
+  <input *ngIf="selectedAssessmentType === 'Performance Task 4'" type="date" [(ngModel)]="selectedDateWW4" name="assessmentDateWW4"/>  
+  <input *ngIf="selectedAssessmentType === 'Performance Task 5'" type="date" [(ngModel)]="selectedDateWW5" name="assessmentDateWW5"/> 
+  <input *ngIf="selectedAssessmentType === 'Performance Task 6'" type="date" [(ngModel)]="selectedDateWW6" name="assessmentDateWW6"/>  
+  <input *ngIf="selectedAssessmentType === 'Performance Task 7'" type="date" [(ngModel)]="selectedDateWW7" name="assessmentDateWW7"/>  
+  <input *ngIf="selectedAssessmentType === 'Performance Task 8'" type="date" [(ngModel)]="selectedDateWW8" name="assessmentDateWW8"/>  
+  <input *ngIf="selectedAssessmentType === 'Performance Task 9'" type="date" [(ngModel)]="selectedDateWW9" name="assessmentDateWW9"/> 
+  <input *ngIf="selectedAssessmentType === 'Performance Task 10'" type="date" [(ngModel)]="selectedDateWW10" name="assessmentDateWW10"/>
+
+  <input *ngIf="selectedAssessmentType === 'Quarterly Assessment'" type="date" [(ngModel)]="selectedDateWW10" name="assessmentDateWW10"/>
+
  
 
 <table *ngIf="selectedAssessmentType" class="student-scores mt-4" id="grades-table">

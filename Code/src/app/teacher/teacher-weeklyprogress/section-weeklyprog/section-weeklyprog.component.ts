@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 import { DatePipe } from '@angular/common';
@@ -48,6 +48,7 @@ interface Task {
   styleUrls: ['./section-weeklyprog.component.css']
 })
 export class SectionWeeklyprogComponent {
+  @ViewChild('hpsInput', { static: false }) hpsInput: ElementRef;
 
   deptId: number;
   gradeLevelId: number;
@@ -151,6 +152,52 @@ export class SectionWeeklyprogComponent {
 
   nameWW1: string;
   nameWW2: string;
+  nameWW3: string;
+  nameWW4: string;
+  nameWW5: string;
+  nameWW6: string;
+  nameWW7: string;
+  nameWW8: string;
+  nameWW9: string;
+  nameWW10: string;
+
+  namePT1: string;
+  namePT2: string;
+  namePT3: string;
+  namePT4: string;
+  namePT5: string;
+  namePT6: string;
+  namePT7: string;
+  namePT8: string;
+  namePT9: string;
+  namePT10: string;
+
+  nameQA: string;
+
+  hpsWW1: string;
+  hpsWW2: string;
+  hpsWW3: string;
+  hpsWW4: string;
+  hpsWW5: string;
+  hpsWW6: string;
+  hpsWW7: string;
+  hpsWW8: string;
+  hpsWW9: string;
+  hpsWW10: string;
+
+  hpsPT1: string;
+  hpsPT2: string;
+  hpsPT3: string;
+  hpsPT4: string;
+  hpsPT5: string;
+  hpsPT6: string;
+  hpsPT7: string;
+  hpsPT8: string;
+  hpsPT9: string;
+  hpsPT10: string;
+
+  hpsQA:string;
+
 
 
   assessmentTypes = [
@@ -439,14 +486,12 @@ export class SectionWeeklyprogComponent {
               if (hpsData.hasOwnProperty(ptkey)) {
                 this.hpsData[`Performance Task ${i}`] = parseFloat(hpsData[ptkey]);
               }
-              
             }
             this.formData.totalWrittenWorkHPS = parseFloat(hpsData.hps_ww_total_score) || 0;
             this.formData.totalPerformanceTaskHPS = parseFloat(hpsData.hps_pt_total_score) || 0; 
             this.hpsData['Quarterly Assessment'] = parseFloat(hpsData['hps_qa_total_score']);
-
+            
           }
-
         } else {
           console.error('Invalid API response:', data);
         }
@@ -546,24 +591,79 @@ export class SectionWeeklyprogComponent {
 
             ww_score_3: student.ww_scores[2],
             date_input_ww_score_3: this.selectedDateWW3,
+            ww_score_3_name: this.nameWW3,
+
             ww_score_4: student.ww_scores[3],
+            date_input_ww_score_4: this.selectedDateWW4,
+            ww_score_4_name: this.nameWW4,
+
             ww_score_5: student.ww_scores[4],
+            date_input_ww_score_5: this.selectedDateWW5,
+            ww_score_5_name: this.nameWW5,
+
             ww_score_6: student.ww_scores[5],
+            date_input_ww_score_6: this.selectedDateWW6,
+            ww_score_6_name: this.nameWW6,
+
             ww_score_7: student.ww_scores[6],
+            date_input_ww_score_7: this.selectedDateWW7,
+            ww_score_7_name: this.nameWW7,
+
             ww_score_8: student.ww_scores[7],
+            date_input_ww_score_8: this.selectedDateWW8,
+            ww_score_8_name: this.nameWW8,
+
             ww_score_9: student.ww_scores[8],
+            date_input_ww_score_9: this.selectedDateWW9,
+            ww_score_9_name: this.nameWW9,
+
             ww_score_10: student.ww_scores[9],
+            date_input_ww_score_10: this.selectedDateWW10,
+            ww_score_10_name: this.nameWW10,
+
             pt_score_1: student.pt_scores[0],
+            date_input_pt_score_1: this.selectedDatePT1,
+            pt_score_1_name: this.namePT1,
+
             pt_score_2: student.pt_scores[1],
+            date_input_pt_score_2: this.selectedDatePT2,
+            pt_score_2_name: this.namePT2,
+
             pt_score_3: student.pt_scores[2],
+            date_input_pt_score_3: this.selectedDatePT3,
+            pt_score_3_name: this.namePT3,
+
             pt_score_4: student.pt_scores[3],
+            date_input_pt_score_4: this.selectedDatePT4,
+            pt_score_4_name: this.namePT4,
+
             pt_score_5: student.pt_scores[4],
+            date_input_pt_score_5: this.selectedDatePT5,
+            pt_score_5_name: this.namePT5,
+
             pt_score_6: student.pt_scores[5],
+            date_input_pt_score_6: this.selectedDatePT6,
+            pt_score_6_name: this.namePT6,
+
             pt_score_7: student.pt_scores[6],
+            date_input_pt_score_7: this.selectedDatePT7,
+            pt_score_7_name: this.namePT7,
+
             pt_score_8: student.pt_scores[7],
+            date_input_pt_score_8: this.selectedDatePT8,
+            pt_score_8_name: this.namePT8,
+
             pt_score_9: student.pt_scores[8],
+            date_input_pt_score_9: this.selectedDatePT9,
+            pt_score_9_name: this.namePT9,
+
             pt_score_10: student.pt_scores[9],
+            date_input_pt_score_10: this.selectedDatePT10,
+            pt_score_10_name: this.namePT10,
+
             qa_score: student.qa_score,
+            date_input_qa_score: this.selectedDateQA,
+            qa_score_name: this.nameQA,
         };
 
         console.log('student grades', studentGrades);
@@ -577,33 +677,32 @@ export class SectionWeeklyprogComponent {
                 console.error('Error adding student grades:', error);
             }
         );
-
         const hpsData = {
             gradelevel: this.gradeLevelId,
             section: this.sectionId,
             subject: this.subjectId,
             quarter: this.selectedQuarter,
-            hps_qa_total_score: this.formData.quarterlyAssessmentHPS,
-            hps_pt_1: this.formData.performanceTaskHPS[0],
-            hps_pt_2: this.formData.performanceTaskHPS[1],
-            hps_pt_3: this.formData.performanceTaskHPS[2],
-            hps_pt_4: this.formData.performanceTaskHPS[3],
-            hps_pt_5: this.formData.performanceTaskHPS[4],
-            hps_pt_6: this.formData.performanceTaskHPS[5],
-            hps_pt_7: this.formData.performanceTaskHPS[6],
-            hps_pt_8: this.formData.performanceTaskHPS[7],
-            hps_pt_9: this.formData.performanceTaskHPS[8],
-            hps_pt_10: this.formData.performanceTaskHPS[9],
-            hps_ww_1: this.formData.writtenWorkHPS[0],
-            hps_ww_2: this.formData.writtenWorkHPS[1],
-            hps_ww_3: this.formData.writtenWorkHPS[2],
-            hps_ww_4: this.formData.writtenWorkHPS[3],
-            hps_ww_5: this.formData.writtenWorkHPS[4],
-            hps_ww_6: this.formData.writtenWorkHPS[5],
-            hps_ww_7: this.formData.writtenWorkHPS[6],
-            hps_ww_8: this.formData.writtenWorkHPS[7],
-            hps_ww_9: this.formData.writtenWorkHPS[8],
-            hps_ww_10: this.formData.writtenWorkHPS[9],
+            hps_qa_total_score: this.hpsData[`Quarterly Assessment`],
+            hps_pt_1: this.hpsData[`Performance Task 1`],
+            hps_pt_2: this.hpsData[`Performance Task 2`],
+            hps_pt_3: this.hpsData[`Performance Task 3`],
+            hps_pt_4: this.hpsData[`Performance Task 4`],
+            hps_pt_5: this.hpsData[`Performance Task 5`],
+            hps_pt_6: this.hpsData[`Performance Task 6`],
+            hps_pt_7: this.hpsData[`Performance Task 7`],
+            hps_pt_8: this.hpsData[`Performance Task 8`],
+            hps_pt_9: this.hpsData[`Performance Task 9`],
+            hps_pt_10: this.hpsData[`Performance Task 10`],
+            hps_ww_1: this.hpsData[`Written Work 1`],
+            hps_ww_2: this.hpsData[`Written Work 2`],
+            hps_ww_3: this.hpsData[`Written Work 3`],
+            hps_ww_4: this.hpsData[`Written Work 4`],
+            hps_ww_5: this.hpsData[`Written Work 5`],
+            hps_ww_6: this.hpsData[`Written Work 6`],
+            hps_ww_7: this.hpsData[`Written Work 7`],
+            hps_ww_8: this.hpsData[`Written Work 8`],
+            hps_ww_9: this.hpsData[`Written Work 9`],
+            hps_ww_10: this.hpsData[`Written Work 10`],
         };
 
         console.log('hps', hpsData);
@@ -656,30 +755,89 @@ export class SectionWeeklyprogComponent {
                 ww_score_2_name: this.nameWW2,
 
                 ww_score_3: student.ww_scores[2],
+                date_input_ww_score_3: this.selectedDateWW3,
+                ww_score_3_name: this.nameWW3,
+
                 ww_score_4: student.ww_scores[3],
+                date_input_ww_score_4: this.selectedDateWW4,
+                ww_score_4_name: this.nameWW4,
+    
                 ww_score_5: student.ww_scores[4],
+                date_input_ww_score_5: this.selectedDateWW5,
+                ww_score_5_name: this.nameWW5,
+
                 ww_score_6: student.ww_scores[5],
+                date_input_ww_score_6: this.selectedDateWW6,
+                ww_score_6_name: this.nameWW6,
+
                 ww_score_7: student.ww_scores[6],
+                date_input_ww_score_7: this.selectedDateWW7,
+                ww_score_7_name: this.nameWW7,
+
                 ww_score_8: student.ww_scores[7],
+                date_input_ww_score_8: this.selectedDateWW8,
+                ww_score_8_name: this.nameWW8,
+
                 ww_score_9: student.ww_scores[8],
+                date_input_ww_score_9: this.selectedDateWW9,
+                ww_score_9_name: this.nameWW9,
+
                 ww_score_10: student.ww_scores[9],
+                date_input_ww_score_10: this.selectedDateWW10,
+                ww_score_10_name: this.nameWW10,
+
                 ww_total_score: student.totalWrittenWorkRS,
                 ww_percentage_score: student.totalWWPercentage,
                 ww_weighted_score: student.totalWrittenWorkWS,
+
                 pt_score_1: student.pt_scores[0],
+                date_input_pt_score_1: this.selectedDatePT1,
+                pt_score_1_name: this.namePT1,
+
                 pt_score_2: student.pt_scores[1],
+                date_input_pt_score_2: this.selectedDatePT2,
+                pt_score_2_name: this.namePT2,
+
                 pt_score_3: student.pt_scores[2],
+                date_input_pt_score_3: this.selectedDatePT3,
+                pt_score_3_name: this.namePT3,
+
                 pt_score_4: student.pt_scores[3],
+                date_input_pt_score_4: this.selectedDatePT4,
+                pt_score_4_name: this.namePT4,
+
                 pt_score_5: student.pt_scores[4],
+                date_input_pt_score_5: this.selectedDatePT5,
+                pt_score_5_name: this.namePT5,
+
                 pt_score_6: student.pt_scores[5],
+                date_input_pt_score_6: this.selectedDatePT6,
+                pt_score_6_name: this.namePT6,
+
                 pt_score_7: student.pt_scores[6],
+                date_input_pt_score_7: this.selectedDatePT7,
+                pt_score_7_name: this.namePT7,
+
                 pt_score_8: student.pt_scores[7],
+                date_input_pt_score_8: this.selectedDatePT8,
+                pt_score_8_name: this.namePT8,
+
                 pt_score_9: student.pt_scores[8],
+                date_input_pt_score_9: this.selectedDatePT9,
+                pt_score_9_name: this.namePT9,
+
                 pt_score_10: student.pt_scores[9],
+                date_input_pt_score_10: this.selectedDatePT10,
+                pt_score_10_name: this.namePT10,
+
                 pt_total_score: student.totalPerfTaskRS,
                 pt_percentage_score: student.totalPTPercentage,
                 pt_weighted_score: student.totalPerfTaskWS,
+
                 qa_score: student.qa_score,
+                date_input_qa_score: this.selectedDateQA,
+                qa_score_name: this.nameQA,
+                
                 qa_percentage_score: student.totalQAPercentage,
                 qa_weighted_score: student.totalQuarterlyAssessmentWS,
                 initial_grade: student.initialGrade,
@@ -699,123 +857,7 @@ export class SectionWeeklyprogComponent {
             (error) => {
                 console.error('Error batch updating student grades:', error);
             }
-        );
-
-        
-        const updatedTasks: Task[] = [];
-        if (!student) {
-            console.error('Student not found');
-            return;
-        }
-
-        const existingTasks = this.studentTasks[student.id] || [];
-        console.log(`Student ID: ${student.id}`);
-        console.log('Existing Tasks:', existingTasks);
-        console.log('tasks in submit frm', this.studentTasks[student.id])
-                
-        for (let i = 0; i < student.ww_scores.length; i++) {
-          const taskName = `${this.selectedAssessmentType}: ${this.taskName}`;
-          const taskScore = student.ww_scores[i];
-          const ptScore = student.pt_scores[i];
-          const taskStatus = 'Completed';
-          const taskId = student.tasks && student.tasks[i] ? student.tasks[i].id : null;
-      
-          if (taskScore !== null && taskScore !== undefined) {
-              const taskScoreAsString = taskScore.toString();
-              const existingTask = existingTasks.find((task) => task.id === taskId);
-              console.log('task id', taskId)
-
-      
-              console.log('Task Name:', taskName);
-              console.log('Existing Task:', existingTask);
-      
-              if (existingTask) {
-                  existingTask.id = taskId;
-                  console.log('Updating existing task...');
-                  existingTask.task_score = taskScoreAsString;
-                  updatedTasks.push(existingTask);
-              } else {
-                  const taskData: Task = {
-                      id: taskId,
-                      student_id: student.id,
-                      dept_id: this.deptId,
-                      gradelvl_id: this.gradeLevelId,
-                      section_id: this.sectionId,
-                      subject_id: this.subjectId,
-                      quarter_id: this.selectedQuarter,
-                      task_name: taskName,
-                      task_score: taskScoreAsString,
-                      task_status: taskStatus,
-                      input_date: this.datePipe.transform(new Date(), 'yyyy-MM-dd'),
-                    };
-                  updatedTasks.push(taskData);
-      
-                  this.authService.addWeeklyProgress(taskData).subscribe(
-                      (response) => {
-                          console.log('Task added successfully:', response);
-                          this.getWeeklyProgress(student.id);
-                      },
-                      (error) => {
-                          console.error('Error adding task', error);
-                      }
-                  );
-                  if (updatedTasks.length > 0) {
-                      this.authService.updateWeeklyProgress(updatedTasks).subscribe(
-                          (response) => {
-                              console.log('Tasks updated successfully:', response);
-                          },
-                          (error) => {
-                              console.error('Error updating tasks', error);
-                          }
-                      );
-                  }
-              }
-          } else {
-              console.error('Invalid task score for task:', taskName);
-          }
-
-          if (ptScore !== null && ptScore !== undefined) {
-            const taskName = `Performance Task: ${this.taskName}`; 
-            const taskScoreAsString = ptScore.toString();
-            const existingTask = existingTasks.find((task) => task.id === taskId);
-    
-            console.log('Task Name (PT):', taskName);
-            console.log('Existing Task (PT):', existingTask);
-    
-            if (existingTask) {
-                existingTask.id = taskId;
-                console.log('Updating existing task (PT)...');
-                existingTask.task_score = taskScoreAsString;
-                updatedTasks.push(existingTask);
-            } else {
-                const taskData: Task = {
-                    id: taskId,
-                    student_id: student.id,
-                    dept_id: this.deptId,
-                    gradelvl_id: this.gradeLevelId,
-                    section_id: this.sectionId,
-                    subject_id: this.subjectId,
-                    quarter_id: this.selectedQuarter,
-                    task_name: taskName,
-                    task_score: taskScoreAsString,
-                    task_status: taskStatus,
-                    input_date: this.datePipe.transform(new Date(), 'yyyy-MM-dd'),
-                };
-                updatedTasks.push(taskData);
-    
-                this.authService.addWeeklyProgress(taskData).subscribe(
-                    (response) => {
-                        console.log('Task added successfully (PT):', response);
-                        this.getWeeklyProgress(student.id);
-                    },
-                    (error) => {
-                        console.error('Error adding task (PT)', error);
-                    }
-                );
-            }
-        }
-    
-      }
+        );        
    });
       
   }

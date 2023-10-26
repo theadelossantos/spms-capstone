@@ -177,27 +177,36 @@ class StudentGrade(models.Model):
 
     ww_score_3 = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
     date_input_ww_score_3 = models.DateField(null=True, blank=True)
+    ww_score_3_name = models.CharField(max_length=50, null=True, blank=True)
+
 
     ww_score_4 = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
     date_input_ww_score_4 = models.DateField(null=True, blank=True)
+    ww_score_4_name = models.CharField(max_length=50, null=True, blank=True)
 
     ww_score_5 = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
     date_input_ww_score_5 = models.DateField(null=True, blank=True)
+    ww_score_5_name = models.CharField(max_length=50, null=True, blank=True)
 
     ww_score_6 = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
     date_input_ww_score_6 = models.DateField(null=True, blank=True)
+    ww_score_6_name = models.CharField(max_length=50, null=True, blank=True)
 
     ww_score_7 = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
     date_input_ww_score_7 = models.DateField(null=True, blank=True)
+    ww_score_7_name = models.CharField(max_length=50, null=True, blank=True)
 
     ww_score_8 = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
     date_input_ww_score_8 = models.DateField(null=True, blank=True)
+    ww_score_8_name = models.CharField(max_length=50, null=True, blank=True)
 
     ww_score_9 = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
     date_input_ww_score_9 = models.DateField(null=True, blank=True)
+    ww_score_9_name = models.CharField(max_length=50, null=True, blank=True)
 
     ww_score_10 = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
     date_input_ww_score_10 = models.DateField(null=True, blank=True)
+    ww_score_10_name = models.CharField(max_length=50, null=True, blank=True)
 
     ww_total_score = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
     ww_percentage_score = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
@@ -205,34 +214,43 @@ class StudentGrade(models.Model):
     
     pt_score_1 = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
     date_input_pt_score_1 = models.DateField(null=True, blank=True)
+    pt_score_1_name = models.CharField(max_length=50, null=True, blank=True)
 
     pt_score_2 = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
     date_input_pt_score_2 = models.DateField(null=True, blank=True)
+    pt_score_2_name = models.CharField(max_length=50, null=True, blank=True)
 
     pt_score_3 = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
     date_input_pt_score_3 = models.DateField(null=True, blank=True)
+    pt_score_3_name = models.CharField(max_length=50, null=True, blank=True)
 
     pt_score_4 = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
     date_input_pt_score_4 = models.DateField(null=True, blank=True)
+    pt_score_4_name = models.CharField(max_length=50, null=True, blank=True)
 
     pt_score_5 = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
     date_input_pt_score_5 = models.DateField(null=True, blank=True)
+    pt_score_5_name = models.CharField(max_length=50, null=True, blank=True)
 
     pt_score_6 = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
     date_input_pt_score_6 = models.DateField(null=True, blank=True)
+    pt_score_6_name = models.CharField(max_length=50, null=True, blank=True)
 
     pt_score_7 = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
     date_input_pt_score_7 = models.DateField(null=True, blank=True)
+    pt_score_7_name = models.CharField(max_length=50, null=True, blank=True)
 
     pt_score_8 = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
     date_input_pt_score_8 = models.DateField(null=True, blank=True)
+    pt_score_8_name = models.CharField(max_length=50, null=True, blank=True)
 
     pt_score_9 = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
     date_input_pt_score_9 = models.DateField(null=True, blank=True)
+    pt_score_9_name = models.CharField(max_length=50, null=True, blank=True)
 
     pt_score_10 = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
     date_input_pt_score_10 = models.DateField(null=True, blank=True)
-
+    pt_score_10_name = models.CharField(max_length=50, null=True, blank=True)
 
     pt_total_score = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
     pt_percentage_score = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
@@ -240,6 +258,7 @@ class StudentGrade(models.Model):
     
     qa_score = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
     date_input_qa_score = models.DateField(null=True, blank=True)
+    qa_score_name = models.CharField(max_length=50, null=True, blank=True)
 
     qa_percentage_score = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
     qa_weighted_score = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
