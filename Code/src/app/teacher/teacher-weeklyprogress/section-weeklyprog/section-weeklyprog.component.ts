@@ -2,6 +2,7 @@ import { Component, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 import { DatePipe } from '@angular/common';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 interface Student {
   id: number;
@@ -28,6 +29,10 @@ interface Student {
   quarter: number;
   status:string;
   tasks: Task[];
+  nameWW: string; 
+  namePT: string; 
+  nameQA: string;
+  scoreEntered: boolean
 }
 interface Task {
   id?: number;
@@ -149,7 +154,8 @@ export class SectionWeeklyprogComponent {
   selectedDatePT10: string;
 
   selectedDateQA: string;
-
+  nameWW: string;
+  namePT: string;
   nameWW1: string;
   nameWW2: string;
   nameWW3: string;
@@ -197,8 +203,11 @@ export class SectionWeeklyprogComponent {
   hpsPT10: string;
 
   hpsQA:string;
+  showRawScoreAlert = false;
 
-
+  data: any[];
+  myForm: FormGroup;
+  scoreEntered: boolean = false;
 
   assessmentTypes = [
     'Written Work 1', 'Written Work 2', 'Written Work 3', 'Written Work 4', 'Written Work 5',
@@ -212,7 +221,7 @@ export class SectionWeeklyprogComponent {
     return index;
   }
 
-  constructor(private route: ActivatedRoute, private authService: AuthService, private datePipe: DatePipe) {
+  constructor(private route: ActivatedRoute, private authService: AuthService, private datePipe: DatePipe, private fb: FormBuilder) {
     this.students.forEach((student) => {
       this.studentExpansionMap[student.id] = false;
     });
@@ -221,6 +230,14 @@ export class SectionWeeklyprogComponent {
     });
     this.selectedAssessmentType = 'Written Work 1';
     this.students = [];
+    this.myForm = this.fb.group({
+      highestPossibleScore: ['', Validators.required],
+
+    });
+    this.students.forEach(student => {
+      student.status = 'Missing';
+      student.scoreEntered = false;
+    });
 
   }
 
@@ -238,6 +255,9 @@ export class SectionWeeklyprogComponent {
       console.log('Subject ID:', this.subjectId);
       console.log('Assignment ID:', this.assignmentId);
 
+    });
+    this.students.forEach(student => {
+      this.updateStatus(student, this.selectedAssessmentType);
     });
     const subjectPercentageMapping = {
       'Araling Panlipunan': {
@@ -282,6 +302,7 @@ export class SectionWeeklyprogComponent {
       },
 
     };
+    
     this.authService.filterStudents(this.deptId, this.gradeLevelId, this.sectionId).subscribe(
       (studentsData: any) => {
         this.students = studentsData.students.map((student: Student) => ({
@@ -317,7 +338,8 @@ export class SectionWeeklyprogComponent {
               this.fetchStudentRawScores();
               this.fetchHPS();
               this.getWeeklyProgress(student)
-      
+              this.fetchAssesssmentNames()
+              this.sortStudents()
           });
 
     });
@@ -362,9 +384,7 @@ export class SectionWeeklyprogComponent {
     );
     
     })
-    
-        
-
+  
       
   }
   onQuarterChange(){
@@ -481,15 +501,15 @@ export class SectionWeeklyprogComponent {
               const wwkey = `hps_ww_${i}`;
               const ptkey = `hps_pt_${i}`;
               if (hpsData.hasOwnProperty(wwkey)) {
-                this.hpsData[`Written Work ${i}`] = parseFloat(hpsData[wwkey]);
+                this.hpsData[`Written Work ${i}`] = parseFloat(hpsData[wwkey]) || null;
               }
               if (hpsData.hasOwnProperty(ptkey)) {
-                this.hpsData[`Performance Task ${i}`] = parseFloat(hpsData[ptkey]);
+                this.hpsData[`Performance Task ${i}`] = parseFloat(hpsData[ptkey]) || null;
               }
             }
             this.formData.totalWrittenWorkHPS = parseFloat(hpsData.hps_ww_total_score) || 0;
             this.formData.totalPerformanceTaskHPS = parseFloat(hpsData.hps_pt_total_score) || 0; 
-            this.hpsData['Quarterly Assessment'] = parseFloat(hpsData['hps_qa_total_score']);
+            this.hpsData['Quarterly Assessment'] = parseFloat(hpsData['hps_qa_total_score']) || null;
             
           }
         } else {
@@ -499,6 +519,84 @@ export class SectionWeeklyprogComponent {
     )
   }
   
+  fetchAssesssmentNames(){
+    const filters = {
+      gradelevel: this.gradeLevelId,
+      section: this.sectionId,
+      subject: this.subjectId,
+      quarter: this.selectedQuarter
+    };
+  
+    this.authService.fetchStudentGrades(filters).subscribe(
+      (data) => {
+        console.log('Data:', data);
+        if (Array.isArray(data) && data.length > 0) {
+          const firstDataItem = data[0];
+          
+          if (firstDataItem) {
+            this.nameWW1 = firstDataItem.ww_score_1_name;
+            this.nameWW2 = firstDataItem.ww_score_2_name;
+            this.nameWW3 = firstDataItem.ww_score_3_name;
+            this.nameWW4 = firstDataItem.ww_score_4_name;
+            this.nameWW5 = firstDataItem.ww_score_5_name;
+            this.nameWW6 = firstDataItem.ww_score_6_name;
+            this.nameWW7 = firstDataItem.ww_score_7_name;
+            this.nameWW8 = firstDataItem.ww_score_8_name;
+            this.nameWW9 = firstDataItem.ww_score_9_name;
+            this.nameWW10 = firstDataItem.ww_score_10_name;
+            
+            this.namePT1 = firstDataItem.pt_score_1_name;
+            this.namePT2 = firstDataItem.pt_score_2_name;
+            this.namePT3 = firstDataItem.pt_score_3_name;
+            this.namePT4 = firstDataItem.pt_score_4_name;
+            this.namePT5 = firstDataItem.pt_score_5_name;
+            this.namePT6 = firstDataItem.pt_score_6_name;
+            this.namePT7 = firstDataItem.pt_score_7_name;
+            this.namePT8 = firstDataItem.pt_score_8_name;
+            this.namePT9 = firstDataItem.pt_score_9_name;
+            this.namePT10 = firstDataItem.pt_score_10_name;
+
+            this.nameQA = firstDataItem.qa_score_name
+
+            this.selectedDateWW1 = firstDataItem.date_input_ww_score_1
+            this.selectedDateWW2 = firstDataItem.date_input_ww_score_2
+            this.selectedDateWW3 = firstDataItem.date_input_ww_score_3
+            this.selectedDateWW4 = firstDataItem.date_input_ww_score_4
+            this.selectedDateWW5 = firstDataItem.date_input_ww_score_5
+            this.selectedDateWW6 = firstDataItem.date_input_ww_score_6
+            this.selectedDateWW7 = firstDataItem.date_input_ww_score_7
+            this.selectedDateWW8 = firstDataItem.date_input_ww_score_8
+            this.selectedDateWW9 = firstDataItem.date_input_ww_score_9
+            this.selectedDateWW10 = firstDataItem.date_input_ww_score_10
+
+            this.selectedDatePT1 = firstDataItem.date_input_pt_score_1
+            this.selectedDatePT2 = firstDataItem.date_input_pt_score_2
+            this.selectedDatePT3 = firstDataItem.date_input_pt_score_3
+            this.selectedDatePT4 = firstDataItem.date_input_pt_score_4
+            this.selectedDatePT5 = firstDataItem.date_input_pt_score_5
+            this.selectedDatePT6 = firstDataItem.date_input_pt_score_6
+            this.selectedDatePT7 = firstDataItem.date_input_pt_score_7
+            this.selectedDatePT8 = firstDataItem.date_input_pt_score_8
+            this.selectedDatePT9 = firstDataItem.date_input_pt_score_9
+            this.selectedDatePT10 = firstDataItem.date_input_pt_score_10
+
+            this.selectedDateQA = firstDataItem.date_input_qa_score
+
+
+          } else {
+            this.nameWW1 = ''; 
+          }
+        } else {
+          this.nameWW1 = '';
+        }
+       
+      },
+      (error) => {
+        console.error('Error fetching student raw scores:', error);
+      }
+    );
+  }
+
   fetchStudentRawScores() {
     const filters = {
       gradelevel: this.gradeLevelId,
@@ -544,8 +642,23 @@ export class SectionWeeklyprogComponent {
               } else {
                 studentToUpdate.qa_score = null;
               }
+
+              if (this.selectedAssessmentType.startsWith('Written Work')) {
+                const assessmentNumber = parseInt(this.selectedAssessmentType.split(' ')[2]);
+                const wwScoreNameKey = `ww_score_${assessmentNumber}_name`;
+                studentToUpdate.nameWW = scoreData[wwScoreNameKey] || ''; 
+              } else if (this.selectedAssessmentType.startsWith('Performance Task')) {
+                const assessmentNumber = parseInt(this.selectedAssessmentType.split(' ')[2]);
+                const ptScoreNameKey = `pt_score_${assessmentNumber}_name`;
+                studentToUpdate.namePT = scoreData[ptScoreNameKey] || ''; 
+              } else if (this.selectedAssessmentType === 'Quarterly Assessment') {
+                studentToUpdate.nameQA = scoreData.qa_score_name || ''; 
+              }
             }
-  
+            this.updateStatus(studentToUpdate, this.selectedAssessmentType);
+
+            studentToUpdate.status = 'Missing';
+
             studentToUpdate.totalWrittenWorkRS = parseFloat(scoreData.ww_total_score);
             studentToUpdate.totalPerfTaskRS = parseFloat(scoreData.pt_total_score);
             studentToUpdate.initialTotalWrittenWorkRS = studentToUpdate.totalWrittenWorkRS;
@@ -558,7 +671,6 @@ export class SectionWeeklyprogComponent {
             console.error(`Student with ID ${studentId} not found in students array.`);
           }
         }
-  
         console.log('Updated Students:', this.students);
       },
       (error) => {
@@ -1004,7 +1116,15 @@ export class SectionWeeklyprogComponent {
       this.selectedDateWW3 = date;
     }
   }
-
+  updateStatus(student, assessmentType) {
+    const score = this.getStudentScore(student, assessmentType);
+  
+    if (score === null || score === undefined || score.toString().trim() === '') {
+      student.status = 'Missing';
+    } else {
+      student.status = 'Completed';
+    }
+  }
   
   
 }

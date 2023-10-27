@@ -5,7 +5,7 @@
     font-weight: 700;
 }
 .classes-container{
-    margin-top: 20px;
+    padding: 20px;
     background-color: #f0f3f5;
     padding: 15px;
     border-radius: 10px;
@@ -13,9 +13,21 @@
     cursor: pointer;
 
 }
-
 .data-container{
     display: flex;
     align-items: center;
     justify-content: space-between;
+    padding: 15px;
+
 }
+.classes{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+@media (max-width: 768px) {
+    .classes {
+        display: flex;
+        flex-direction: column;
+    }
+  }

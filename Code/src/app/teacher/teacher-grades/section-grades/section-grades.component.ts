@@ -134,46 +134,14 @@ export class SectionGradesComponent {
 
     });
     const subjectPercentageMapping = {
-      'Araling Panlipunan': {
-        wwPercentage: 30,
-        ptPercentage: 50,
-        qaPercentage: 20
-      },
-      'Mathematics': {
-        wwPercentage: 40,
-        ptPercentage: 40,
-        qaPercentage: 20
-      },
-      'Mother Tongue': {
-        wwPercentage: 30,
-        ptPercentage: 50,
-        qaPercentage: 20
-      },
-      'Music':{
-        wwPercentage: 20,
-        ptPercentage: 60,
-        qaPercentage: 20
-      },
-      'Arts':{
-        wwPercentage: 20,
-        ptPercentage: 60,
-        qaPercentage: 20
-      },
-      'Physical Education':{
-        wwPercentage: 20,
-        ptPercentage: 60,
-        qaPercentage: 20
-      },
-      'Health':{
-        wwPercentage: 20,
-        ptPercentage: 60,
-        qaPercentage: 20
-      },
-      'Edukasyon sa Pagpapakatao':{
-        wwPercentage: 30,
-        ptPercentage: 50,
-        qaPercentage: 20
-      },
+      'Araling Panlipunan': {wwPercentage: 30,ptPercentage: 50,qaPercentage: 20},
+      'Mathematics': {wwPercentage: 40, ptPercentage: 40, qaPercentage: 20},
+      'Mother Tongue': {wwPercentage: 30, ptPercentage: 50, qaPercentage: 20},
+      'Music':{wwPercentage: 20,ptPercentage: 60,qaPercentage: 20},
+      'Arts':{wwPercentage: 20,ptPercentage: 60,qaPercentage: 20},
+      'Physical Education':{wwPercentage: 20,ptPercentage: 60,qaPercentage: 20},
+      'Health':{wwPercentage: 20,ptPercentage: 60,qaPercentage: 20},
+      'Edukasyon sa Pagpapakatao':{wwPercentage: 30,ptPercentage: 50,qaPercentage: 20},
 
     };
     this.authService.getSubjectById(this.subjectId).subscribe(
@@ -300,19 +268,23 @@ export class SectionGradesComponent {
           if (hpsData) {
             this.formData.writtenWorkHPS = [];
             this.formData.performanceTaskHPS = [];
+            
             for (let i = 1; i <= 10; i++) {
               const wwkey = `hps_ww_${i}`;
               const ptkey = `hps_pt_${i}`;
               if (hpsData.hasOwnProperty(wwkey)) {
-                this.formData.writtenWorkHPS.push(parseFloat(hpsData[wwkey]) || null);
-              }
+                const wwValue = parseFloat(hpsData[wwkey]);
+                this.formData.writtenWorkHPS.push(isNaN(wwValue) ? 0 : wwValue);              }
               if (hpsData.hasOwnProperty(ptkey)) {
-                this.formData.performanceTaskHPS.push(parseFloat(hpsData[ptkey]) || null); 
-              }  
+                const ptValue = parseFloat(hpsData[ptkey]);
+                this.formData.performanceTaskHPS.push(isNaN(ptValue) ? 0 : ptValue);               }  
             }
-            this.formData.totalWrittenWorkHPS = parseFloat(hpsData.hps_ww_total_score) || null;
-            this.formData.totalPerformanceTaskHPS = parseFloat(hpsData.hps_pt_total_score) || null; 
-            this.formData.quarterlyAssessmentHPS = parseFloat(hpsData.hps_qa_total_score) || null
+            const wwTotalScore = parseFloat(hpsData.hps_ww_total_score);
+          this.formData.totalWrittenWorkHPS = isNaN(wwTotalScore) ? 0 : wwTotalScore;
+          const ptTotalScore = parseFloat(hpsData.hps_pt_total_score);
+          this.formData.totalPerformanceTaskHPS = isNaN(ptTotalScore) ? 0 : ptTotalScore;
+          const qaTotalScore = parseFloat(hpsData.hps_qa_total_score);
+          this.formData.quarterlyAssessmentHPS = isNaN(qaTotalScore) ? 0 : qaTotalScore;
 
           }
 
@@ -372,10 +344,11 @@ export class SectionGradesComponent {
   
               if (!isNaN(qaScore)) {
                 studentToUpdate.qa_score = qaScore;
+
               } else {
                 studentToUpdate.qa_score = null;
               }
-
+              
             }
             studentToUpdate.initialTotalWrittenWorkRS = studentToUpdate.totalWrittenWorkRS;
             studentToUpdate.initialTotalPerfTaskRS = studentToUpdate.totalPerfTaskRS;
@@ -393,6 +366,7 @@ export class SectionGradesComponent {
         this.calculatePTWeightedScores();
         this.calculateTotalWrittenWorkRS();
         this.calculateTotalPerfTaskRS();
+        this.calculateQAWeightedScores();
 
         console.log('Updated Students:', this.students);
       },
@@ -569,7 +543,6 @@ calculateWeightedScores() {
 
     if (!isNaN(parsedPercentage)) {
       this.students.forEach((student) => {
-        console.log('Calculating weighted scores for student:', student.id);
 
         const totalWW = student.ww_scores.reduce((acc, score) => {
           const parsedScore = parseFloat(String(score)) || 0;
@@ -633,7 +606,6 @@ calculatePTWeightedScores() {
 
     if (!isNaN(parsedPercentage)) {
       this.students.forEach((student) => {
-          console.log('Calculating PT weighted scores for student:', student.id);
 
         const totalPT = student.pt_scores.reduce((acc, score) => {
           const parsedScore = parseFloat(String(score)) || 0;
@@ -676,22 +648,28 @@ updateQARawScore(studentId: number) {
 calculateQAWeightedScores() {
   this.students.forEach((student) => {
     const rawScore = student.qa_score || 0;
+    console.log('rawscore', rawScore)
 
     const quarterlyAssessmentHPSNumber = typeof this.formData.quarterlyAssessmentHPS === 'string'
       ? parseInt(this.formData.quarterlyAssessmentHPS, 10)
       : this.formData.quarterlyAssessmentHPS;
+      console.log('quarterlyAssessmentHPSNumber', quarterlyAssessmentHPSNumber)
 
-    let totalQA = !isNaN(quarterlyAssessmentHPSNumber)
-      ? ((rawScore / quarterlyAssessmentHPSNumber) * (this.selectedSubject.qaPercentage / 100) * 100)
-      : undefined;
+    if (quarterlyAssessmentHPSNumber !== 0) {
+      let totalQA = ((rawScore / quarterlyAssessmentHPSNumber) * (this.selectedSubject.qaPercentage / 100) * 100);
 
-    if (!isNaN(totalQA)) {
-      totalQA = parseFloat(totalQA.toFixed(2));
+      if (!isNaN(totalQA)) {
+        totalQA = parseFloat(totalQA.toFixed(2));
+        student.totalQuarterlyAssessmentWS = totalQA;
+      } else {
+        student.totalQuarterlyAssessmentWS = null;
+      }
+    } else {
+      student.totalQuarterlyAssessmentWS = 0; 
     }
-
-    student.totalQuarterlyAssessmentWS = totalQA;
   });
 }
+
 
 
 
@@ -712,7 +690,6 @@ calculateQAPercentageScore(studentId: number) {
       return student.totalQAPercentage;
     }
   }
-
   return 0;
 
 }

@@ -47,6 +47,10 @@ export class TeacherSidenavComponent {
 
   departments: any[] = [];
   departmentsExpanded = false;
+  user: any;
+  teacherInfo: any = {}
+  teacherName: string;
+  teacherLname: string;
   constructor(public router: Router, private authService: AuthService,private activatedRoute: ActivatedRoute) {}
 
   ngOnInit(): void {
@@ -68,7 +72,21 @@ export class TeacherSidenavComponent {
       console.log('Departments:', data);
       this.departments = data.departments;
     });
-    
+
+    this.authService.getTeacherProfile().subscribe((userData: any) => {
+      this.user = userData; 
+      console.log(userData)
+      console.log(userData.fname)
+
+      this.teacherInfo = userData
+      console.log('teacher info', this.teacherInfo)
+
+      this.teacherName = this.teacherInfo.fname
+      this.teacherLname = this.teacherInfo.mname
+      console.log('teacherfname', this.teacherName)
+
+    });
+  
   }
 
   toggleCollapse():void{

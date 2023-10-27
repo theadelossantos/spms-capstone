@@ -226,7 +226,7 @@
         </td>
         
         <!-- QUARTERLY ASSESSMENT -->
-        <td><input type="text" [(ngModel)]="student.qa_score" (input)="updateQARawScore(student.id)" (input)="calculateQAWeightedScores()" name="qa_score_{{student.id}}"/></td>
+        <td><input type="text" [(ngModel)]="student.qa_score" (input)="updateQARawScore(student.id)" (input)="calculateQAWeightedScores()" [value]="calculateQAWeightedScores()" name="qa_score_{{student.id}}"/></td>
         <td>
           <input
             *ngIf="calculateQAPercentageScore(student.id) !== 0"
