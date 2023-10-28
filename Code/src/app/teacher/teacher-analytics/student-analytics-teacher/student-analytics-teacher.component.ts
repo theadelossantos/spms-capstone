@@ -15,6 +15,9 @@ export class StudentAnalyticsTeacherComponent {
   gradeLevelName: string;
   sectionName: string;
   deptId: number
+  selectedQuarter: number;
+  quarters: any[]=[]
+
   constructor(private authService: AuthService, private router: Router){}
 
   ngOnInit():void{
@@ -47,7 +50,41 @@ export class StudentAnalyticsTeacherComponent {
         }
       );
 
-      
-      });
+      this.authService.getQuarters().subscribe((quartersData) => {
+        this.quarters = quartersData;
+        console.log('quarters', this.quarters);
+
+          if (this.quarters && this.quarters.length > 0) {
+          this.selectedQuarter = this.quarters[0].quarter_id;
+          console.log('Selected Quarter ID:', this.selectedQuarter);
+          }
+          this.fetchStudentGrades()
+
+          
+        },
+        (error) => {
+          console.error('Error fetching students:', error);
+        }
+      )
+
+
+    });
+  }
+  onQuarterChange(){
+    console.log('Selected Quarter ID:', this.selectedQuarter);
+
+  }
+  fetchStudentGrades(){
+    const filters = {
+      gradelevel: this.gradelvlId,
+      section: this.sectionId,
+      quarter: this.selectedQuarter
+    };
+
+    this.authService.fetchAllStudentGrades(filters).subscribe(
+      (data) => {
+        console.log('student grades', data)
+      }
+    )
   }
 }

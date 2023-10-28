@@ -46,6 +46,8 @@ export class StudentSidenavComponent {
 
   departments: any[] = [];
   departmentsExpanded = false;
+  user: any;
+  studentInfo: any = {}
   constructor(public router: Router, private authService: AuthService) {}
 
   ngOnInit(): void {
@@ -64,8 +66,12 @@ export class StudentSidenavComponent {
     loadDepartments(this.navData, this.authService, coursesRouteLink);
 
     this.authService.getDepartments().subscribe((data) => {
-      console.log('Departments:', data);
       this.departments = data.departments;
+    });
+    this.authService.getStudentProfile().subscribe((userData: any) => {
+      this.user = userData; 
+
+      this.studentInfo = userData
     });
     
   }
@@ -112,4 +118,5 @@ handleclick(item: INavbarData):void{
       }
     )
   }
+  
 }

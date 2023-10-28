@@ -68,7 +68,7 @@ const routes: Routes = [
     },
     {
       path: 'analytics',
-      loadChildren:() => import('./teacher/teacher-analytics/teacher-analytics.module').then(m => m.TeacherAnalyticsModule)
+      component: TeacherAnalyticsComponent
     },
 
   ]

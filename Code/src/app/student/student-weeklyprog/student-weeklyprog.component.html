@@ -6,20 +6,8 @@
         </div>
         <select class="form-select select-opt mb-2" id="dateRangeSelect" [(ngModel)]="selectedMonth" (change)="filterByMonth()">
             <option value="This Week">This Week</option>
-            <option value="January">January</option>
-            <option value="February">February</option>
-            <option value="March">March</option>
-            <option value="April">April</option>
-            <option value="May">May</option>
-            <option value="June">June</option>
-            <option value="July">July</option>
-            <option value="August">August</option>
-            <option value="September">September</option>
-            <option value="October">October</option>
-            <option value="November">November</option>
-            <option value="December">December</option>
-          </select>
-
+            <option *ngFor="let month of months" [value]="month">{{ month }}</option>
+        </select>
 
 </div>
 
@@ -29,11 +17,6 @@
         <div class="secion-subject" (click)="toggleSubject(i)">
             <h5>
                 {{subject.subject_name}}
-                <span *ngIf="subject.activities && subject.activities.length > 0">
-                    <span class="failed-act"*ngIf="countFailedActivities(subject.activities) > 0">
-                        {{ countFailedActivities(subject.activities) }}
-                    </span>
-                </span>
             </h5>
 
         </div>
@@ -50,27 +33,29 @@
     <div class="subject-data" *ngIf="expandedState[i]">
         <table class="mt-2">
             <tr >
-                <th></th>
+                <th><b>Date</b></th>
                 <th><b>Tasks</b></th>
                 <th><b>Score</b></th>
                 <th><b>Status</b></th>
+                <th></th>
+
             </tr>
 
                 <tr *ngFor="let activity of subject.activities">
+                    
+                    <td>{{ activity.date | date:'MMMM d, y'}}</td> 
+                    <td>{{ activity.activityName }}</td>
+                    <td>{{ activity.activityScore }} </td>
+                    <td>{{ activity.status }}</td>
                     <td>
-                        <ng-container *ngIf="activity.task_status === 'Completed'">
+                        <ng-container *ngIf="activity.status === 'Completed'">
                             <i class="bi bi-check-circle-fill text-success"></i> 
                         </ng-container>
-                        <ng-container *ngIf="activity.task_status === 'Missing'">
+                        <ng-container *ngIf="activity.status === 'Missing'">
                             <i class="bi bi-question-circle-fill text-warning"></i> 
                         </ng-container>
-                        <ng-container *ngIf="activity.task_status === 'Failed'">
-                            <i class="bi bi-x-circle-fill text-danger"></i>
-                        </ng-container>
+
                     </td>
-                    <td>{{ activity.task_name }}</td>
-                    <td>{{ activity.task_score }} </td>
-                    <td>{{ activity.task_status }}</td>
                 </tr>
         </table>
         <div *ngIf="!subject.activities || subject.activities.length === 0">

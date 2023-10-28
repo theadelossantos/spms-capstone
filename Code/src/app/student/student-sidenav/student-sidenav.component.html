@@ -7,8 +7,11 @@
         <button class="btnclose" *ngIf="collapsed" @rotate (click)="closeSidenav()"> 
             <i class="fal fa-times close-icon"></i>
         </button>
+
     </div>
-   
+    <div class="name">
+        <p class="name-text" @fadeInOut *ngIf="collapsed">{{studentInfo.lname}}, {{studentInfo.fname}}</p>
+    </div>
     <div class="scrollwrap scrollwrap_delayed">
         <ul class="sidenav-nav">
             <li class="sidenav-nav-item" *ngFor = "let data of navData">

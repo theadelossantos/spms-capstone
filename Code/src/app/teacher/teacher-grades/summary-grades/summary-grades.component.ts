@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef  } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 @Component({
@@ -23,7 +23,7 @@ export class SummaryGradesComponent {
   studentAverages: string[] = []
   isSortingAZ: boolean = true; 
 
-  constructor(private route: ActivatedRoute, private authService: AuthService) {
+  constructor(private route: ActivatedRoute, private authService: AuthService, private cdr: ChangeDetectorRef) {
     
   }
 
@@ -86,7 +86,6 @@ export class SummaryGradesComponent {
 
         this.authService.getQuarters().subscribe((quartersData) => {
           this.quarters = quartersData;
-          console.log('quarters', this.quarters);
           if (this.quarters && this.quarters.length > 0) {
             this.selectedQuarter = this.quarters[0].quarter_id;
             console.log('Selected Quarter ID:', this.selectedQuarter);
@@ -103,7 +102,9 @@ export class SummaryGradesComponent {
                       student[subject.subject_id] = '-';
                     }
 
-                    this.calculateAverage(student);
+                    if (subject === this.subjects[this.subjects.length - 1]) {
+                      this.calculateAverage(student);
+                    }
 
                   },
                   (error) => {
@@ -123,35 +124,63 @@ export class SummaryGradesComponent {
       }
     );
   }
-
-    calculateAverage(student: any): void {
+  calculateAverage(student: any): void {
     if (!student) {
       return;
     }
-
+  
     let total = 0;
     let count = 0;
-
+  
     this.subjects.forEach(subject => {
       const grade = student[subject.subject_id];
       if (grade !== '-' && !isNaN(parseFloat(grade))) {
         total += parseFloat(grade);
+        console.log('grade',grade)
         count++;
       }
     });
-
+  
     if (count > 0) {
       const average = total / count;
       student.average = average.toFixed(2);
       console.log(`Average for student ${student.id}: ${student.average}`);
       const backgroundColor = this.getRank(parseFloat(student.average));
-
       student.backgroundColor = backgroundColor;
+      
+      const studentAverage = {
+        student: student.id,
+        gradelevel: this.gradeLevelId,
+        section: this.sectionId,
+        subject: this.subjectId,
+        quarter: this.selectedQuarter,
+        average: student.average
+      };
+      console.log('average', studentAverage);
+      
+      this.authService.fetchAverage(studentAverage).subscribe((existingAverageData) => {
+        console.log('existing', existingAverageData)
+        if (existingAverageData && existingAverageData.length > 0) {
+          const aveId = existingAverageData[0].id;
+          student.aveId = aveId;
+            this.authService.updateAverage(aveId, studentAverage).subscribe((data) => {
+            console.log('Average updated', data);
+          });
+        } else {
+          this.authService.addStudentAverage(studentAverage).subscribe((data) => {
+            student.aveId = data.id;
+            console.log('New average added', data);
+          });
+        }
+      });
     } else {
       student.average = '-';
       console.log(`No grades found for student ${student.id}`);
     }
-    }
+  }
+  
+  
+  
   getRank(average: number): string {
     if (average >= 90 && average <= 94) {
       return 'lightyellow';

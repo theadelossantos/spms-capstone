@@ -280,6 +280,11 @@ class StudentGradesFilterSerializer(serializers.Serializer):
     subject = serializers.IntegerField()
     quarter = serializers.IntegerField()
 
+class AllStudentGradesFilterSerializer(serializers.Serializer):
+    gradelevel = serializers.IntegerField()
+    section = serializers.IntegerField()
+    quarter = serializers.IntegerField()
+
 class HPSFilterSerializer(serializers.Serializer):
     gradelevel = serializers.IntegerField()
     section = serializers.IntegerField()
@@ -321,3 +326,12 @@ class PasswordResetSerializer(serializers.Serializer):
 class PasswordResetConfirmSerializer(serializers.Serializer):
     token = serializers.CharField()
     password = serializers.CharField(write_only=True)
+
+
+class StudentAverageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = StudentAverage
+        fields = '__all__'
+        extra_kwargs = {
+            'student': {'required': False}  
+        }

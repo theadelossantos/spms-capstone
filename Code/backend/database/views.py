@@ -988,6 +988,24 @@ class StudentGradesFilterView(APIView):
             serializer = StudentGradesSerializer(student_grades, many=True)
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class AllSubjStudentGradesFilterView(APIView):
+    def post(self, request):
+        serializer = AllStudentGradesFilterSerializer(data=request.data)
+        if serializer.is_valid():
+            gradelevel = serializer.validated_data['gradelevel']
+            section = serializer.validated_data['section']
+            quarter = serializer.validated_data['quarter']
+
+            student_grades = StudentGrade.objects.filter(
+                gradelevel=gradelevel,
+                section=section,
+                quarter=quarter
+            )
+
+            serializer = StudentGradesSerializer(student_grades, many=True)
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 class HPSFilterView(APIView):
     def post(self, request):
@@ -1090,27 +1108,6 @@ class TeacherCountView(View):
 class WeeklyProgressListCreateView(generics.ListCreateAPIView):
     queryset = WeeklyProgress.objects.all()
     serializer_class = WeeklyProgressSerializer
-
-    # def create(self, request, *args, **kwargs):
-    #     subject_id = request.data.get('subject_id')
-    #     gradelevel_id = request.data.get('gradelvl_id')
-    #     section_id = request.data.get('section_id')
-    #     quarter_id = request.data.get('quarter_id')
-    #     task_name = request.data.get('task_name')
-
-    #     existing_record = WeeklyProgress.objects.filter(
-    #         subject_id=subject_id,
-    #         gradelvl_id=gradelevel_id,
-    #         section_id=section_id,
-    #         quarter_id=quarter_id,
-    #         task_name=task_name,
-
-    #     ).first()
-
-    #     if existing_record:
-    #         return Response({'detail': 'This record already exists.'}, status=status.HTTP_400_BAD_REQUEST)
-
-    #     return super().create(request, *args, **kwargs)
 
 class getWeeklyProgress(ListAPIView):
     serializer_class = WeeklyProgressSerializer
@@ -1374,4 +1371,102 @@ class PasswordResetConfirmVieww(APIView):
                 return Response({'message': 'Password reset successful'}, status=status.HTTP_200_OK)
             except PasswordResetToken.DoesNotExist:
                 return Response({'error': 'Invalid or expired token'}, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class StudentAverageListCreateView(generics.ListCreateAPIView):
+    queryset = StudentAverage.objects.all()
+    serializer_class = StudentAverageSerializer
+    permission_classes = [permissions.AllowAny]
+
+    def create(self, request, *args, **kwargs):
+        student_id = request.data.get('student')
+        gradelevel_id = request.data.get('gradelevel')
+        section_id = request.data.get('section')
+        quarter_id = request.data.get('quarter')
+
+        existing_record = StudentAverage.objects.filter(
+            student=student_id,
+            gradelevel=gradelevel_id,
+            section=section_id,
+            quarter=quarter_id
+        ).first()
+
+        if existing_record:
+            return Response({'detail': 'This record already exists.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        return super().create(request, *args, **kwargs)
+
+# class StudentAverageBatchUpdateView(generics.UpdateAPIView):
+#     serializer_class = StudentAverageSerializer
+#     permission_classes = [permissions.AllowAny]
+
+#     def update(self, request, *args, **kwargs):
+#         data = request.data
+
+#         for record_data in data:
+#             student_id = record_data.get('student')
+#             gradelevel_id = record_data.get('gradelevel')
+#             section_id = record_data.get('section')
+#             quarter_id = record_data.get('quarter')
+
+#             try:
+#                 student_grade = StudentAverage.objects.get(
+#                     student=student_id,
+#                     gradelevel=gradelevel_id,
+#                     section=section_id,
+#                     quarter=quarter_id
+#                 )
+
+#                 serializer = StudentAverageSerializer(student_grade, data=record_data, partial=True)
+
+#                 if serializer.is_valid():
+#                     serializer.save()
+#                 else:
+#                     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+#             except StudentGrade.DoesNotExist:
+#                 return Response({'detail': 'Record not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+#         return Response({'detail': 'Batch update successful.'}, status=status.HTTP_200_OK)
+
+class AverageUpdateView(generics.UpdateAPIView):
+    queryset = StudentAverage.objects.all()
+    serializer_class = StudentAverageSerializer
+
+class AverageFilterView(APIView):
+    def post(self, request):
+        serializer = StudentAverageSerializer(data=request.data)
+        if serializer.is_valid():
+            student = serializer.validated_data['student']
+            gradelevel = serializer.validated_data['gradelevel']
+            section = serializer.validated_data['section']
+            quarter = serializer.validated_data['quarter']
+
+            ave = StudentAverage.objects.filter(
+                student=student,
+                gradelevel=gradelevel,
+                section=section,
+                quarter=quarter
+            )
+
+            serializer = StudentAverageSerializer(ave, many=True)
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class AllAverageFilterView(APIView):
+    def post(self, request):
+        serializer = StudentAverageSerializer(data=request.data)
+        if serializer.is_valid():
+            gradelevel = serializer.validated_data['gradelevel']
+            section = serializer.validated_data['section']
+            quarter = serializer.validated_data['quarter']
+
+            ave = StudentAverage.objects.filter(
+                gradelevel=gradelevel,
+                section=section,
+                quarter=quarter
+            )
+
+            serializer = StudentAverageSerializer(ave, many=True)
+            return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

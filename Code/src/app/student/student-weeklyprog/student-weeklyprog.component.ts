@@ -21,7 +21,20 @@ export class StudentWeeklyprogComponent {
   selectedMonth: string = 'This Week'; 
   failedActivitiesCount: { [key: number]: number } = {};
 
-
+  months: string[] = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December'
+  ];
   constructor(private authService: AuthService, private router: Router){}
 
   ngOnInit():void{
@@ -62,24 +75,86 @@ export class StudentWeeklyprogComponent {
   
   }
 
+
   toggleSubject(index: number): void {
     this.expandedState[index] = !this.expandedState[index];
 
-    if (this.expandedState[index] && !this.subjects[index].activities) {
+    if (this.expandedState[index]) {
         const subjectId = this.subjects[index].subject_id;
+        const filters = {
+            gradelevel: this.gradelvlId,
+            section: this.sectionId,
+            subject: subjectId,
+            quarter: this.selectedQuarter,
+            student: this.studentId,
+        };
 
-        this.authService.getStudentWeeklyProgress(
-            this.gradelvlId,
-            this.sectionId,
-            subjectId, 
-            this.selectedQuarter,
-            this.selectedMonth
-        ).subscribe(
+        const currentDate: Date = new Date();
+        this.authService.fetchIndivStudentGrades(filters).subscribe(
             (response: any) => {
-                const subjectActivities = response.filter((activity: any) => activity.subject_id === subjectId);
+                console.log('activities', response);
+                const selectedMonthIndex = this.getMonthIndex(this.selectedMonth);
 
-                this.subjects[index].activities = subjectActivities;
-                console.log(this.subjects[index].activities)
+                const selectedMonthActivities = response.filter((activity: any) => {
+                    const activityFields = Object.keys(activity);
+                    const activitiesToDisplay = [];
+
+                    activityFields.forEach((field) => {
+                        if (
+                            field.includes('date_input_ww_score_') ||
+                            field.includes('date_input_pt_score') ||
+                            field === 'date_input_qa_score'
+                        ) {
+                            const index = field.includes('date_input_ww_score_')
+                                ? parseInt(field.split('_').pop())
+                                : 1;
+
+                            if (activity[field]) {
+                                const activityDate = new Date(activity[field]);
+
+                                // Check if the activity is within the selected month or within the last 7 days (This Week)
+                                if (
+                                    activityDate.getMonth() === selectedMonthIndex ||
+                                    (this.selectedMonth === 'This Week' &&
+                                        currentDate.getTime() - activityDate.getTime() <= 7 * 24 * 60 * 60 * 1000)
+                                ) {
+                                    let activityName;
+                                    let activityScore;
+
+                                    if (field.includes('date_input_ww_score_')) {
+                                        activityName = `ww_score_${index}_name`;
+                                        activityScore = `ww_score_${index}`;
+                                    } else if (field.includes('date_input_pt_score')) {
+                                        activityName = `pt_score_${index}_name`;
+                                        activityScore = `pt_score_${index}`;
+                                    } else if (field === 'date_input_qa_score') {
+                                        activityName = 'qa_name';
+                                        activityScore = 'qa_score';
+                                    }
+
+                                    activitiesToDisplay.push({
+                                        date: activity[field],
+                                        activityScore:
+                                            activity[activityScore] === null || isNaN(activity[activityScore])
+                                                ? '-'
+                                                : parseInt(activity[activityScore]),
+                                        activityName: activity[activityName],
+                                        status:
+                                            activity[activityScore] === null || isNaN(activity[activityScore])
+                                                ? 'Missing'
+                                                : activity[activityScore] === ''
+                                                ? 'Missing'
+                                                : 'Completed',
+                                    });
+                                }
+                            }
+                        }
+                    });
+
+                    console.log('activitiesToDisplay', activitiesToDisplay);
+
+                    this.subjects[index].activities = activitiesToDisplay;
+                });
             },
             (error) => {
                 console.error('Error fetching Weekly Progress:', error);
@@ -88,43 +163,70 @@ export class StudentWeeklyprogComponent {
     }
 }
 
-filterByMonth() {
-  for (let index = 0; index < this.subjects.length; index++) {
-      if (this.expandedState[index]) {
-          this.getWeeklyProgress(index);
-      }
+
+  
+filterByMonth(): void {
+  console.log('filterByMonth function called');
+
+  if (!this.subjects || !this.subjects.length) {
+    return;
   }
+
+  const selectedMonthIndex = this.months.indexOf(this.selectedMonth);
+
+  if (selectedMonthIndex === -1) {
+    return; 
+  }
+
+  this.subjects.forEach((subject, index) => {
+    if (!subject.activities) {
+      return;
+    }
+
+    console.log('Selected Month:', this.selectedMonth);
+
+    subject.activities = subject.activities.filter((activity: any) => {
+      const activityDate = new Date(activity.date);
+      const activityMonth = activityDate.getMonth();
+
+      return activityMonth === selectedMonthIndex;
+    });
+  });
 }
+
+
+  getMonthIndex(monthName: string): number {
+    const months = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
+    ];
+  
+    return months.indexOf(monthName);
+  }
+  
 
   getWeeklyProgress(index: number) {
     const subject = this.subjects[index];
     const subjectId = subject.subject_id;
 
-    this.authService
-        .getStudentWeeklyProgress(
-            this.gradelvlId,
-            this.sectionId,
-            subjectId,
-            this.selectedQuarter,
-            this.selectedMonth
-        )
-        .subscribe(
-            (response: any) => {
-                const subjectActivities = response.filter(
-                    (activity: any) => activity.subject_id === subjectId
-                );
-
-                subject.activities = subjectActivities;
-            },
-            (error) => {
-                console.error('Error fetching Weekly Progress:', error);
-            }
-        );
-}
-
-
-  countFailedActivities(activities: any[]): number{
-    const failedActivities = activities.filter(activity => activity.task_status === 'Failed');
-    return failedActivities.length;
+    this.authService.getStudentGrades(subjectId, this.selectedQuarter, this.studentId).subscribe(
+      (response: any) => {
+        console.log('activities', response);
+      },
+      (error) => {
+        console.error('Error fetching Weekly Progress:', error);
+      }
+    );
   }
+
 }

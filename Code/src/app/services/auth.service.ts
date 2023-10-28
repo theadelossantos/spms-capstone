@@ -493,6 +493,9 @@ export class AuthService {
   fetchStudentGrades(filters:any):Observable<any>{
     return this.http.post(`${this.api_url}student-grade/filter/`, filters, this.httpOptions);
   }
+  fetchAllStudentGrades(filters:any):Observable<any>{
+    return this.http.post(`${this.api_url}all-subj-student-grade/filter/`, filters, this.httpOptions);
+  }
 
   fetchHPSscores(filters:any):Observable<any>{
     return this.http.post(`${this.api_url}hps/filter/`, filters, this.httpOptions);
@@ -599,5 +602,20 @@ export class AuthService {
     const body = { token, password: newPassword };
   
     return this.http.post(`${this.api_url}password-reset-confirm/`, body);
+  }
+  addStudentAverage(studentGrades:any): Observable<any> {
+    return this.http.post(`${this.api_url}student-average/`, studentGrades, this.httpOptions);
+  }
+  // batchUpdateStudentAverage(studentGrades: any): Observable<any> {
+  //   return this.http.put(`${this.api_url}student-average/batch-update/`, studentGrades, this.httpOptions);
+  // }
+  updateAverage(aveId: number, averageData: any): Observable<any> {
+    return this.http.put(`${this.api_url}average/${aveId}/`,averageData,this.httpOptions);
+  }
+  fetchAverage(filters:any):Observable<any>{
+    return this.http.post(`${this.api_url}average/filter/`, filters, this.httpOptions);
+  }
+  fetchAllAverage(filters:any):Observable<any>{
+    return this.http.post(`${this.api_url}all-average/filter/`, filters, this.httpOptions);
   }
 }

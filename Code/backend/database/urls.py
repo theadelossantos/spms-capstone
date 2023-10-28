@@ -59,6 +59,7 @@ urlpatterns = [
     path('student-grade/update/<int:student_id>/<int:subject_id>/<int:gradelevel_id>/<int:section_id>/<int:quarter_id>/', views.StudentGradeUpdateView.as_view(), name='studentgrade-update'),
     path('student-grade/batch-update/', StudentGradeBatchUpdateView.as_view(), name='studentgrade-batch-update'),
     path('student-grade/filter/', views.StudentGradesFilterView.as_view(), name='studentgrade-filter'),
+    path('all-subj-student-grade/filter/', views.AllSubjStudentGradesFilterView.as_view(), name='allsubjstudentgrade-filter'),
     path('quarters/', QuarterListCreateView.as_view(), name='quarter-list'),
     path('hps/', HPSListCreateView.as_view(), name='hps-list'),
     path('hps/filter/', views.HPSFilterView.as_view(), name='HPS-filter'),
@@ -87,7 +88,10 @@ urlpatterns = [
     path('get-announcements/<int:department_id>/', AnnouncementByDepartmentView.as_view(), name='announcements-by-department'),
     path('password-reset/', PasswordResetVieww.as_view(), name='password-reset'),
     path('password-reset-confirm/', PasswordResetConfirmVieww.as_view(), name='password-reset-confirm'),
-
+    path('student-average/', views.StudentAverageListCreateView.as_view(), name='studentaverage-list-create'),
+    path('average/<int:pk>/', views.AverageUpdateView.as_view(), name='average-update'),
+    path('average/filter/', views.AverageFilterView.as_view(), name='average-filter'),
+    path('all-average/filter/', views.AllAverageFilterView.as_view(), name='all-average-filter'),
 
 
 ]

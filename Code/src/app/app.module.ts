@@ -35,6 +35,7 @@ import { TeacherAnalyticsComponent } from './teacher/teacher-analytics/teacher-a
 import { StudentAnalyticsComponent } from './student/student-analytics/student-analytics.component';
 import { ForgotPasswordComponent } from './landing/forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './landing/reset-password/reset-password.component';
+import { NgChartsModule } from 'ng2-charts';
 
 
 @NgModule({
@@ -76,7 +77,8 @@ import { ResetPasswordComponent } from './landing/reset-password/reset-password.
     HttpClientModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
-    NgbModule
+    NgbModule,
+    NgChartsModule
 ],
   providers: [CookieService],
   bootstrap: [AppComponent]
