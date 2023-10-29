@@ -526,6 +526,7 @@ export class SectionWeeklyprogComponent {
       subject: this.subjectId,
       quarter: this.selectedQuarter
     };
+    
   
     this.authService.fetchStudentGrades(filters).subscribe(
       (data) => {

@@ -36,6 +36,7 @@ import { StudentAnalyticsComponent } from './student/student-analytics/student-a
 import { ForgotPasswordComponent } from './landing/forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './landing/reset-password/reset-password.component';
 import { NgChartsModule } from 'ng2-charts';
+import { QueriesComponent } from './admin/queries/queries.component';
 
 
 @NgModule({
@@ -69,6 +70,7 @@ import { NgChartsModule } from 'ng2-charts';
     StudentAnalyticsComponent,
     ForgotPasswordComponent,
     ResetPasswordComponent,
+    QueriesComponent,
   ],
   imports: [
     BrowserModule,

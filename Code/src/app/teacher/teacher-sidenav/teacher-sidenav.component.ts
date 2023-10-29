@@ -51,6 +51,8 @@ export class TeacherSidenavComponent {
   teacherInfo: any = {}
   teacherName: string;
   teacherLname: string;
+  gradelevel:string;
+  section: string;
   constructor(public router: Router, private authService: AuthService,private activatedRoute: ActivatedRoute) {}
 
   ngOnInit(): void {
@@ -81,9 +83,12 @@ export class TeacherSidenavComponent {
       this.teacherInfo = userData
       console.log('teacher info', this.teacherInfo)
 
-      this.teacherName = this.teacherInfo.fname
-      this.teacherLname = this.teacherInfo.mname
-      console.log('teacherfname', this.teacherName)
+      this.authService.getGradeLevelById(this.teacherInfo.gradelvl_id).subscribe((data)=>{
+        this.gradelevel = data.gradelevelss[0].gradelvl
+      })
+      this.authService.getSectionById(this.teacherInfo.section_id).subscribe((data)=>{
+        this.section = data.sections[0].section_name
+      })
 
     });
   

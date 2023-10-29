@@ -34,8 +34,19 @@
     font-size: 20px;
     font-family: 'Poppins', sans-serif;
     font-weight: 800;
+    margin: 0;
 }
-
+.subname-text{
+    text-align: center;
+    font-size: 15px;
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+}
+.subsubname-text{
+    text-align: center;
+    font-size: 12px;
+    font-family: 'Poppins', sans-serif;
+}
 
 .btnclose{
     margin-left: auto;

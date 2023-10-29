@@ -335,3 +335,8 @@ class StudentAverageSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'student': {'required': False}  
         }
+
+class QueriesSerializer(serializers.ModelSerializer):
+    class Meta: 
+        model = Queries
+        fields = '__all__'

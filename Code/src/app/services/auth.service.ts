@@ -618,4 +618,16 @@ export class AuthService {
   fetchAllAverage(filters:any):Observable<any>{
     return this.http.post(`${this.api_url}all-average/filter/`, filters, this.httpOptions);
   }
+
+  addQueries(queries:any): Observable<any> {
+    return this.http.post(`${this.api_url}add-queries/`, queries, this.httpOptions);
+  }
+  getQueries(){
+    return this.http.get(`${this.api_url}add-queries/`, this.httpOptions);
+  }
+  delQueries(queryId:number){
+    return this.http.delete(`${this.api_url}queries/${queryId}/`, this.httpOptions);
+
+  }
+
 }

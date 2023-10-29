@@ -17,7 +17,7 @@
         <tr *ngFor="let subject of subjects; let i = index">
             <td class="subject-names">{{subject.subject_name}}</td>
             <td *ngFor="let quarterGrade of studentGrades[i]; let j = index" class="quarterly-grade">
-                {{ quarterGrade[0]?.quarterly_grade || '' }}
+                {{ quarterGrade[0]?.quarterly_grade | number:'1.0-0' || '' }}
             </td>     
             <td><b>{{ getSubjectAverage(studentGrades[i]) }}</b></td>
             <td><b>{{ getRemarks(generalAverage) }}</b></td>
@@ -26,10 +26,10 @@
         </tr>
         <tr>
             <td class="subject-names"><b>General Average</b></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
+            <ng-container *ngFor="let quarterAverage of getQuarterAverages(); let i = index">
+                <td *ngIf="quarterAverage !== ''"><b>{{ quarterAverage }}</b></td>
+                <td *ngIf="quarterAverage === ''"></td>
+            </ng-container>          
             <td colspan="2"><b>{{ generalAverage }}</b></td>
 
         </tr>

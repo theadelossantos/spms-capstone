@@ -112,7 +112,6 @@ export class StudentWeeklyprogComponent {
                             if (activity[field]) {
                                 const activityDate = new Date(activity[field]);
 
-                                // Check if the activity is within the selected month or within the last 7 days (This Week)
                                 if (
                                     activityDate.getMonth() === selectedMonthIndex ||
                                     (this.selectedMonth === 'This Week' &&

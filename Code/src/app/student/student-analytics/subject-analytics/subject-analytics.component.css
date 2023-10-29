@@ -18,8 +18,11 @@ a:hover{
     text-decoration: underline;
 }
 .progress-div{
-    background-color: white;
-    border-radius: 10px;
+    background-color: #ffff;
+    padding: 30px;
+    border-radius: 24px;
+    box-shadow: rgba(0, 0, 0, 0.15) 2.4px 2.4px 3.2px;
+
 }
 .h5-text{
     font-weight: 600;
@@ -34,4 +37,28 @@ a:hover{
     justify-content: center;
     height: 100%; 
 }
+/* .rawscore-line{
+    width: 1000px;
+    height: 1000px;
+} */
 
+@media (max-width: 768px) {
+    .classes {
+        display: flex;
+        flex-direction: column;
+    }
+    .analytics-container{
+        display: flex;
+        flex-direction: column;
+    }
+    .progress-div{
+        margin-top:5px ;
+    }
+    .circle-progress-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100%; 
+    }
+  }

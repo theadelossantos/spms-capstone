@@ -26,6 +26,8 @@ export class AdminDashboardComponent implements AfterViewInit, OnInit {
   selectedAnnouncement: any = {};  
   selectedDepartmentsForEdit: { [key: number]: boolean } = {};
   selectedDepartmentId: number;
+  queriesCount: number
+  queries: any[] = [];
   constructor(private authService: AuthService, private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
@@ -51,6 +53,13 @@ export class AdminDashboardComponent implements AfterViewInit, OnInit {
         console.log('announcements', this.announcementlist)
 
         
+      }
+    )
+    this.authService.getQueries().subscribe(
+      (data: any) => {
+        console.log('queries',data)
+        this.queries = data
+        this.queriesCount = this.queries.length
       }
     )
   }

@@ -118,9 +118,9 @@ export class TeacherAnalyticsComponent {
           const average = parseFloat(student.average);
           
   
-          if (average >= 90 && average <= 94) {
+          if (average >= 90 && average <= 94.99) {
             this.withHonorsCount++;
-          } else if (average >= 95 && average <= 97) {
+          } else if (average >= 95 && average <= 97.99) {
             this.withHighHonorsCount++;
           } else if (average >= 98 && average <= 100) {
             this.withHighestHonorsCount++;

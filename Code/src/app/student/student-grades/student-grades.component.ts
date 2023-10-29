@@ -36,12 +36,10 @@ export class StudentGradesComponent implements OnInit {
         if (this.subjects.length > 0) {
           this.subjectId = this.subjects[0].subject_id;
         }
-        console.log('Subjects:', this.subjects);
       });
 
       this.authService.getQuarters().subscribe((quartersData) => {
         this.quarters = quartersData;
-        console.log('Quarters', this.quarters);
 
         const fetchGradeObservables = [];
 
@@ -75,7 +73,6 @@ export class StudentGradesComponent implements OnInit {
                 }
                 this.studentGrades[subjectIndex][quarterIndex] = result.gradeData;
                 this.calculateGeneralAverage();
-                console.log(`Assigned grade for Subject ID ${result.subjectId}, Quarter ${result.quarterId}:`, result.gradeData); // Add this line
               }
             }
           },
@@ -107,10 +104,11 @@ export class StudentGradesComponent implements OnInit {
     const sum = quarterlyGrades.reduce((acc, grade) => acc + grade, 0);
     const average = sum / quarterlyGrades.length;
     const roundedAverage = Math.round(average);
-    console.log('Average Grades:', quarterlyGrades, average);
-  
+    
+    console.log(roundedAverage.toString())
     return roundedAverage.toString();
   }
+  
   calculateGeneralAverage() {
     let totalSubjectAverages = 0;
     let totalSubjectsWithGrades = 0;
@@ -136,13 +134,48 @@ export class StudentGradesComponent implements OnInit {
   }
   
   getRemarks(grade: string): string {
-    const numericGrade = parseFloat(grade);
-    if (!isNaN(numericGrade) && numericGrade >= 75) {
+    if (grade !== '') {
+      const numericGrade = parseFloat(grade);
+      if (!isNaN(numericGrade) && numericGrade >= 75) {
         return 'PASSED';
-    } else {
+      } else {
         return 'FAILED';
+      }
     }
+    return '';
+  }
+  getQuarterAverages(): string[] {
+    const quarterAverages: string[] = [];
+
+    for (let i = 0; i < this.quarters.length; i++) {
+        let totalQuarterAverage = 0;
+        let totalSubjectsWithGrades = 0;
+
+        for (const subjectGrades of this.studentGrades) {
+            if (subjectGrades[i]) {
+                const subjectAverage = parseFloat(subjectGrades[i][0]?.quarterly_grade);
+                if (!isNaN(subjectAverage)) {
+                    totalQuarterAverage += subjectAverage;
+                    totalSubjectsWithGrades++;
+                }
+            }
+        }
+
+        if (totalSubjectsWithGrades > 0) {
+            const average = totalQuarterAverage / totalSubjectsWithGrades;
+            quarterAverages.push(Math.round(average).toString());
+        } else {
+            quarterAverages.push('');
+        }
+    }
+
+    return quarterAverages;
+}
+
+
+  
+  
 }
 
   
-}
+

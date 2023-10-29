@@ -9,6 +9,13 @@ export const navbarData: INavbarData[] = [
         label: 'Dashboard'
     },
     {
+      routeLink: '/admin-home/queries',
+      icon: 'fa-solid fa-message',
+      label: 'Queries',
+      items: [],
+
+  },
+    {
         routeLink: '/admin-home/teachers',
         icon: 'fa-solid fa-users',
         label: 'Teachers',

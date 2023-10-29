@@ -1,13 +1,15 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { AuthService } from 'src/app/services/auth.service';
 import { ActivatedRoute, ParamMap } from '@angular/router';
-
+import { Chart } from 'chart.js';
+import { filter } from 'rxjs';
 @Component({
   selector: 'app-overall-performance',
   templateUrl: './overall-performance.component.html',
   styleUrls: ['./overall-performance.component.css']
 })
 export class OverallPerformanceComponent {
+  lineChart: Chart;
   user:any;
   studentId: number
   studentfname: string;
@@ -23,6 +25,8 @@ export class OverallPerformanceComponent {
   weeklyProgress: any[] = [];
   subjectGrades: { [key: string]: number } = {};
   subjectName: string
+  private honorPieChart: Chart | undefined;
+
 
   constructor(private route: ActivatedRoute, private authService: AuthService) {}
 
@@ -41,6 +45,7 @@ export class OverallPerformanceComponent {
         this.deptId = userData.dept_id
         this.gradelvlId = userData.gradelvl_id
         this.sectionId = userData.section_id
+        this.gradelvlId = userData.gradelvl_id
 
         this.authService.getSubjectsByDeptGL(this.deptId, this.gradelvlId).subscribe(
           (subjectData: any) => {
@@ -64,8 +69,6 @@ export class OverallPerformanceComponent {
             for (const subject of this.subjects) {
               this.fetchStudentRawScoresForSubject(subject);
             }   
-
-            
           },
           (error) => {
             console.error('Error fetching students:', error);
@@ -103,12 +106,17 @@ export class OverallPerformanceComponent {
         console.log('Raw Scores Data:', data);
         if (data.length > 0){
           const initialGrade = parseFloat(data[0].initial_grade);
-          console.log(initialGrade);
+          console.log('grade',initialGrade);
   
           this.subjectGrades[subject.subject_id] = this.convertToPerspectiveGrade(initialGrade);
         }else{
           this.subjectGrades[subject.subject_id] = 0
         }
+        const overallAverage = this.getOverallAverage();
+        console.log('Overall Average:', overallAverage);
+
+        this.generateHonorPieChart();
+        this.createLineChart()
       },
       (error) => {
         console.error('Error fetching student raw scores:', error);
@@ -182,4 +190,158 @@ export class OverallPerformanceComponent {
       return honorRollThreshold - overallAverage
     }
   }
+  
+  generateHonorPieChart() {
+    const overallAverage = this.getOverallAverage();
+    console.log('ovaverage', overallAverage);
+    
+    const withHonorMin = 90;
+    const withHighHonorMin = 95;
+    const withHighestHonorMin = 98;
+    
+    const labels = [];
+    const dataValues = [];
+    let currentAverageColor = 'lightgray';
+    
+    if (overallAverage >= withHonorMin && overallAverage < withHighHonorMin) {
+      labels.push('Current Average', 'With High Honor', 'With Highest Honor');
+      dataValues.push(overallAverage, withHighHonorMin - overallAverage, 100 - withHighHonorMin);
+      currentAverageColor = 'yellowgreen';
+    } else if (overallAverage >= withHighHonorMin && overallAverage < withHighestHonorMin) {
+      labels.push('Current Average', 'With Highest Honor');
+      dataValues.push(overallAverage, 100 - overallAverage);
+      currentAverageColor = 'green';
+    } else if (overallAverage >= withHighestHonorMin) {
+      labels.push('Current Average', 'With Highest Honor');
+      dataValues.push(overallAverage, 100 - overallAverage);
+      currentAverageColor = 'green';
+    } else {
+      labels.push('Current Average', 'With Honor', 'With High Honor', 'With Highest Honor');
+      dataValues.push(overallAverage, withHonorMin - overallAverage, withHighHonorMin - withHonorMin, withHighestHonorMin - withHighHonorMin);
+      currentAverageColor = 'orange';
+    }
+    
+    const backgroundColors = [currentAverageColor, 'yellow', 'yellowgreen', 'green'];
+    
+    const data = {
+      labels: labels,
+      datasets: [{
+        data: dataValues,
+        backgroundColor: backgroundColors,
+      }],
+    };
+    
+    const ctx = document.getElementById('honorPieChart') as HTMLCanvasElement;
+    
+    if (this.honorPieChart) {
+      this.honorPieChart.destroy();
+    }
+    
+    this.honorPieChart = new Chart(ctx, {
+      type: 'pie',
+      data: data,
+      options: {
+        responsive: true,
+        legend: {
+          display: true,
+        },
+        plugins:{
+          title: {
+            font: {
+              family:'Poppins',
+              size: 17
+            },
+            display: true,
+            text: 'Average Status',
+            color: '#000'
+          },
+        }
+
+      },
+      
+    } as any);
+  }
+
+  createLineChart() {
+    if (this.subjects.length > 0) {
+      const subjectNames = this.subjects.map((subject) => subject.subject_name);
+      const initialGrades = this.subjects.map((subject) => {
+        return this.subjectGrades[subject.subject_id];
+      });
+  
+      console.log('Subject Names:', subjectNames);
+      console.log('Initial Grades:', initialGrades);
+  
+      if (this.lineChart) {
+        this.lineChart.destroy();
+      }
+  
+      const ctx = document.getElementById('subjectLineChart') as HTMLCanvasElement;
+      const fontOptions1 = {
+        family: 'Poppins',
+        size: 12,
+      };
+      const fontOptions2 = {
+        family: 'Poppins',
+        size: 17,
+      };
+      const chartOptions = {
+        plugins: {
+          legend: {
+            labels: {
+              font: fontOptions1,
+            },
+          },
+          title: {
+            font: fontOptions2,
+            display: true,
+            text: 'Subject Grades',
+            color: '#000'
+          },
+          responsive: true,
+        },
+        scales: {
+          x: {
+            ticks: {
+              font: fontOptions1,
+              color: '#000'
+            },
+          },
+          y: {
+            beginAtZero: true,
+            max: 100,
+            ticks:{
+              font: fontOptions1,
+              color: '#000'
+            }
+          },
+        },
+      };
+      this.lineChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: subjectNames,
+          datasets: [
+            {
+              label: 'Subject Grades',
+              data: initialGrades,
+              borderColor: 'rgba(75, 192, 192, 1)',
+              backgroundColor: 'rgba(54, 162, 235, 0.2)',
+              borderWidth: 2,
+              fill: true,
+              pointBackgroundColor:'rgba(54, 162, 235)',
+              tension: 0.4,
+            },
+          ],
+        },
+        options: chartOptions
+      });
+    } else {
+      console.log('No subjects data available.');
+    }
+  }
+  
 }
+
+
+

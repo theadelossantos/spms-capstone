@@ -1470,3 +1470,12 @@ class AllAverageFilterView(APIView):
             serializer = StudentAverageSerializer(ave, many=True)
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class QueriesListCreateView(generics.ListCreateAPIView):
+    queryset = Queries.objects.all()
+    serializer_class = QueriesSerializer
+
+class QueriesRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Queries.objects.all()
+    serializer_class = QueriesSerializer
+

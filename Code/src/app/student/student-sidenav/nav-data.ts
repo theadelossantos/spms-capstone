@@ -6,7 +6,7 @@ export const navbarData: INavbarData[] = [
     {
         routeLink: '/student/dashboard',
         icon: 'fa-solid fa-home',
-        label: 'Dashboard'
+        label: 'Home'
     },
     {
         routeLink: '/student/weeklyprog',
@@ -33,10 +33,6 @@ export const navbarData: INavbarData[] = [
                 routeLink: '/student/settings/profile',
                 label: 'Profile'
             },
-            {
-                routeLink: '/student/settings/privacy',
-                label: 'Privacy'
-            }
         ]
     },
 ];

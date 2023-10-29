@@ -92,6 +92,7 @@ urlpatterns = [
     path('average/<int:pk>/', views.AverageUpdateView.as_view(), name='average-update'),
     path('average/filter/', views.AverageFilterView.as_view(), name='average-filter'),
     path('all-average/filter/', views.AllAverageFilterView.as_view(), name='all-average-filter'),
-
+    path('add-queries/', QueriesListCreateView.as_view(), name='queries-add'),
+    path('queries/<int:pk>/', views.QueriesRetrieveUpdateDestroyView.as_view(), name='queries-detail'),
 
 ]

@@ -48,6 +48,8 @@ export class StudentSidenavComponent {
   departmentsExpanded = false;
   user: any;
   studentInfo: any = {}
+  gradelevel: string;
+  section: string;
   constructor(public router: Router, private authService: AuthService) {}
 
   ngOnInit(): void {
@@ -72,6 +74,13 @@ export class StudentSidenavComponent {
       this.user = userData; 
 
       this.studentInfo = userData
+      console.log(this.studentInfo)
+      this.authService.getGradeLevelById(this.studentInfo.gradelvl_id).subscribe((data)=>{
+        this.gradelevel = data.gradelevelss[0].gradelvl
+      })
+      this.authService.getSectionById(this.studentInfo.section_id).subscribe((data)=>{
+        this.section = data.sections[0].section_name
+      })
     });
     
   }

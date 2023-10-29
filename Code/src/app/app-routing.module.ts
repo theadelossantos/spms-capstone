@@ -24,6 +24,7 @@ import { TeacherAnalyticsComponent } from './teacher/teacher-analytics/teacher-a
 import { StudentAnalyticsComponent } from './student/student-analytics/student-analytics.component';
 import { ForgotPasswordComponent } from './landing/forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './landing/reset-password/reset-password.component';
+import { QueriesComponent } from './admin/queries/queries.component';
 const routes: Routes = [
  {
   path: 'admin', component:LoginComponent
@@ -34,7 +35,7 @@ const routes: Routes = [
  {
   path: 'reset-password/:token',
   component: ResetPasswordComponent,
-},
+  },
  {
   path: 'teacher', 
   component:TeacherHomepageComponent,
@@ -119,6 +120,10 @@ const routes: Routes = [
     {
       path: 'dashboard',
       component: AdminDashboardComponent,
+    },
+    {
+      path: 'queries',
+      component: QueriesComponent,
     },
     {
       path: 'teachers',

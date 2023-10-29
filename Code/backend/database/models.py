@@ -323,3 +323,9 @@ class StudentAverage(models.Model):
     gradelevel = models.ForeignKey(GradeLevel, on_delete=models.CASCADE)
     section = models.ForeignKey(Section, on_delete=models.CASCADE)
     average = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
+
+class Queries(models.Model):
+    name = models.CharField(max_length=100)
+    email = models.CharField(max_length=100)
+    message = models.TextField() 
+    date = models.DateTimeField(auto_now_add=True)

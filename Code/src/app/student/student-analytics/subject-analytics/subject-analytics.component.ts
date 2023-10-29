@@ -1,4 +1,4 @@
-import { Component, OnInit,ElementRef, Renderer2 } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ElementRef, ViewChild, Renderer2 } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 import { Chart } from 'chart.js/auto';
@@ -9,7 +9,8 @@ import { Chart } from 'chart.js/auto';
   styleUrls: ['./subject-analytics.component.css']
 })
 export class SubjectAnalyticsComponent implements OnInit{
-  
+  @ViewChild('rawScoreChart') rawScoreChart: ElementRef;
+
   deptId: number;
   user: any;
   studentId: number;
@@ -21,6 +22,8 @@ export class SubjectAnalyticsComponent implements OnInit{
   quarters: any[]=[]
   initialGrade: number = 0;
   weeklyProgress: any[] = [];
+  rawScores: any[] = [];
+  hps: any = {};
   constructor(private route: ActivatedRoute, private authService: AuthService, private el: ElementRef, private renderer: Renderer2){}
 
   ngOnInit(): void {
@@ -58,9 +61,6 @@ export class SubjectAnalyticsComponent implements OnInit{
           console.log('Selected Quarter ID:', this.selectedQuarter);
           }
           this.fetchStudentRawScores();
-          this.getWeeklyProgress()
-          this.createWeeklyProgressChart();
-          
         },
         (error) => {
           console.error('Error fetching students:', error);
@@ -71,40 +71,119 @@ export class SubjectAnalyticsComponent implements OnInit{
       }
 
   onQuarterChange(){
-
     if(this.selectedQuarter){
           this.fetchStudentRawScores()
     }
   }
+  fetchHPS(){
+    const filters = {
+      gradelevel: this.gradeLevelId,
+      section: this.sectionId,
+      subject: this.subjectId,
+      quarter: this.selectedQuarter
+    };
+    
+    this.authService.fetchHPSscores(filters).subscribe((data)=>{
+      console.log('hps',data)
+      this.hps = data[0];
+
+    })
+  }
 
   fetchStudentRawScores() {
-
-
     const filters = {
       gradelevel: this.gradeLevelId,
       section: this.sectionId,
       subject: this.subjectId,
       quarter: this.selectedQuarter,
-      student: this.studentId
+      student: this.studentId,
     };
   
     this.authService.fetchIndivStudentGrades(filters).subscribe(
-      (data) => {
-        console.log('Raw Scores Data:', data);
-        this.initialGrade = parseFloat(data[0].initial_grade);
-        console.log(this.initialGrade)
+      (rawScoreData) => {
+        const hpsFilters = {
+          gradelevel: this.gradeLevelId,
+          section: this.sectionId,
+          subject: this.subjectId,
+          quarter: this.selectedQuarter,
+        };
+        console.log(rawScoreData)
+        this.initialGrade = rawScoreData[0].initial_grade
+        console.log('initial grade', this.initialGrade)
         this.convertToPerspectiveGrade(this.initialGrade)
-
   
+        this.authService.fetchHPSscores(hpsFilters).subscribe(
+          (hpsData) => {
+            if (rawScoreData.length > 0 && hpsData.length > 0) {
+              const rawScoreNames = [];
+              const rawScorePercentages = [];
+  
+              for (let i = 1; i <= 10; i++) {
+                const wwScoreKey = `ww_score_${i}`;
+                const ptScoreKey = `pt_score_${i}`;
+                const hpsWWKey = `hps_ww_${i}`;
+                const hpsPTKey = `hps_pt_${i}`;
+                const wwName = `ww_score_${i}_name`
+                const ptName = `pt_score_${i}_name`
+                console.log(`WW Score Key: ${wwScoreKey}, HPS WW Key: ${hpsWWKey}`);
+                console.log(`PT Score Key: ${ptScoreKey}, HPS PT Key: ${hpsPTKey}`);
+  
+                if (rawScoreData[0][wwScoreKey] !== null && hpsData[0][hpsWWKey] !== null) {
+                  const rawScore = parseFloat(rawScoreData[0][wwScoreKey]);
+                  const hpsScore = parseFloat(hpsData[0][hpsWWKey]);
+                  const percentage = (rawScore / hpsScore) * 100;
+                  rawScoreNames.push(rawScoreData[0][wwName]);
+                  rawScorePercentages.push(percentage);
+                }
+  
+                if (rawScoreData[0][ptScoreKey] !== null && hpsData[0][hpsPTKey] !== null) {
+                  const rawScore = parseFloat(rawScoreData[0][ptScoreKey]);
+                  const hpsScore = parseFloat(hpsData[0][hpsPTKey]);
+                  const percentage = (rawScore / hpsScore) * 100;
+                  rawScoreNames.push(rawScoreData[0][ptName]);
+                  rawScorePercentages.push(percentage);
+                }
+              }
+  
+              const qaScoreKey = 'qa_score';
+              const hpsQAKey = 'hps_qa_total_score';
+              const qaName = `qa_score_name`
+
+              console.log(`QA Score Key: ${qaScoreKey}, HPS QA Key: ${hpsQAKey}`);
+              if (rawScoreData[0][qaScoreKey] !== null && hpsData[0][hpsQAKey] !== null) {
+                const rawScore = parseFloat(rawScoreData[0][qaScoreKey]);
+                const hpsScore = parseFloat(hpsData[0][hpsQAKey]);
+                const percentage = (rawScore / hpsScore) * 100;
+                rawScoreNames.push(rawScoreData[0][qaName]);
+                rawScorePercentages.push(percentage);
+              }
+  
+              console.log('Raw Score Names:', rawScoreNames);
+              console.log('Raw Score Percentages:', rawScorePercentages);
+  
+              this.createRawScoreChart(rawScoreNames, rawScorePercentages);
+            } else {
+              console.log('No data available.');
+            }
+          },
+          (hpsError) => {
+            console.error('Error fetching HPS scores:', hpsError);
+          }
+        );
       },
-      (error) => {
-        console.error('Error fetching student raw scores:', error);
+      (rawScoreError) => {
+        console.error('Error fetching student raw scores:', rawScoreError);
       }
     );
   }
-
+  
+  
+  
+  
+  
+  
+  
   convertToPerspectiveGrade(initialGrade: number): number {
-    console.log(this.initialGrade)
     if (initialGrade >= 100) return 100;
     if (initialGrade >= 98.4) return 99;
     if (initialGrade >= 96.8) return 98;
@@ -148,97 +227,87 @@ export class SubjectAnalyticsComponent implements OnInit{
     return 60;
   }
   
-
-  getWeeklyProgress() {
-
-    this.authService.getStudentWeeklyProgress(this.gradeLevelId,this.sectionId,this.subjectId,this.selectedQuarter).subscribe(
-      (response: any) => {
-        console.log('weekly progress',response)
-        this.weeklyProgress = response
-        this.createWeeklyProgressChart()
-      },
-      (error) => {
-          console.error('Error fetching Weekly Progress:', error);
+  
+  createRawScoreChart(rawScoreNames, rawScorePercentages) {
+    const ctx = this.rawScoreChart.nativeElement;
+  
+    if (this.rawScoreChart && this.rawScoreChart.nativeElement) {
+      const canvasElement = this.rawScoreChart.nativeElement;
+      const chart = Chart.getChart(canvasElement);
+      if (chart) {
+        chart.destroy();
       }
-    );
-  }
-
-  createWeeklyProgressChart(): void {
-    if (!this.weeklyProgress || this.weeklyProgress.length === 0) {
-      return;
     }
-  
-    const ctx = this.el.nativeElement.querySelector('#weeklyProgressChart');
-    
-    const taskNames = this.weeklyProgress.map(item => item.task_name);
-    const taskScores = this.weeklyProgress.map(item => {
-      const score = item.task_score.split('/');
-      return parseFloat(score[0]);
-    });
-  
-  
+    const fontOptions1 = {
+      family: 'Poppins',
+      size: 12,
+    };
+    const fontOptions2 = {
+      family: 'Poppins',
+      size: 17,
+    };
     new Chart(ctx, {
       type: 'line',
       data: {
-        labels: taskNames,
-        datasets: [{
-          label: 'Task Scores',
-          data: taskScores,
-          fill: true,
-          backgroundColor: 'rgba(54, 162, 235, 0.2)',
-          borderWidth: 1,
-          borderColor: '#1B59F8',
-          pointRadius: 4,
-          tension: 0.4,
-          
-        }]
+        labels: rawScoreNames,
+        datasets: [
+          {
+            label: 'Percentage Scores',
+            data: rawScorePercentages, 
+            fill: true,
+            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+            borderWidth: 1,
+            borderColor: '#1B59F8',
+            pointRadius: 4,
+            pointBackgroundColor:'rgba(54, 162, 235)',
+            tension: 0.4,
+          },
+        ],
       },
       options: {
-
+        plugins: {
+          legend: {
+            labels: {
+              font: fontOptions1,
+            },
+          },
+          title: {
+            font: fontOptions2,
+            display: true,
+            text: 'Student Performance',
+            color: '#000'
+          },
+        },
         scales: {
           y: {
             beginAtZero: true,
-            max: 10,
-
+            max:100,
             ticks: {
+              color: '#000',
               font: {
-                family: 'Poppins', 
-                size: 14, 
-              }
-            }
+                family: 'Poppins',
+                size: 14,
+                
+              },
+            },
           },
           x: {
-
             ticks: {
               font: {
-                family: 'Poppins', 
-                size: 14, 
-              }
-            }
-          }
-        },
-        plugins: {
-          legend: {
-            display: false,
-            title: {
-              text: 'Task Scores',
-              font: {
-                family: 'Poppins', 
-                size: 14, 
-              }
-            },
-            labels: {
-              font: {
-                family: 'Poppins', 
+                family: 'Poppins',
                 size: 14,
-               
-              }
-            }
-          }
-        }
-      }
+              },
+            },
+          },
+        },
+        
+      },
     });
   }
+  
+
+  
+  
   getCircleColor(grade: number){
     return grade < 75 ? '#ff0e0e' : '#78C000' 
   }

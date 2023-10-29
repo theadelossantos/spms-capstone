@@ -11,6 +11,8 @@
     </div>
     <div class="name">
         <p class="name-text" @fadeInOut *ngIf="collapsed">{{studentInfo.lname}}, {{studentInfo.fname}}</p>
+        <p class="subname-text" *ngIf="collapsed">{{gradelevel}} - {{section}}</p>
+        <p class="subsubname-text" *ngIf="collapsed">Student</p>
     </div>
     <div class="scrollwrap scrollwrap_delayed">
         <ul class="sidenav-nav">

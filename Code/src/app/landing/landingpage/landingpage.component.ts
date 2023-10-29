@@ -13,6 +13,9 @@ import { CookieService } from 'ngx-cookie-service';
 })
 export class LandingpageComponent {
   msg:any;
+  name: string;
+  email: string;
+  message: string;
   validationUserMessage:any;
   validationFormUser !:FormGroup;
 
@@ -63,7 +66,22 @@ export class LandingpageComponent {
     });
   }
 
-  
+  sendMessage(){
+    console.log(this.name)
+    const data = {
+      name: this.name,
+      email: this.email,
+      message: this.message
+    }
+    this.authService.addQueries(data).subscribe(
+      (data)=> {
+        console.log('success', data)
+        this.name = ''
+        this.email = ''
+        this.message = ''
+      }
+    )
+  }
 
   onSubmit() {
     const { email, password, role } = this.validationFormUser.value;
