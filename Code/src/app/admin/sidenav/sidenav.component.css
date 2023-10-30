@@ -1,58 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;300;500;700;800&display=swap');
-
-.sidenav{
-    background: #fff;
-    transition: all .5s ease;
-    position: fixed;
-    z-index: 1;
-    top: 0;
-    width: 5rem;
-    height: 100vh;
-    box-shadow: 0.063rem 0 1.25rem 0 #f0eded;
-}
-
-.logo-container{
-    display: flex;
-    align-items: center;
-    padding: 1rem 1rem 1rem 1.3rem;
-    width: 100%;
-}
-
-.logo{
-    padding: 0.30rem;
-    cursor: pointer;
-}
-
-.logo-text{
-    margin-left: 1.5rem;
-    font-size: 24px;
-    font-family: 'Poppins', sans-serif;
-    font-weight: 800;
-
-}
-
-.btnclose{
-    margin-left: auto;
-    cursor: pointer;
-    width: 2rem;
-    height: 2rem;
-    border-radius: 50%;
-    background-color: transparent;
-    border: none;
-}
-
-.sidenav-collapsed{
-    width: 17rem;
-}
-.sidenav-nav{
-    list-style: none;
-    padding: 1rem;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    cursor: pointer;
-}
+.sidenav{background:#fff;transition:all .5s ease;position:fixed;z-index:1;top:0;width:5rem;height:100vh;box-shadow:0.063rem 0 1.25rem 0 #f0eded;}
+.logo-container{display:flex;align-items:center;padding:1rem 1rem 1rem 1.3rem;width:100%;}
+.logo{padding:0.30rem;cursor:pointer;}
+.logo-text{margin-left:1.5rem;font-size:24px;font-family:'Poppins', sans-serif;font-weight:800;}
+.btnclose{margin-left:auto;cursor:pointer;width:2rem;height:2rem;border-radius:50%;background-color:transparent;border:none;}
+.sidenav-collapsed{width:17rem;}
+.sidenav-nav{list-style: none;padding: 1rem;margin: 0;display: flex;flex-direction: column;align-items: center;cursor: pointer;}
 
 .sidenav-nav-item{
     width: 100%;
@@ -66,9 +19,7 @@
     text-decoration: none;
     transition: all .3s ease;
     border-radius: 1rem;
-
 }
-
 .sidenav-link-icon{
     font-size: 22px;
     width: 2rem;
@@ -76,13 +27,10 @@
     margin: 0 0.5rem;
     text-align: center;
 }
-
 .sidenav-link-text{
     margin-left: 1.5rem;
     font-family: 'Poppins', sans-serif;
-
 }
-
 .sidenav-nav-link:hover{
     background-color: #A70000;
     color: white !important;
@@ -92,19 +40,14 @@
 }
 .active {
     background-color: #A70000;
-  }
-  
+}
 .active .sidenav-link-icon,
 .active .sidenav-link-text, 
 .active .menu-collapse-icon {
 color: white;
 }
-
 .active-sublevel{
     color: #A70000 !important;
-    /* opacity: 1 !important; */
-
-
 }
 .menu-collapse-icon{
     font-size: 25px;
@@ -114,12 +57,10 @@ color: white;
     text-align: center;
     color: #000
 }
-
 .sublevel-nav{
     list-style: none;
     margin-left: 10px;
 }
-
 .sublevel-nav-item, .sublevel-nav-link{
     display: flex;
     align-items: center;
@@ -135,7 +76,6 @@ color: white;
     min-width: 2rem;
     margin: 0 0.5rem;
     text-align: center;
-    
 }
 .sublevel-link-text{
     margin-left: 0.8rem;
@@ -144,38 +84,30 @@ color: white;
 .sublevel-nav-link:hover{
     color: #A70000;
 }
-
 .scrollwrap{
     overflow-y: auto;
     visibility: hidden;
     height: calc(100% - 3.65rem);
 }
-
 .sidenav-nav, .scrollwrap:hover, .scrollwrap:focus{
     visibility: visible;
 }
-
 .scrollwrap_delayed{
     transition: visibility 0.5s 0.2s;
 }
-
 .scrollwrap_delayed:hover{
     transition: visibility 0.2s 0.2s;
 }
-
 .scrollwrap::-webkit-scrollbar{
     width:5px;
-
 }
 .scrollwrap::-webkit-scrollbar-track{
     background: transparent;
 }
-
 .scrollwrap::-webkit-scrollbar-thumb{
     background-color: #f0eded;
     border-radius: 20px;
 }
-
 .scrollwrap{
     scrollbar-width: thin;
     scrollbar-color: #f0eded transparent;
