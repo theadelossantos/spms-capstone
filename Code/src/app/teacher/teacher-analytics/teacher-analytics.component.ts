@@ -21,28 +21,40 @@ export class TeacherAnalyticsComponent {
   withHonorsCount: number = 0;
   withHighHonorsCount: number = 0;
   withHighestHonorsCount: number = 0;
-
+  subjects: any[] = [];
+  subjectId: number;
   barChart: Chart;
+  studentGrades: any[] = [];
+  chart: any;
   constructor(private authService: AuthService, private router: Router){}
 
   ngOnInit():void{
     this.authService.getTeacherProfile().subscribe((userData: any) => {
       this.user = userData; 
-      console.log(userData)
       this.gradelvlId = userData.gradelvl_id
       this.sectionId = userData.section_id
       this.deptId = userData.dept_id
 
       const teacherId = userData.teacher_id
-      console.log('id',teacherId)
+
+      this.authService.getSubjectsByDeptGL(this.deptId, this.gradelvlId).subscribe(
+        (subjectData: any) => {
+          this.subjects = subjectData.subjects;
+          if (this.subjects.length > 0) {
+            this.subjectId = this.subjects[0].subject_id;
+          }
+        },
+        (error) => {
+          console.error('Error fetching subject name:');
+        }
+      );
 
       this.authService.getGradeLevelById(this.gradelvlId).subscribe(
         (gradeLevelData: any) => {
           this.gradeLevelName = gradeLevelData.gradelevelss[0].gradelvl;
-          console.log(this.gradeLevelName)
         },
         (error) => {
-          console.error('Error fetching grade level name:', error);
+          console.error('Error fetching grade level name:');
         }
       );
 
@@ -51,24 +63,23 @@ export class TeacherAnalyticsComponent {
           this.sectionName = sectionData.sections[0].section_name;
         },
         (error) => {
-          console.error('Error fetching section name:', error);
+          console.error('Error fetching section name:');
         }
       );
 
       this.authService.getQuarters().subscribe((quartersData) => {
         this.quarters = quartersData;
-        console.log('quarters', this.quarters);
 
+        
           if (this.quarters && this.quarters.length > 0) {
           this.selectedQuarter = this.quarters[0].quarter_id;
-          console.log('Selected Quarter ID:', this.selectedQuarter);
           }
           this.fetchStudentGrades()
           this.fetchAllAverage()
           
         },
         (error) => {
-          console.error('Error fetching students:', error);
+          console.error('Error fetching students:');
         }
       )
 
@@ -76,13 +87,14 @@ export class TeacherAnalyticsComponent {
     });
   }
   onQuarterChange(){
-    console.log('Selected Quarter ID:', this.selectedQuarter);
     this.withHonorsCount = 0;
     this.withHighHonorsCount = 0;
     this.withHighestHonorsCount = 0;
     this.fetchAllAverage()
+    this.fetchStudentGrades()
 
   }
+
   fetchStudentGrades(){
     const filters = {
       gradelevel: this.gradelvlId,
@@ -92,11 +104,36 @@ export class TeacherAnalyticsComponent {
 
     this.authService.fetchAllStudentGrades(filters).subscribe(
       (data) => {
-        console.log('student grades', data)
+        this.studentGrades = data;
+
+        const passCounts = {};
+        const failCounts = {};
+
+        for (const subject of this.subjects) {
+          passCounts[subject.subject_id] = 0;
+          failCounts[subject.subject_id] = 0;
+        }
+
+        for (const grade of this.studentGrades) {
+          const subjectId = grade.subject;
+
+          const gradeValue = parseFloat(grade.initial_grade);
+
+          if (gradeValue >= 75) {
+            passCounts[subjectId]++;
+          } else {
+            failCounts[subjectId]++;
+          }
+        }
+
+
+        this.createDoubleBarGraph(passCounts, failCounts);
+
+
       }
     )
-
   }
+
   fetchAllAverage(){
     const filters = {
       gradelevel: this.gradelvlId,
@@ -106,7 +143,6 @@ export class TeacherAnalyticsComponent {
 
     this.authService.fetchAllAverage(filters).subscribe(
       (data)=>{
-        console.log('student average', data)
         this.withHonorsCount = 0;
         this.withHighHonorsCount = 0;
         this.withHighestHonorsCount = 0;
@@ -193,6 +229,41 @@ export class TeacherAnalyticsComponent {
       },
       options: chartOptions,
     });
+  }
+
+  createDoubleBarGraph(passCounts, failCounts){
+    const subjectNames = this.subjects.map((subject) => subject.subject_name);
+    const passData = this.subjects.map((subject) => passCounts[subject.subject_id]);
+    const failData = this.subjects.map((subject) => failCounts[subject.subject_id]);
+
+    if (this.chart) {
+      this.chart.destroy();
+    }
+    this.chart = new Chart ('studentGradesChart', {
+      type: 'bar',
+      data: {
+        labels: subjectNames,
+        datasets: [
+          {
+            label: 'Pass',
+            data: passData,
+            backgroundColor:'rgba(75, 192, 192, 0.2)',
+          },
+          {
+            label: 'Fail',
+            data: failData,
+            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+          }
+        ]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    } as any)
   }
 }
 

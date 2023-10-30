@@ -30,10 +30,7 @@ export class CoursesShsComponent {
 
   ngOnInit(): void {
     this.authService.getsHsGradeLevels().subscribe((data) => {
-      console.log('Gradelevels:', data);
       this.gradelvl = data;
-      console.log('this.gradelvl:', this.gradelvl);
-
     });
 
     this.form = this.fb.group({
@@ -45,7 +42,6 @@ export class CoursesShsComponent {
 
   manageClasses(departmentId: number, gradelvlId: number) {
     if (!gradelvlId) {
-      console.error("Invalid gradelvlId:", gradelvlId);
       return;
     }
   
@@ -53,8 +49,6 @@ export class CoursesShsComponent {
       (data) => {
         this.selectedGradeLevel = this.gradelvl.find((level) => level.gradelvl_id === gradelvlId);
         this.filteredCourses = data.subjects;
-
-        console.log("filtered courses:", this.filteredCourses)
   
         if (this.filteredCourses.length > 0) {
           this.selectedSubject = {
@@ -73,7 +67,7 @@ export class CoursesShsComponent {
         }
       },
       (error) => {
-        console.error("Error fetching subjects:", error);
+        console.error("Error fetching subjects:");
       }
     );
   }
@@ -105,7 +99,7 @@ export class CoursesShsComponent {
         }
       );
     } else {
-      console.error('Invalid selected subject:', this.selectedSubject);
+      console.error('Invalid selected subject:');
     }
     
   }
@@ -114,12 +108,8 @@ export class CoursesShsComponent {
   }
 
   logSelectedSection(){
-    console.log('Selected Subject:', this.selectedSubject);
-
   }
-  editSection(subject: any) {
-    console.log('Selected Section:', subject);
-  
+  editSection(subject: any) {  
     this.selectedSubject = {
       subject_id: subject.id,
       grlevel: subject.gradelvl_id,
@@ -132,19 +122,16 @@ export class CoursesShsComponent {
     });
   }
 
-  deleteSubject(subjectId: number) {
-    console.log('Deleting subject with ID:', subjectId);
-  
+  deleteSubject(subjectId: number) {  
     const confirmDelete = window.confirm('Are you sure you want to delete this subject?');
   
     if (confirmDelete) {
-      console.log('Before API call - subjectId:', subjectId);
       this.authService.deleteSubject(subjectId).subscribe(
         (response) => {
           this.filteredCourses = this.filteredCourses.filter((s) => s.id !== subjectId);
         },
         (error) => {
-          console.error('Error deleting subject: ', error);
+          console.error('Error deleting subject: ');
         }
       );
     }

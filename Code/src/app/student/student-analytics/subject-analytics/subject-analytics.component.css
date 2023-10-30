@@ -46,6 +46,11 @@ a:hover{
     .classes {
         display: flex;
         flex-direction: column;
+        font-size: 14px;
+    }
+    .active{
+        font-size: 14px;
+
     }
     .analytics-container{
         display: flex;
@@ -61,4 +66,9 @@ a:hover{
         justify-content: center;
         height: 100%; 
     }
+    .rawscore-line{
+        height: 300px !important;
+        width: 300px !important;
+    }
+
   }

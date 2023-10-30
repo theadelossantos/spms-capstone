@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators, FormArray, Form} from '@angular/forms';
 import { AuthService } from 'src/app/services/auth.service';
+
 @Component({
   selector: 'app-addsection',
   templateUrl: './addsection.component.html',
@@ -65,6 +66,7 @@ export class AddsectionComponent {
           setTimeout(() => {
             this.hideAlert();
           }, 3000);
+
         },
         (error) => {
           this.showAlert = true;
@@ -82,14 +84,8 @@ export class AddsectionComponent {
 
   ngOnInit() {
     this.authService.getGradeLevels().subscribe((data) => {
-      console.log('Gradelevels:', data);
       this.gradelvl = data;
-      console.log('this.gradelvl:', this.gradelvl);
-      
     });
   }
 
-
-  
-  
 }

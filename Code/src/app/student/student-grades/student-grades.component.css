@@ -12,6 +12,8 @@ table{
     padding: 10px; 
 
     border: 1px solid #ddd;
+    max-width: 100%; 
+    overflow-x: auto;
 
 }
 table, th, td {
@@ -23,7 +25,10 @@ table, th, td {
     border: 2px solid #ddd;
     text-align: center;
 }
+.generalave{
+    font-size: 18px;
 
+}
 th {
     background-color: #f2f2f2; 
     font-size: 17px;
@@ -36,4 +41,46 @@ th {
 }
 .class-record{
     font-weight: 700;
+}
+
+@media (max-width: 768px) {
+    table {
+        font-size: 14px;
+    }
+
+    th, td {
+        padding: 5px;
+        font-size: 10px;
+    }
+    .quarterly-grade {
+        font-size: 12px;
+    }
+
+    .class-record {
+        font-size: 16px;
+    }
+    .subject-names{
+        font-size: 12px;
+    }
+    .subject-names{
+        font-size: 12px;
+
+    }
+    .generalave{
+        font-size: 12px;
+    }
+}
+
+/* Handle smaller screens and reduce padding for table cells */
+@media (max-width: 576px) {
+    table {
+        font-size: 12px;
+    }
+
+    th, td {
+        padding: 3px;
+    }
+    .generalave{
+        font-size: 12px !important;
+    }
 }

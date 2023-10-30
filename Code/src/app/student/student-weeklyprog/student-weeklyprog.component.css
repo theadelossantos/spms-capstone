@@ -19,8 +19,12 @@
     align-items: center;
     justify-content: space-between;
 }
+.select-container{
+    display: flex;
+    justify-content: space-between;
+}
 .select-opt{
-    width: 30%;
+    width: 50%;
 }
 table {
     width: 100%;
@@ -46,4 +50,18 @@ tr:nth-child(odd) {
     border-radius: 50%;
     background-color: red;
     margin-left: 5px;
+}
+
+@media (max-width: 768px) {
+    .text-header{
+        font-size: 25px;
+    }
+    .select-container{
+        display: flex;
+        flex-direction: column;
+    }
+    .select-opt{
+        width: 100%;
+    }
+
 }

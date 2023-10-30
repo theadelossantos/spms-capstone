@@ -7,10 +7,12 @@
     <option *ngFor="let quarter of quarters" [value]="quarter.quarter_id">{{quarter.quarter_name}}</option>
 </select>
 
-<div class="honors d-flex flex-row mt-3">
+<div class="honors d-flex justify-content-between mt-4">
     <div class="average-barchart">
-        <canvas id="barChart" width="500" height="400"></canvas>
+        <canvas id="barChart" height="250"></canvas>
     </div>
-
+    <div class="average-barchart">
+        <canvas id="studentGradesChart" height="250" ></canvas>
+    </div>
 </div>
 

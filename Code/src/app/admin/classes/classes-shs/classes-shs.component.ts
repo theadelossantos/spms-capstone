@@ -31,12 +31,9 @@ export class ClassesShsComponent {
 
   ngOnInit(): void {
     this.authService.getsHsGradeLevels().subscribe((data) => {
-      console.log('Gradelevels:', data);
       this.gradelvl = data;
-      console.log('this.gradelvl:', this.gradelvl);
       
       const deptIds = this.gradelvl.map((grade) => grade.dept_id);
-      console.log('deptIds:', deptIds)
     });
 
     this.form = this.fb.group({
@@ -49,7 +46,6 @@ export class ClassesShsComponent {
   
   manageClasses(departmentId: number, gradelvlId: number) {
     if (!gradelvlId) {
-      console.error("Invalid gradelvlId:", gradelvlId);
       return;
     }
   
@@ -57,8 +53,6 @@ export class ClassesShsComponent {
       (data) => {
         this.selectedGradeLevel = this.gradelvl.find((level) => level.gradelvl_id === gradelvlId);
         this.filteredSections = data.sections;
-
-        console.log("filtered sections:", this.filteredSections)
   
         if (this.filteredSections.length > 0) {
           this.selectedSection = {
@@ -77,7 +71,7 @@ export class ClassesShsComponent {
         }
       },
       (error) => {
-        console.error("Error fetching sections:", error);
+        console.error("Error fetching sections:");
       }
     );
   }
@@ -109,7 +103,7 @@ export class ClassesShsComponent {
         }
       );
     } else {
-      console.error('Invalid selected section:', this.selectedSection);
+      console.error('Invalid selected section:');
     }
     
   }
@@ -118,12 +112,9 @@ export class ClassesShsComponent {
   }
 
     logSelectedSection(){
-      console.log('Selected Section:', this.selectedSection);
   
     }
-    editSection(section: any) {
-      console.log('Selected Section:', section);
-    
+    editSection(section: any) {    
       this.selectedSection = {
         section_id: section.id,
         grlevel: section.gradelvl_id,
@@ -137,18 +128,16 @@ export class ClassesShsComponent {
     }
 
     deleteSection(sectionId: number) {
-      console.log('Deleting section with ID:', sectionId);
     
       const confirmDelete = window.confirm('Are you sure you want to delete this section?');
     
       if (confirmDelete) {
-        console.log('Before API call - sectionId:', sectionId);
         this.authService.deleteSection(sectionId).subscribe(
           (response) => {
             this.filteredSections = this.filteredSections.filter((s) => s.id !== sectionId);
           },
           (error) => {
-            console.error('Error deleting section: ', error);
+            console.error('Error deleting section: ');
           }
         );
       }

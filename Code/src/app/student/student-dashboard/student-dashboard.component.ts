@@ -19,7 +19,16 @@ export class StudentDashboardComponent {
   teacherCount: any = {};
   announcementlist: any [] = []
   dept_id: any;
-
+  subjects: any[] = [];
+  user: any;
+  deptId: number;
+  gradelvlId: number;
+  sectionId:number;
+  subjectId: number;
+  studentId: number;
+  quarters: any[]=[]
+  selectedQuarter: number;
+  activitiesToDisplay: any[] = [];
   constructor(private authService: AuthService, private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
@@ -35,10 +44,38 @@ export class StudentDashboardComponent {
     )
     this.authService.getStudentProfile().subscribe((userData: any) => {
       this.dept_id = userData.dept_id
+      this.gradelvlId = userData.gradelvl_id
+      this.studentId = userData.student_id
+      this.sectionId = userData.section_id
       this.getAnnouncement()
 
+      this.authService.getSubjectsByDeptGL(this.dept_id, this.gradelvlId).subscribe(
+        (response) =>{
+          this.subjects = response.subjects
+          console.log(this.subjects)
+          if (this.subjects.length > 0) {
+            this.subjectId = this.subjects[0].subject_id;
+          }        
+        }
+      )
 
+      this.authService.getQuarters().subscribe((quartersData) => {
+        this.quarters = quartersData;
+        console.log('quarters', this.quarters);
+  
+        if (this.quarters && this.quarters.length > 0) {
+          this.selectedQuarter = this.quarters[0].quarter_id;
+          console.log('Selected Quarter ID:', this.selectedQuarter);
+        }
+        this.fetchActivitiesForToday()
+
+      },
+      (error) => {
+        console.error('Error fetching quarters:', error);
+      }
+      )
     });
+    
   }
 
   getAnnouncement(){
@@ -103,6 +140,90 @@ export class StudentDashboardComponent {
     this.currentDate.innerText = `${this.months[this.currMonth]} ${this.currYear}`;
     this.cdr.detectChanges();
 
+
   }
+  fetchActivitiesForToday() {
+    const currentDate: Date = new Date();
+    const startOfToday = new Date(currentDate);
+    startOfToday.setHours(0, 0, 0, 0);
+    const endOfToday = new Date(currentDate);
+    endOfToday.setHours(23, 59, 59, 999);
+  
+    this.activitiesToDisplay = [];
+  
+    this.subjects.forEach((subject) => {
+      const subjectId = subject.subject_id;
+      const filters = {
+        gradelevel: this.gradelvlId,
+        section: this.sectionId,
+        subject: subjectId,
+        quarter: this.selectedQuarter,
+        student: this.studentId,
+      };
+  
+      this.authService.fetchIndivStudentGrades(filters).subscribe(
+        (response: any) => {
+          const activitiesForToday = response.filter((activity: any) => {
+            const activityFields = Object.keys(response[0]);
+  
+            const activitiesToDisplay = [];
+  
+            activityFields.forEach((field) => {
+              if (
+                (field.includes('date_input_ww_score_') ||
+                field.includes('date_input_pt_score') ||
+                field === 'date_input_qa_score') &&
+                activity[field]
+              ) {
+                const activityDate = new Date(activity[field]);
+  
+                if (activityDate >= startOfToday && activityDate <= endOfToday) {
+                  let index;
+                  let activityName;
+                  let activityScore;
+  
+                  if (field.includes('date_input_ww_score_')) {
+                    index = parseInt(field.split('_').pop());
+                    activityName = `ww_score_${index}_name`;
+                    activityScore = `ww_score_${index}`;
+                  } else if (field.includes('date_input_pt_score')) {
+                    index = parseInt(field.split('_').pop());
+                    activityName = `pt_score_${index}_name`;
+                    activityScore = `pt_score_${index}`;
+                  } else if (field === 'date_input_qa_score') {
+                    activityName = 'qa_name';
+                    activityScore = 'qa_score';
+                  }
+  
+                  activitiesToDisplay.push({
+                    date: activity[field],
+                    subject: subject.subject_name,
+                    activityName: activity[activityName],
+                    activityScore: activity[activityScore],
+                  });
+                }
+              }
+            });
+            activitiesToDisplay.forEach((activity) => {
+              this.activitiesToDisplay.push(activity);
+            });
+    
+            subject.activitiesForToday = activitiesForToday;
+  
+          });
+  
+          
+          console.log(`Subject: ${subject.subject_name}`);
+        },
+        (error) => {
+          console.error('Error fetching activities for today:', error);
+        }
+      );
+    });
+  }
+  
+  
+  
+  
 
 }

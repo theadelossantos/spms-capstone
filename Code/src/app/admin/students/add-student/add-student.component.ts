@@ -152,7 +152,6 @@ export class AddStudentComponent {
     this.authService.getDepartments().subscribe(
       (response:any) => {
       this.departments = response.departments;
-      console.log('Departments:', this.departments);
     })
 
     
@@ -166,7 +165,6 @@ export class AddStudentComponent {
       this.authService.getGradelevelsByDept(selectedDepartment).subscribe(
         (data: GradeLevelResponse) => { 
           this.gradeLevels = data.gradelevels;
-          console.log('Grade Levels:', this.gradeLevels);
         },
         (error) => {
           console.error('Error fetching grade levels', error);
@@ -178,16 +176,10 @@ export class AddStudentComponent {
   }
 
   onGradeLevelChange(selectedGradeLevel: number | null, selectedDepartment: number | null): void {
-    if (selectedGradeLevel !== null && selectedDepartment !== null) {
-      console.log('Selected Grade Level', selectedGradeLevel)
-      
+    if (selectedGradeLevel !== null && selectedDepartment !== null) {      
       this.authService.getSectionsByDeptGL(selectedDepartment, selectedGradeLevel).subscribe(
         (data: GradeLevelResponse) => {
-          console.log('API Response', data);
           this.sections = data.sections;
-          console.log('Sections:', this.sections);
-
-          
         },
         (error) => {
           console.error('Error fetching sections', error);
@@ -251,7 +243,6 @@ onSubmit() {
 
         },
         (error) => {
-          console.log('Error', error)
           this.showAlert = true;
           if (error.error && error.error.user_errors && error.error.user_errors.email) {
             this.emailExistsError = error.error.user_errors.email[0];

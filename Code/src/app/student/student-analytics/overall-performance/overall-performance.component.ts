@@ -206,7 +206,7 @@ export class OverallPerformanceComponent {
     if (overallAverage >= withHonorMin && overallAverage < withHighHonorMin) {
       labels.push('Current Average', 'With High Honor', 'With Highest Honor');
       dataValues.push(overallAverage, withHighHonorMin - overallAverage, 100 - withHighHonorMin);
-      currentAverageColor = 'yellowgreen';
+      currentAverageColor = 'green';
     } else if (overallAverage >= withHighHonorMin && overallAverage < withHighestHonorMin) {
       labels.push('Current Average', 'With Highest Honor');
       dataValues.push(overallAverage, 100 - overallAverage);

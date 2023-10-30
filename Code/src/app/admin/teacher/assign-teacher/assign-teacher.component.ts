@@ -67,7 +67,6 @@ export class AssignTeacherComponent {
   
     
     });
-        console.log('Teacher Data:', this.teacherData);
 
   }
 
@@ -101,12 +100,10 @@ export class AssignTeacherComponent {
   onDepartmentChange(index: number) {
     const selectedDepartment = this.assignments.at(index).get('department').value;
     if (selectedDepartment !== null) {
-      console.log('Selected Department ID:', selectedDepartment);
   
       this.authService.getGradelevelsByDept(selectedDepartment).subscribe(
         (data: GradeLevelResponse) => {
           this.assignmentData[index].gradeLevels = data.gradelevels;
-          console.log(this.assignmentData[index].gradeLevels);
         },
         (error) => {
           console.error('Error fetching grade levels', error);
@@ -119,18 +116,14 @@ export class AssignTeacherComponent {
     const selectedGradeLevel = this.assignments.at(index).get('grlevel').value;
     const selectedDepartment = this.assignments.at(index).get('department').value;
   
-    if (selectedGradeLevel !== null && selectedDepartment !== null) {
-      console.log('Selected Grade Level ID:', selectedGradeLevel);
-  
+    if (selectedGradeLevel !== null && selectedDepartment !== null) {  
       this.authService.getSectionsByDeptGL(selectedDepartment, selectedGradeLevel).subscribe(
         (data: GradeLevelResponse) => {
           this.assignmentData[index].sections = data.sections;
-          console.log('section', this.assignmentData[index].sections);
 
           this.authService.getSubjectsByDeptGL(selectedDepartment, selectedGradeLevel).subscribe(
             (subjectData: any) => {
               this.assignmentData[index].subject = subjectData.subjects;
-              console.log('Subjects:', this.assignmentData[index].subject);
             },
             (subjectError) => {
               console.error('Error fetching subjects', subjectError);
@@ -147,9 +140,7 @@ export class AssignTeacherComponent {
   }
   
   assignSubject() {
-    console.log('Teacher ID in child component:', this.teacherData.teacher_id);
     if (!this.teacherData || !this.teacherData.teacher || !this.teacherData.teacher.teacher_id) {
-        console.error('Teacher data is missing or incomplete.');
         return;
     }
 
@@ -164,7 +155,6 @@ export class AssignTeacherComponent {
     });
 
     if (assignmentsData.length === 0) {
-        console.error('No assignments to create.');
         return;
     }
 
@@ -175,7 +165,6 @@ export class AssignTeacherComponent {
           setTimeout(() => {
             this.hideAlert();
           }, 3000);
-            console.log('Assignments created successfully:', response);
             this.showAlert = true;
             this.successMessage = 'Assignments created successfully.';
         },

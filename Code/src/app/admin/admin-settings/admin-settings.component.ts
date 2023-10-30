@@ -42,11 +42,9 @@ export class AdminSettingsComponent {
     ngOnInit(): void {
       this.authService.getAdminProfile().subscribe((userData: any) => {
         this.user = userData; 
-        console.log(userData)
-        console.log(userData.fname)
+   
   
         this.adminInfo = userData
-        console.log('adminInfo', this.adminInfo)
   
         this.form.patchValue({
           adminName: this.adminInfo.fname,
@@ -105,10 +103,8 @@ export class AdminSettingsComponent {
     } else {
       delete profileData['profile_picture'];
     }
-    console.log('Is profile_picture a File?', this.form.get('profile_picture')?.value instanceof File);
 
   
-    console.log(profileData);
   
     this.authService.updateAdminProfile(profileData).subscribe(
       (response: any) => {

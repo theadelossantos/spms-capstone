@@ -60,9 +60,7 @@ export const navbarData: INavbarData[] = [
 ];
 
 export async function loadDepartments(navbarData: INavbarData[], authService: AuthService, routeLink: string) {
-    const item = navbarData.find(item => item.routeLink === routeLink);
-    console.log('item:', item);
-  
+    const item = navbarData.find(item => item.routeLink === routeLink);  
     if (item) {
       try {
         const departments = await authService.getDepartments()
@@ -75,14 +73,12 @@ export async function loadDepartments(navbarData: INavbarData[], authService: Au
             })
           )
           .toPromise();
-          
-        console.log('Departments:', departments);
-  
+            
         if (departments.length > 0) {
           item.items = departments;
         }
       } catch (error) {
-        console.error('Error loading departments:', error);
+        console.error('Error loading departments:');
       }
     }
   }

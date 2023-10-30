@@ -82,9 +82,7 @@ export class AddShsCoursesComponent {
 
   ngOnInit() {
     this.authService.getsHsGradeLevels().subscribe((data) => {
-      console.log('Gradelevels:', data);
       this.gradelvl = data;
-      console.log('this.gradelvl:', this.gradelvl);
       
     });
   }

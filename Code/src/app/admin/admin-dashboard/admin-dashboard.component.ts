@@ -28,6 +28,10 @@ export class AdminDashboardComponent implements AfterViewInit, OnInit {
   selectedDepartmentId: number;
   queriesCount: number
   queries: any[] = [];
+  showAlert: boolean = false;
+  showAddAlert: boolean = false;
+  showDelAlert: boolean = false;
+
   constructor(private authService: AuthService, private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
@@ -44,20 +48,17 @@ export class AdminDashboardComponent implements AfterViewInit, OnInit {
     this.authService.getDepartments().subscribe(
       (data) => {
         this.departments = data.departments
-        console.log('dept',this.departments)
       }
     )
     this.authService.getAnnouncement().subscribe(
       (data) => {
         this.announcementlist = data
-        console.log('announcements', this.announcementlist)
 
         
       }
     )
     this.authService.getQueries().subscribe(
       (data: any) => {
-        console.log('queries',data)
         this.queries = data
         this.queriesCount = this.queries.length
       }
@@ -71,12 +72,10 @@ export class AdminDashboardComponent implements AfterViewInit, OnInit {
     } else {
       this.selectedDepartments.splice(index, 1);
     }
-    console.log(this.selectedDepartments); 
   }
   
   postAnnouncement(){
     if (this.selectedDepartments.length === 0) {
-      console.error('Please select at least one department.');
       return;
     }
     for (const deptId of this.selectedDepartments) {
@@ -88,14 +87,26 @@ export class AdminDashboardComponent implements AfterViewInit, OnInit {
   
       this.authService.addAnnouncement(announcementData).subscribe(
         (response: any) => {
-          console.log(`Announcement posted for department ${deptId}`, response);
   
           this.announcementMessage = '';
           this.announcementSubject = '';
 
+          this.showAddAlert = true;
+
+          setTimeout(() => {
+            this.hideAlert();
+          }, 3000);
+
+          this.authService.getAnnouncement().subscribe(
+            (data) => {
+              this.announcementlist = data
+      
+            }
+          )
+
         },
         (error: any) => {
-          console.error(`Error posting announcement for department ${deptId}`, error);
+          console.error(`Error posting announcement for department ${deptId}`);
         }
       );
     }
@@ -105,29 +116,37 @@ export class AdminDashboardComponent implements AfterViewInit, OnInit {
     if (this.selectedAnnouncement && this.selectedAnnouncement.id) {
       this.authService.editAnnouncement(this.selectedAnnouncement.id, this.selectedAnnouncement).subscribe(
         (response) => {
-          console.log('Announcement updated', response);
+          this.showAlert = true;
+
+          setTimeout(() => {
+            this.hideAlert();
+          }, 3000);
         },
         (error) => {
-          console.error('Error updating announcement:', error);
+          console.error('Error updating announcement:');
         }
       );
     } else {
       console.error('Selected announcement is missing an ID.');
     }
   }
+  hideAlert() {
+    this.showAlert = false;
+  }
 
   deleteAnnouncement(){
     if(this.selectedAnnouncement.id){
       this.authService.deleteAnnouncement(this.selectedAnnouncement.id).subscribe(
         (response) => {
-          console.log('successfully deleted')
+          this.showDelAlert = true;
+
+          setTimeout(() => {
+            this.hideAlert();
+          }, 3000);
 
           this.authService.getAnnouncement().subscribe(
             (data) => {
               this.announcementlist = data
-              console.log('announcements', this.announcementlist)
-      
-              
             }
           )
 
@@ -143,8 +162,6 @@ export class AdminDashboardComponent implements AfterViewInit, OnInit {
     this.selectedDepartmentsForEdit = {};
     this.selectedDepartmentsForEdit[announcement.department] = true;
   
-    console.log("Selected Announcement:", announcement);
-    console.log("Selected Department ID:", this.selectedDepartmentId);
   }
   
   isSelectedDepartment(deptId: number): boolean {

@@ -53,15 +53,11 @@ export class LoginComponent {
     this.authService.adminlogin(email,password).subscribe(
       (response: any) => {
         this.msg = '';
-        console.log('Login function triggered'); 
-        console.log('ID:', response.user_id);
         this.validationFormUser.reset();
 
         this.router.navigate(['/admin-home'])
       },
       (error:any) => {
-        console.log('Error Response:', error);
-
         if (error && error.error) {
           if (error.error.non_field_errors) {
             this.msg = error.error.non_field_errors[0];

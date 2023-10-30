@@ -8,7 +8,7 @@
     </tr>
     <tr>
         <th>Learning Areas</th>
-        <th *ngFor="let quarter of quarters" class="quarter">{{quarter.quarter_name}}</th>
+        <th class="quarters" *ngFor="let quarter of quarters" class="quarter">{{quarter.quarter_name}}</th>
         <th>Final Grade</th>
         <th>Remarks</th>
 
@@ -25,12 +25,12 @@
 
         </tr>
         <tr>
-            <td class="subject-names"><b>General Average</b></td>
+            <td><b>General Average</b></td>
             <ng-container *ngFor="let quarterAverage of getQuarterAverages(); let i = index">
-                <td *ngIf="quarterAverage !== ''"><b>{{ quarterAverage }}</b></td>
-                <td *ngIf="quarterAverage === ''"></td>
+                <td  class="generalave" *ngIf="quarterAverage !== ''"><b>{{ quarterAverage }}</b></td>
+                <td class="generalave" *ngIf="quarterAverage === ''"></td>
             </ng-container>          
-            <td colspan="2"><b>{{ generalAverage }}</b></td>
+            <td class="generalave" colspan="2"><b>{{ generalAverage }}</b></td>
 
         </tr>
     </tbody>

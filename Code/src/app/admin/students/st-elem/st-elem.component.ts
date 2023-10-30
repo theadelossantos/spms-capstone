@@ -81,7 +81,6 @@ export class StElemComponent {
     this.authService.getGradeLevels().subscribe((data) => {
       this.gradelvl = data;
 
-      console.log('gradelvl', data)
     });
     
     this.authService.getDepartments().subscribe((response: any) => {
@@ -116,7 +115,6 @@ export class StElemComponent {
         this.authService.getSectionsByDeptGL(this.selectedGradeLevel.dept_id, this.selectedGradeLevel.gradelvl_id).subscribe(
             (data) => {
                 this.sections = data.sections;
-                console.log(this.sections);
             },
             (error) => {
                 console.error('Error fetching sections', error);
@@ -141,8 +139,6 @@ toggleSortOrder() {
 }
 
   manageStudents(departmentId:number, gradelvlId: number, sectionId:number){
-    console.log(this.selectedSection)
-
     this.authService.filterStudents(departmentId, gradelvlId, sectionId).subscribe(
       (data: StudentResponse) => {
         this.selectedSection = this.sections.find((level) => level.dept_id === departmentId);
@@ -150,8 +146,6 @@ toggleSortOrder() {
         this.selectedSection = this.sections.find((level) => level.section_id === sectionId);
 
         this.filteredStudent = data.students;
-
-        console.log('students:', this.filteredStudent)
 
         if (this.filteredStudent.length > 0){
           this.selectedStudent = {
@@ -191,9 +185,7 @@ toggleSortOrder() {
       this.authService.getStudentById(studentId).subscribe(
         (data) => {
 
-          this.selectedStudent = data.student;
-          console.log('selected student', this.selectedStudent)
-          
+          this.selectedStudent = data.student;          
           this.form.patchValue({
             grlevel: this.selectedStudent.gradelvl_id,
             studentName: this.selectedStudent.fname,
@@ -239,7 +231,6 @@ toggleSortOrder() {
 
   saveEditedSubject() {
     if (!this.selectedStudent || !this.selectedStudent.student_id) {
-      console.error('Invalid selected subject:', this.selectedStudent);
       return;
     }
     
@@ -273,7 +264,6 @@ toggleSortOrder() {
       },
       (error) => {
         this.showAlert = false;
-        console.log(error)
       }
     );
   }

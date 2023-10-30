@@ -66,7 +66,6 @@ export class SidenavComponent implements OnInit {
     loadDepartments(this.navData, this.authService, coursesRouteLink);
 
     this.authService.getDepartments().subscribe((data) => {
-      console.log('Departments:', data);
       this.departments = data.departments;
     });
     
@@ -104,14 +103,12 @@ handleclick(item: INavbarData):void{
   }
 
   logout(){
-    console.log('Logout function called');
     this.authService.logout().subscribe(
       () => {
-        console.log('Logged out successfully.');
         this.router.navigate(['/login']);
       },
       (error) => {
-        console.error('Error logging out:', error);
+        console.error('Error logging out:');
       }
     )
   }

@@ -31,12 +31,8 @@ export class ClassesElemComponent implements OnInit {
 
   ngOnInit(): void {
     this.authService.getGradeLevels().subscribe((data) => {
-      console.log('Gradelevels:', data);
-      this.gradelvl = data;
-      console.log('this.gradelvl:', this.gradelvl);
-      
+      this.gradelvl = data;      
       const deptIds = this.gradelvl.map((grade) => grade.dept_id);
-      console.log('deptIds:', deptIds)
     });
 
     this.form = this.fb.group({
@@ -52,7 +48,6 @@ export class ClassesElemComponent implements OnInit {
 
   manageClasses(departmentId: number, gradelvlId: number) {
     if (!gradelvlId) {
-      console.error("Invalid gradelvlId:", gradelvlId);
       return;
     }
   
@@ -60,8 +55,6 @@ export class ClassesElemComponent implements OnInit {
       (data) => {
         this.selectedGradeLevel = this.gradelvl.find((level) => level.gradelvl_id === gradelvlId);
         this.filteredSections = data.sections;
-
-        console.log("filtered sections:", this.filteredSections)
   
         if (this.filteredSections.length > 0) {
           this.selectedSection = {
@@ -80,7 +73,7 @@ export class ClassesElemComponent implements OnInit {
         }
       },
       (error) => {
-        console.error("Error fetching sections:", error);
+        console.error("Error fetching sections:");
       }
     );
   }
@@ -106,13 +99,15 @@ export class ClassesElemComponent implements OnInit {
           setTimeout(() => {
             this.hideAlert();
           }, 3000);
+
+          
         },
         (error) => {
           this.showAlert = true;
         }
       );
     } else {
-      console.error('Invalid selected section:', this.selectedSection);
+      console.error('Invalid selected section:');
     }
     
   }
@@ -120,13 +115,9 @@ export class ClassesElemComponent implements OnInit {
     this.showAlert = false;
   }
 
-    logSelectedSection(){
-      console.log('Selected Section:', this.selectedSection);
-  
+    logSelectedSection(){  
     }
-    editSection(section: any) {
-      console.log('Selected Section:', section);
-    
+    editSection(section: any) {    
       this.selectedSection = {
         section_id: section.id,
         grlevel: section.gradelvl_id,
@@ -139,13 +130,10 @@ export class ClassesElemComponent implements OnInit {
       });
     }
 
-    deleteSection(sectionId: number) {
-      console.log('Deleting section with ID:', sectionId);
-    
+    deleteSection(sectionId: number) {    
       const confirmDelete = window.confirm('Are you sure you want to delete this section?');
     
       if (confirmDelete) {
-        console.log('Before API call - sectionId:', sectionId);
         this.authService.deleteSection(sectionId).subscribe(
           (response) => {
             this.filteredSections = this.filteredSections.filter((s) => s.id !== sectionId);

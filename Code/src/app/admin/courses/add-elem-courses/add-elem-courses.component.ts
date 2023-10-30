@@ -83,9 +83,7 @@ export class AddElemCoursesComponent {
 
   ngOnInit() {
     this.authService.getGradeLevels().subscribe((data) => {
-      console.log('Gradelevels:', data);
       this.gradelvl = data;
-      console.log('this.gradelvl:', this.gradelvl);
       
     });
   }

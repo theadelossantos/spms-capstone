@@ -12,7 +12,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { EditSectionComponent } from './edit-section/edit-section.component';
 import { AddHssectionComponent } from './add-hssection/add-hssection.component';
 import { AddShssectionComponent } from './add-shssection/add-shssection.component';
-
 @NgModule({
   declarations: [
     ClassesComponent,

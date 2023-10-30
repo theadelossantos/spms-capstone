@@ -1,12 +1,12 @@
 <h1 class="header-text">Home</h1>
     
-<div class="body-container d-flex flex-row">
+<div class="body-container">
     <div class="first-column mr-4 w-100">
         <div class="other-details">
             <h3 class="label-announce mr-3 ml-3 mt-2">Announcements</h3>
                 <div class="announcement-list ">
                     <div *ngFor="let announcement of announcementlist" class="announce-div-list mb-2 ml-3 mr-3 p-4">
-                        <div class="d-flex flex-row justify-content-between">
+                        <div class="detail-announce">
                             <h6 class="mt-2"><b>New Announcement</b></h6>
                             <p><b>Date Posted:</b> {{ announcement?.date_posted | date: 'medium' }}</p>
     
@@ -18,9 +18,33 @@
                     </div>
             </div>
         </div>
-        <div class="recent-activities">
-            <h3 class="label-announce mr-3 ml-3 mt-2">Activities</h3>
+        <div class="other-details mt-3 p-4">
+            <div class="header d-flex align-items-center justify-content-between">
+                <h3 class="label-announce mr-3 ml-3 mt-2">Activities</h3>
+                <h6 class="label-announce mr-3 ml-3 mt-2">Today</h6>
+            </div>
+        
+            <table class="table table-striped text-center">
+                <thead>
+                    <tr>
+                        <th>Subject</th>
+                        <th>Activity Name</th>
+                        <th>Activity Score</th>
+                    </tr>
+                </thead>
+                <tbody>
+                        <ng-container *ngFor="let activity of activitiesToDisplay">
+                            <tr>
+                                <td>{{activity.subject}}</td>
+                                <!-- <td>{{activity.date | date:'MM/dd/yyyy'}}</td> -->
+                                <td>{{activity.activityName}}</td>
+                                <td>{{activity.activityScore}}</td>
+                            </tr>
+                        </ng-container>
+                </tbody>
+            </table>
         </div>
+        
 
     </div>
     <div class="second-column">

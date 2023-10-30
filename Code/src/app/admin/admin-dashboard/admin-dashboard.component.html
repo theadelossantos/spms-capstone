@@ -77,6 +77,12 @@
                       </button>
                     </div>
                     <div class="modal-body">
+                        <div class="position-fixed top-0 end-0 p-3">
+                            <div *ngIf="showAddAlert" class="alert alert-success alert-dismissible fade show" role="alert">
+                                <strong>Success!</strong> Announcement added successfully.
+                                <button type="button" class="btn-close" (click)="hideAlert()" aria-label="Close"></button>
+                              </div>
+                        </div>
                         <h6><b>Department:</b></h6>
     
                         <div class="radio-button d-flex flex-row">
@@ -123,6 +129,19 @@
                         </button>
                     </div>
                     <div class="modal-body">
+                        <div class="position-fixed top-0 end-0 p-3">
+                            <div *ngIf="showAlert" class="alert alert-success alert-dismissible fade show" role="alert">
+                                <strong>Success!</strong> Announcement updated successfully.
+                                <button type="button" class="btn-close" (click)="hideAlert()" aria-label="Close"></button>
+                              </div>
+
+                              <div class="position-fixed top-0 end-0 p-3">
+                                <div *ngIf="showDelAlert" class="alert alert-success alert-dismissible fade show" role="alert">
+                                    <strong>Success!</strong> Announcement deleted successfully.
+                                    <button type="button" class="btn-close" (click)="hideAlert()" aria-label="Close"></button>
+                                  </div>
+                            </div>
+                        </div>
                         <div>
                             <p><b>Date Posted:</b> {{ selectedAnnouncement?.date_posted | date: 'medium' }}</p>
                             <div class="department-div mb-3">

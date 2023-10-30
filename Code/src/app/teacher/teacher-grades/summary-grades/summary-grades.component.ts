@@ -35,11 +35,7 @@ export class SummaryGradesComponent {
       this.subjectId = Number(params.get('subjectId'));
       this.assignmentId = Number(params.get('assignmentId'));
       
-      console.log('Department:', this.deptId);
-      console.log('Grade Level:', this.gradeLevelId);
-      console.log('Section:', this.sectionId);
-      console.log('Subject ID:', this.subjectId);
-      console.log('Assignment ID:', this.assignmentId);
+
 
     });
 
@@ -50,7 +46,7 @@ export class SummaryGradesComponent {
         
       },
       (error) => {
-        console.error('Error fetching subject name:', error);
+        console.error('Error fetching subject name:');
       }
     );
     this.authService.getGradeLevelById(this.gradeLevelId).subscribe(
@@ -58,7 +54,7 @@ export class SummaryGradesComponent {
        this.gradeLevelName = gradeLevelData.gradelevelss[0].gradelvl;
       },
       (error) => {
-        console.error('Error fetching grade level name:', error);
+        console.error('Error fetching grade level name:');
       }
     );
     this.authService.getSectionById(this.sectionId).subscribe(
@@ -66,7 +62,7 @@ export class SummaryGradesComponent {
         this.sectionName = sectionData.sections[0].section_name;
       },
       (error) => {
-        console.error('Error fetching section name:', error);
+        console.error('Error fetching section name:');
       }
     );
     this.authService.getSubjectsByDeptGL(this.deptId, this.gradeLevelId).subscribe(
@@ -75,7 +71,7 @@ export class SummaryGradesComponent {
         console.log('subjects',this.subjects)
       },
       (error) => {
-        console.error('Error fetching subjects:', error);
+        console.error('Error fetching subjects:');
       }
     );
     
@@ -88,7 +84,6 @@ export class SummaryGradesComponent {
           this.quarters = quartersData;
           if (this.quarters && this.quarters.length > 0) {
             this.selectedQuarter = this.quarters[0].quarter_id;
-            console.log('Selected Quarter ID:', this.selectedQuarter);
 
             this.students.forEach(student => {
 
@@ -108,19 +103,19 @@ export class SummaryGradesComponent {
 
                   },
                   (error) => {
-                    console.error(`Error fetching grades for student ${student.student_id} in subject ${subject.subject_id}:`, error);
+                    console.error(`Error fetching grades for student ${student.student_id} in subject ${subject.subject_id}:`);
                   }
                 );
               });
             });
           }
         }, (error) => {
-          console.error('Error fetching quarters:', error);
+          console.error('Error fetching quarters:');
         })
         
       },
       (error) => {
-        console.error('Error fetching students:', error);
+        console.error('Error fetching students:');
       }
     );
   }
@@ -136,7 +131,6 @@ export class SummaryGradesComponent {
       const grade = student[subject.subject_id];
       if (grade !== '-' && !isNaN(parseFloat(grade))) {
         total += parseFloat(grade);
-        console.log('grade',grade)
         count++;
       }
     });
@@ -144,7 +138,7 @@ export class SummaryGradesComponent {
     if (count > 0) {
       const average = total / count;
       student.average = average.toFixed(2);
-      console.log(`Average for student ${student.id}: ${student.average}`);
+      // student.average = Math.round(average);
       const backgroundColor = this.getRank(parseFloat(student.average));
       student.backgroundColor = backgroundColor;
       
@@ -156,35 +150,33 @@ export class SummaryGradesComponent {
         quarter: this.selectedQuarter,
         average: student.average
       };
-      console.log('average', studentAverage);
       
       this.authService.fetchAverage(studentAverage).subscribe((existingAverageData) => {
-        console.log('existing', existingAverageData)
+
         if (existingAverageData && existingAverageData.length > 0) {
           const aveId = existingAverageData[0].id;
           student.aveId = aveId;
             this.authService.updateAverage(aveId, studentAverage).subscribe((data) => {
-            console.log('Average updated', data);
-          });
+
+            });
         } else {
           this.authService.addStudentAverage(studentAverage).subscribe((data) => {
             student.aveId = data.id;
-            console.log('New average added', data);
+
           });
         }
       });
     } else {
       student.average = '-';
-      console.log(`No grades found for student ${student.id}`);
     }
   }
   
   
   
   getRank(average: number): string {
-    if (average >= 90 && average <= 94) {
+    if (average >= 90 && average <= 94.99) {
       return 'lightyellow';
-    } else if (average >= 95 && average <= 97) {
+    } else if (average >= 95 && average <= 97.99) {
       return 'greenyellow';
     } else if (average >= 98 && average <= 100) {
       return 'Yellow';
@@ -196,8 +188,6 @@ export class SummaryGradesComponent {
   
   
   onQuarterChange(){
-    console.log('Selected Quarter ID:', this.selectedQuarter);
-
     if(this.selectedQuarter){
       this.authService.filterStudents(this.deptId, this.gradeLevelId, this.sectionId).subscribe(
         (studentsData: any) => {

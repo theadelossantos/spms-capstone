@@ -31,10 +31,7 @@ export class CoursesElemComponent {
 
   ngOnInit(): void {
     this.authService.getGradeLevels().subscribe((data) => {
-      console.log('Gradelevels:', data);
       this.gradelvl = data;
-      console.log('this.gradelvl:', this.gradelvl);
-
     });
 
     this.form = this.fb.group({
@@ -50,7 +47,6 @@ export class CoursesElemComponent {
 
   manageClasses(departmentId: number, gradelvlId: number) {
     if (!gradelvlId) {
-      console.error("Invalid gradelvlId:", gradelvlId);
       return;
     }
   
@@ -58,8 +54,6 @@ export class CoursesElemComponent {
       (data) => {
         this.selectedGradeLevel = this.gradelvl.find((level) => level.gradelvl_id === gradelvlId);
         this.filteredCourses = data.subjects;
-
-        console.log("filtered courses:", this.filteredCourses)
   
         if (this.filteredCourses.length > 0) {
           this.selectedSubject = {
@@ -78,7 +72,7 @@ export class CoursesElemComponent {
         }
       },
       (error) => {
-        console.error("Error fetching subjects:", error);
+        console.error("Error fetching subjects:");
       }
     );
   }
@@ -119,12 +113,8 @@ export class CoursesElemComponent {
   }
 
   logSelectedSection(){
-    console.log('Selected Subject:', this.selectedSubject);
-
   }
-  editSection(subject: any) {
-    console.log('Selected Section:', subject);
-  
+  editSection(subject: any) {  
     this.selectedSubject = {
       subject_id: subject.id,
       grlevel: subject.gradelvl_id,
@@ -138,18 +128,16 @@ export class CoursesElemComponent {
   }
 
   deleteSubject(subjectId: number) {
-    console.log('Deleting subject with ID:', subjectId);
   
     const confirmDelete = window.confirm('Are you sure you want to delete this subject?');
   
     if (confirmDelete) {
-      console.log('Before API call - subjectId:', subjectId);
       this.authService.deleteSubject(subjectId).subscribe(
         (response) => {
           this.filteredCourses = this.filteredCourses.filter((s) => s.id !== subjectId);
         },
         (error) => {
-          console.error('Error deleting subject: ', error);
+          console.error('Error deleting subject: ');
         }
       );
     }
