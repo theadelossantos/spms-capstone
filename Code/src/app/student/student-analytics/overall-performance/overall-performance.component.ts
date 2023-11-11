@@ -175,9 +175,16 @@ export class OverallPerformanceComponent {
   }
   getOverallAverage(): number {
     const totalGrades = Object.values(this.subjectGrades);
-    const sum = totalGrades.reduce((acc, grade) => acc + grade, 0);
-    return totalGrades.length > 0 ? Math.round(sum / totalGrades.length) : 0;
-  }
+    const nonZeroGrades = totalGrades.filter(grade => grade !== 0);
+    
+    if (nonZeroGrades.length === 0) {
+        return 0;
+    }
+    
+    const sum = nonZeroGrades.reduce((acc, grade) => acc + grade, 0);
+    return Math.round(sum / nonZeroGrades.length);
+}
+
 
   getHonorQualificationProgress(){
     const overallAverage = this.getOverallAverage();
@@ -190,39 +197,47 @@ export class OverallPerformanceComponent {
       return honorRollThreshold - overallAverage
     }
   }
-  
   generateHonorPieChart() {
     const overallAverage = this.getOverallAverage();
     console.log('ovaverage', overallAverage);
-    
+  
     const withHonorMin = 90;
     const withHighHonorMin = 95;
     const withHighestHonorMin = 98;
-    
-    const labels = [];
-    const dataValues = [];
+  
+    const labels = ['Current Average'];
+    const dataValues = [overallAverage];
     let currentAverageColor = 'lightgray';
-    
+    let displayWithHonor = false;
+  
     if (overallAverage >= withHonorMin && overallAverage < withHighHonorMin) {
-      labels.push('Current Average', 'With High Honor', 'With Highest Honor');
-      dataValues.push(overallAverage, withHighHonorMin - overallAverage, 100 - withHighHonorMin);
+      labels.push('With High Honor', 'With Highest Honor');
+      dataValues.push(withHighHonorMin - overallAverage, 100 - withHighHonorMin);
       currentAverageColor = 'green';
+      displayWithHonor = true;
     } else if (overallAverage >= withHighHonorMin && overallAverage < withHighestHonorMin) {
-      labels.push('Current Average', 'With Highest Honor');
-      dataValues.push(overallAverage, 100 - overallAverage);
+      labels.push('With Highest Honor');
+      dataValues.push(100 - overallAverage);
       currentAverageColor = 'green';
+      displayWithHonor = true;
     } else if (overallAverage >= withHighestHonorMin) {
-      labels.push('Current Average', 'With Highest Honor');
-      dataValues.push(overallAverage, 100 - overallAverage);
+      labels.push('With Highest Honor');
+      dataValues.push(100 - overallAverage);
       currentAverageColor = 'green';
-    } else {
-      labels.push('Current Average', 'With Honor', 'With High Honor', 'With Highest Honor');
-      dataValues.push(overallAverage, withHonorMin - overallAverage, withHighHonorMin - withHonorMin, withHighestHonorMin - withHighHonorMin);
+      displayWithHonor = true;
+    } else if (overallAverage >= 75) {
+      labels.push('With Honor', 'With High Honor', 'With Highest Honor');
+      dataValues.push(withHonorMin - overallAverage, withHighHonorMin - withHonorMin, withHighestHonorMin - withHighHonorMin);
       currentAverageColor = 'orange';
+      displayWithHonor = true;
+    } else {
+      labels.push('With Honor', 'With High Honor', 'With Highest Honor');
+      dataValues.push(withHonorMin - overallAverage, withHighHonorMin - withHonorMin, withHighestHonorMin - withHighHonorMin);
+      currentAverageColor = 'red'; 
     }
-    
+  
     const backgroundColors = [currentAverageColor, 'yellow', 'yellowgreen', 'green'];
-    
+  
     const data = {
       labels: labels,
       datasets: [{
@@ -230,13 +245,13 @@ export class OverallPerformanceComponent {
         backgroundColor: backgroundColors,
       }],
     };
-    
+  
     const ctx = document.getElementById('honorPieChart') as HTMLCanvasElement;
-    
+  
     if (this.honorPieChart) {
       this.honorPieChart.destroy();
     }
-    
+  
     this.honorPieChart = new Chart(ctx, {
       type: 'pie',
       data: data,
@@ -245,10 +260,10 @@ export class OverallPerformanceComponent {
         legend: {
           display: true,
         },
-        plugins:{
+        plugins: {
           title: {
             font: {
-              family:'Poppins',
+              family: 'Poppins',
               size: 17
             },
             display: true,
@@ -256,12 +271,11 @@ export class OverallPerformanceComponent {
             color: '#000'
           },
         }
-
       },
-      
     } as any);
   }
-
+  
+  
   createLineChart() {
     if (this.subjects.length > 0) {
       const subjectNames = this.subjects.map((subject) => subject.subject_name);

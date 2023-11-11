@@ -60,7 +60,7 @@ export class AuthService {
     const data = {
       email, password
     };
-
+    
     return this.http.post(`${this.api_url}admin-login/`, data, this.httpOptions)
   }
 
@@ -114,17 +114,17 @@ export class AuthService {
             
             if (decodedPayload && decodedPayload.roles) {
                 return decodedPayload.roles;
-            } else {
-                console.error('Token payload does not contain roles:', decodedPayload);
-                return [];
-            }
-        } catch (error) {
+    } else {
+      console.error('Token payload does not contain roles:', decodedPayload);
+                return []; 
+    }
+} catch (error) {
             console.error('Error decoding token payload', error);
             return [];
         }
     }
     return [];
-}
+  }
 
   
   addStudent(studentData: any): Observable<any> {

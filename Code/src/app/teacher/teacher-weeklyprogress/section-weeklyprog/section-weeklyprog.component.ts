@@ -208,6 +208,7 @@ export class SectionWeeklyprogComponent {
   data: any[];
   myForm: FormGroup;
   scoreEntered: boolean = false;
+  hpsDataByQuarter: { [quarter: string]: any } = {};
 
   assessmentTypes = [
     'Written Work 1', 'Written Work 2', 'Written Work 3', 'Written Work 4', 'Written Work 5',
@@ -249,11 +250,6 @@ export class SectionWeeklyprogComponent {
       this.subjectId = Number(params.get('subjectId'));
       this.assignmentId = Number(params.get('assignmentId'));
       
-      console.log('Department:', this.deptId);
-      console.log('Grade Level:', this.gradeLevelId);
-      console.log('Section:', this.sectionId);
-      console.log('Subject ID:', this.subjectId);
-      console.log('Assignment ID:', this.assignmentId);
 
     });
     this.students.forEach(student => {
@@ -390,30 +386,35 @@ export class SectionWeeklyprogComponent {
   onQuarterChange(){
     console.log('Selected Quarter ID:', this.selectedQuarter);
 
-    this.students.forEach((student) => {
-      this.studentExpansionMap[student.id] = false;
-      this.studentTasks[student.id] = [];
-
-      this.getWeeklyProgress(student.id);
-
-    });
-
     if(this.selectedQuarter){
       this.authService.filterStudents(this.deptId, this.gradeLevelId, this.sectionId).subscribe(
         (studentsData: any) => {
           this.students = studentsData.students.map((student: Student) => ({
             ...student,
+            totalWrittenWorkRS: 0,
+            totalWrittenWorkWS: 0,
+            totalPerfTaskRS: 0,
+            totalPerfTaskWS: 0,
+            totalQuarterlyAssessmentWS: 0,
+            initialGrade: 0,
+            quarterlyGrade: 0,
+            ww_scores: Array.from({ length: 10 }, () => null),
+            pt_scores: Array.from({ length: 10 }, () => null),
+            qa_scores: 0,
             
           }));
           this.students.forEach((student) => {
-            this.studentExpansionMap[student.id] = false;
             this.studentTasks[student.id] = [];
+            this.fetchStudentRawScores();
+            this.fetchHPS();
+            this.getWeeklyProgress(student)
+            this.fetchAssesssmentNames()
+            this.sortStudents()
           });
           console.log(this.students);
       })
     }
   }
-
   toggleSortOrder() {
     this.isSortingAZ = !this.isSortingAZ; 
   
@@ -851,6 +852,8 @@ export class SectionWeeklyprogComponent {
                 console.error('Error checking HPS data:', error);
             }
         );
+        
+        const selectedQuarterHPS = this.hpsDataByQuarter[this.selectedQuarter] || {};
 
         const updatedStudentGrades = this.students.map((student) => {
             const studentGrades = {
@@ -1084,7 +1087,7 @@ export class SectionWeeklyprogComponent {
       case 'Performance Task 9':
         return student.pt_scores[8] = score;
       case 'Performance Task 10':
-        return student.pt_scores[9];
+        return student.pt_scores[9] = score;
       
       case 'Quarterly Assessment':
         return student.qa_score  = score;

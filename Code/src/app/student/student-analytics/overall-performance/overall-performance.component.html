@@ -11,17 +11,17 @@
     <div class="container-analytics">
         <div class="col-md-6">
             <div class="subject-card overall-average-container p-3 d-flex justify-content-center flex-column align-items-center">
-                
+               
                 <div class="circle-text d-flex flex-column align-items-center">
                     <canvas id="honorPieChart" class="mb-5" width="400" height="1000"></canvas>
                     <p *ngIf="getOverallAverage() >= 90 && getOverallAverage() < 95">Qualified for Honor</p>
                     <p *ngIf="getOverallAverage() >= 95 && getOverallAverage() < 98">Qualified for High Honor</p>
                     <p *ngIf="getOverallAverage() >= 98 && getOverallAverage() <= 100">Qualified for Highest Honor</p>    
-                    <p *ngIf="getOverallAverage() < 90">Not qualified for Honor</p>
                 </div>
             </div>
         </div>
         <div class="col-md-6 subject-card overall-average-container p-3">
+
             <canvas id="subjectLineChart" width="400" height="300"></canvas>
         </div>
 

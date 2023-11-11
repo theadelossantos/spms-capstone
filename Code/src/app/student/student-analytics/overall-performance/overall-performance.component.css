@@ -81,6 +81,9 @@ a:hover{
     flex-direction: row;
 
 }
+.legend{
+    background-color: green;
+}
 
 @media (max-width: 768px) {
     .classes {

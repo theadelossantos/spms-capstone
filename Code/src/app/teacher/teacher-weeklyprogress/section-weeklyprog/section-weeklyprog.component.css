@@ -43,7 +43,7 @@ table {
 }
 
 table, th, td {
-    text-align: center; 
+    text-align: left; 
     font-size: 17px;
 }
 tr:nth-child(even) {
@@ -71,10 +71,10 @@ tr:hover{
 .tbl-headers{
     justify-content: space-between;
 }
-
+/* 
 .select-opt{
     max-width: 200px;
-}
+} */
 .quarterly-grade{
     font-weight: bold;
 }
@@ -87,7 +87,7 @@ tr:hover{
     font-weight: 700;
 }
 .input-score {
-    width: 50%; 
+    width: 25%; 
     font-size: 15px;
     border: none;
     background-color: transparent;
@@ -99,4 +99,7 @@ select{
 
 .student-scores td {
     padding: 8px; 
+}
+.form-select{
+    width: 100% !important;
 }

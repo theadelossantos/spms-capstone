@@ -3,19 +3,20 @@
     <p class="next">></p>
     <a class="active"><b>{{ gradeLevelName}} - {{ sectionName }} - {{subjectName}}</b></a>
 </div>
-<div class="toggle-select-container mb-3">
-  
-</div>
 
-<div class="parent-div">
-  <div class="assessment-div">
-    <div >
-      <select  class="form-select" [(ngModel)]="selectedAssessmentType">
-        <option *ngFor="let type of assessmentTypes" [value]="type">{{ type }}</option>
+<div class="d-flex justify-content-between">
+  <div class="w-50 mr-3">
+      <select class="form-select" [(ngModel)]="selectedAssessmentType">
+          <option *ngFor="let type of assessmentTypes" [value]="type">{{ type }}</option>
       </select>
-    </div>
+  </div>
+  <div class="w-50">
+      <select class="form-select shadow-none select-opt mb-2" [(ngModel)]="selectedQuarter" name="quarter" (ngModelChange)="onQuarterChange()">
+          <option *ngFor="let quarter of quarters" [value]="quarter.quarter_id">{{quarter.quarter_name}}</option>
+      </select>
   </div>
 </div>
+
 
 
 <form (submit)="submitForm()">
@@ -112,7 +113,7 @@
         </td> -->
       </tr>
     </tbody>
-  </table>
+</table>
   <button type="submit" class="btn btn-primary align-items-center mt-2">
     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-floppy-fill" viewBox="0 0 16 16">
       <path d="M0 1.5A1.5 1.5 0 0 1 1.5 0H3v5.5A1.5 1.5 0 0 0 4.5 7h7A1.5 1.5 0 0 0 13 5.5V0h.086a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5H14v-5.5A1.5 1.5 0 0 0 12.5 9h-9A1.5 1.5 0 0 0 2 10.5V16h-.5A1.5 1.5 0 0 1 0 14.5v-13Z"/>
